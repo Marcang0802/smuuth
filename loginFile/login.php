@@ -20,6 +20,8 @@
                 border: 1px solid black;
             }
         </style>
+        
+<link rel="stylesheet" type="text/css" href="loginPage.css">
     </head>
 
     <form action="process_login.php" method="post">
@@ -40,4 +42,5 @@
     <?php printErrors(); ?>
     
 </body>
+
 </html>
