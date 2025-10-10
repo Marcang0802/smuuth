@@ -1,5 +1,4 @@
 <?php
-require_once '../lib/db.php';
 session_start();
 
 if ($_SESSION['role '] !== 'admin') {
