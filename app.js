@@ -4,7 +4,7 @@ const app = Vue.createApp({
     data() {
         return {
             title: "The Final Empire",
-            serialNo: 5,
+            serialNo: 5
         }
     }
 
@@ -12,3 +12,4 @@ const app = Vue.createApp({
 
 
 app.mount("#app");  
+
