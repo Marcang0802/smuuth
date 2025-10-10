@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS event;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS application;
+DROP TABLE IF EXISTS points_ledger;
+DROP TABLE IF EXISTS user_warning;
