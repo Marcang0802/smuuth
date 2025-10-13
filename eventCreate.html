@@ -23,27 +23,47 @@
   <div class="container">
     <div class="card p-4">
       <h2 class="mb-4 text-center">Create Event</h2>
-      <form>
+      <form action="create_event.php" method="POST">
         <div class="mb-3">
           <label for="eventName" class="form-label">Name of Event</label>
-          <input type="text" class="form-control" id="eventName" required placeholder="Event name" />
+          <input type="text" class="form-control" id="eventName" name="eventName" required placeholder="Event name" />
         </div>
+        
         <div class="mb-3">
           <label for="eventLocation" class="form-label">Location</label>
-          <input type="text" class="form-control" id="eventLocation" required placeholder="Event location" />
+          <input type="text" class="form-control" id="eventLocation" name="eventLocation" required placeholder="Event location" />
         </div>
+        
         <div class="mb-3">
           <label for="eventDescription" class="form-label">Event Description</label>
-          <textarea class="form-control" id="eventDescription" rows="3" required placeholder="Describe the event"></textarea>
+          <textarea class="form-control" id="eventDescription" name="eventDescription" rows="3" placeholder="Describe the event"></textarea>
         </div>
+        
         <div class="mb-3">
           <label for="manpower" class="form-label">Number of Manpower Needed</label>
-          <input type="number" class="form-control" id="manpower" min="1" required placeholder="Eg. 10" />
+          <input type="number" class="form-control" id="manpower" name="manpower" min="1" required placeholder="Eg. 10" />
         </div>
-        <div class="mb-4">
+        
+        <div class="mb-3">
           <label for="qualifications" class="form-label">Specific Qualifications Needed</label>
-          <input type="text" class="form-control" id="qualifications" placeholder="Eg. First aid, crowd management" />
+          <input type="text" class="form-control" id="qualifications" name="qualifications" placeholder="Eg. First aid, crowd management" />
         </div>
+
+        <div class="mb-3">
+          <label for="startDatetime" class="form-label">Start Date & Time</label>
+          <input type="datetime-local" class="form-control" id="startDatetime" name="startDatetime" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="endDatetime" class="form-label">End Date & Time</label>
+          <input type="datetime-local" class="form-control" id="endDatetime" name="endDatetime" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="rewardPoints" class="form-label">Reward Points</label>
+          <input type="number" class="form-control" id="rewardPoints" name="rewardPoints" min="0" value="50" />
+        </div>
+
         <button type="submit" class="btn btn-success w-100">Create</button>
       </form>
     </div>
