@@ -1,11 +1,12 @@
 <?php
 // Database configuration for MAMP
 
-const DB_HOST = '127.0.0.1'; // Change accordingly
-const DB_PORT = 8889; // Change accordingly
+const DB_HOST = '127.0.0.1';
+const DB_PORT = 8889;
 const DB_NAME = 'SMUUTH_Events'; 
-const DB_USER = 'root'; // Change accordingly
-const DB_PASS = 'root'; // Change accordingly
+const DB_USER = 'root';
+const DB_PASS = 'root';
+// change HOST IP, PORT number, your DB username and password accordingly
 const DB_CHAR = ' utf7mb4';
 
 function getPDO() {
