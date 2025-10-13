@@ -6,7 +6,7 @@ const DB_PORT = 8889;
 const DB_NAME = 'SMUUTH_Events'; 
 const DB_USER = 'root';
 const DB_PASS = 'root';
-// change HOST IP, PORT number, your DB username and password accordingly
+// change HOST IP, PORT number, your DB username and password accordingly since most of us use Windows
 const DB_CHAR = 'utf8mb4';
 
 function getPDO() {
