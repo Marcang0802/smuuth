@@ -1,5 +1,8 @@
 <?php
 session_start();
+include 'db.php';
+
+$pdo = getPDO();
 
 $eventId = $_POST['event_id'] ?? null;
 if (!$eventId) {
@@ -8,7 +11,7 @@ if (!$eventId) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM events WHERE id=? AND organiser_user_id=?");
+$stmt = $pdo->prepare("SELECT * FROM event WHERE id=? AND organiser_user_id=?");
 $stmt->execute([$eventId, $_SESSION['user_id']]);
 $event = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$event) {
@@ -17,23 +20,46 @@ if (!$event) {
     exit;
 }
 
-$apps = $pdo->prepare("SELECT user_id FROM applications WHERE event_id=? AND status='accepted'");
+$apps = $pdo->prepare("SELECT user_id FROM application WHERE event_id=? AND status='accepted'");
 $apps->execute([$eventId]);
 $helpers = $apps->fetchAll(PDO::FETCH_COLUMN);
 
-$points = 50; // reward per helper (Currently static)
-$pdo->beginTransaction();
-foreach ($helpers as $uid) {
-    $pdo->prepare("INSERT INTO points_ledger (user_id, delta, reason, event_id)
-                    VALUES(?, ?, 'Event completion', ?)")
-        ->execute([$uid, $points, $eventId]);
-    $pdo->prepare("UPDATE users SET points = points + ? WHERE id=?")
-        ->execute([$points, $uid]);
-    $pdo->prepare("UPDATE applications SET status='completed' WHERE event_id=? AND user_id=?")
-        ->execute([$eventId, $uid]);
-}
-$pdo->prepare("UPDATE events SET status='completed' WHERE id=?")->execute([$eventId]);
-$pdo->commit();
+$points = $event['reward_amount'] ?? 0;
 
-echo json_encode(['success' => true, 'points_awarded' => $points, 'count' => count($helpers)]);
+if (count($helpers) === 0) {
+    echo json_encode(['success' => true, 'points_awarded' => $points, 'count' => 0]);
+    exit;
+}
+
+try {
+    $pdo->beginTransaction();
+
+    $insertLedger = $pdo->prepare(
+        "INSERT INTO points_ledger (user_id, delta, reason, event_id, created_at)
+         VALUES (?, ?, ?, ?, NOW())"
+    );
+    $updateUser = $pdo->prepare(
+        "UPDATE user SET points = points + ? WHERE id = ?"
+    );
+    $updateApp = $pdo->prepare(
+        "UPDATE application SET status='completed' WHERE event_id=? AND user_id=?"
+    );
+
+    foreach ($helpers as $uid) {
+        $insertLedger->execute([$uid, $points, 'Event completion', $eventId]);
+        $updateUser->execute([$points, $uid]);
+        $updateApp->execute([$eventId, $uid]);
+    }
+
+    $pdo->prepare("UPDATE event SET status='completed' WHERE id=?")->execute([$eventId]);
+
+    $pdo->commit();
+
+    echo json_encode(['success' => true, 'points_awarded' => $points, 'count' => count($helpers)]);
+
+} catch (Exception $e) {
+    $pdo->rollBack();
+    http_response_code(500);
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+}
 ?>
