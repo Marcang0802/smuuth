@@ -1,7 +1,10 @@
+CREATE DATABASE IF NOT EXISTS SMUUTH_Events;
 use SMUUTH_Events;
 CREATE TABLE IF NOT EXISTS user (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
+  username VARCHAR(100) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
   name VARCHAR(255),
   role ENUM('helper','admin') NOT NULL,
   points INT DEFAULT 0,
@@ -60,3 +63,49 @@ CREATE TABLE IF NOT EXISTS user_warning (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   resolved BOOLEAN DEFAULT FALSE
 );
+
+DELIMITER $$
+
+CREATE TRIGGER trg_award_points_after_event_completed
+AFTER UPDATE ON event
+FOR EACH ROW
+BEGIN
+    IF NEW.status = 'completed' AND OLD.status <> 'completed' THEN
+
+        INSERT INTO points_ledger (user_id, delta, reason, event_id, created_at)
+        SELECT a.user_id, NEW.reward_amount, CONCAT('Points for event ', NEW.title), NEW.id, NOW()
+        FROM application a
+        LEFT JOIN user_warning w
+            ON a.user_id = w.reported_user_id
+            AND w.event_id = NEW.id
+            AND w.resolved = FALSE
+        WHERE a.event_id = NEW.id
+          AND a.status = 'accepted'
+          AND w.id IS NULL;
+
+        UPDATE user u
+        JOIN application a ON u.id = a.user_id
+        LEFT JOIN user_warning w
+            ON a.user_id = w.reported_user_id
+            AND w.event_id = NEW.id
+            AND w.resolved = FALSE
+        SET u.points = u.points + NEW.reward_amount
+        WHERE a.event_id = NEW.id
+          AND a.status = 'accepted'
+          AND w.id IS NULL;
+
+        UPDATE application a
+        LEFT JOIN user_warning w
+            ON a.user_id = w.reported_user_id
+            AND w.event_id = NEW.id
+            AND w.resolved = FALSE
+        SET a.status = 'completed'
+        WHERE a.event_id = NEW.id
+          AND a.status = 'accepted'
+          AND w.id IS NULL;
+
+    END IF;
+END$$
+
+DELIMITER ;
+
