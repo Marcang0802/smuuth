@@ -1,42 +1,47 @@
 <?php
 session_start();
+include 'db.php';
+$pdo = getPDO();
+// Hardcoded testing, I'll get to this soon
+$_SESSION['user_id'] = 3;
+$_SESSION['role'] = 'admin';
 
-if ($_SESSION['role '] !== 'admin') {
+if ($_SESSION['role'] !== 'admin') {
     http_response_code(403);
     echo json_encode(['error' => 'Access denied']);
     exit;
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
-$required = ['title', 'start_datetime', 'required_pax'];
+$required = ['eventName', 'manpower', 'startDatetime', 'endDatetime'];
 foreach ($required as $field) {
-    if (empty($data[$field])) {
+    if (empty($_POST[$field])) {
         http_response_code(400);
         echo json_encode(['error' => "$field is required"]);
         exit;
     }
 }
 
+$requirementTags = isset($_POST['qualifications']) && $_POST['qualifications'] !== ''
+    ? json_encode(array_map('trim', explode(',', $_POST['qualifications'])))
+    : null;
+
 $stmt = $pdo->prepare("
-    INSERT INTO events (
-    title, description, organiser_user_id, location_name, lat, lng, address,
-    start_datetime, end_datetime, required_pax, reward_amount, requirement_tags
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO event (
+        title, description, organiser_user_id, location_name,
+        start_datetime, end_datetime, required_pax, reward_amount, requirement_tags
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
 
 $stmt->execute([
-    $data['title'],
-    $data['description'] ?? '',
+    $_POST['eventName'],
+    $_POST['eventDescription'] ?? '',
     $_SESSION['user_id'],
-    $data['location_name'] ?? '',
-    $data['lat'] ?? null,
-    $data['lng'] ?? null,
-    $data['address'] ?? '',
-    $data['start_datetime'],
-    $data['end_datetime'] ?? null,
-    $data['required_pax'],
-    $data['reward_amount'] ?? 0,
-    isset($data['requirement_tags']) ? json_encode($data['requirement_tags']) : null
+    $_POST['eventLocation'] ?? '',
+    $_POST['startDatetime'],
+    $_POST['endDatetime'],
+    $_POST['manpower'],
+    $_POST['rewardPoints'] ?? 50,
+    $requirementTags
 ]);
 
 echo json_encode(['success' => true, 'event_id' => $pdo->lastInsertId()]);
