@@ -5,6 +5,8 @@ import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10
 
 
 // Your web app's Firebase configuration
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
   authDomain: "wad2-505be.firebaseapp.com",
@@ -14,6 +16,7 @@ const firebaseConfig = {
   appId: "1:221863917439:web:2a517ca11c83e991388c4a",
   measurementId: "G-L69GG585GF"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
