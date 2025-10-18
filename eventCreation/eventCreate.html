@@ -23,27 +23,28 @@
   <div class="container">
     <div class="card p-4">
       <h2 class="mb-4 text-center">Create Event</h2>
-      <form action="create_event.php" method="POST">
+
+      <form id="eventForm">
         <div class="mb-3">
           <label for="eventName" class="form-label">Name of Event</label>
           <input type="text" class="form-control" id="eventName" name="eventName" required placeholder="Event name" />
         </div>
-        
+
         <div class="mb-3">
           <label for="eventLocation" class="form-label">Location</label>
           <input type="text" class="form-control" id="eventLocation" name="eventLocation" required placeholder="Event location" />
         </div>
-        
+
         <div class="mb-3">
           <label for="eventDescription" class="form-label">Event Description</label>
           <textarea class="form-control" id="eventDescription" name="eventDescription" rows="3" placeholder="Describe the event"></textarea>
         </div>
-        
+
         <div class="mb-3">
           <label for="manpower" class="form-label">Number of Manpower Needed</label>
           <input type="number" class="form-control" id="manpower" name="manpower" min="1" required placeholder="Eg. 10" />
         </div>
-        
+
         <div class="mb-3">
           <label for="qualifications" class="form-label">Specific Qualifications Needed</label>
           <input type="text" class="form-control" id="qualifications" name="qualifications" placeholder="Eg. First aid, crowd management" />
@@ -68,5 +69,49 @@
       </form>
     </div>
   </div>
+
+  <!-- Firebase & Firestore integration -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyANHBfsjyoOvaSw2QyICirzEV-CWyUGOfs",
+      authDomain: "wad2-event-test.firebaseapp.com",
+      projectId: "wad2-event-test",
+      storageBucket: "wad2-event-test.firebasestorage.app",
+      messagingSenderId: "1023097033865",
+      appId: "1:1023097033865:web:210fbd48e69c2e94922258" // This is for my test firebase. Will update the the main one.
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("eventForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById("eventName").value.trim(),
+        location: document.getElementById("eventLocation").value.trim(),
+        description: document.getElementById("eventDescription").value.trim(),
+        manpower: parseInt(document.getElementById("manpower").value),
+        qualifications: document.getElementById("qualifications").value.trim(),
+        startDatetime: document.getElementById("startDatetime").value,
+        endDatetime: document.getElementById("endDatetime").value,
+        rewardPoints: parseInt(document.getElementById("rewardPoints").value),
+        createdAt: serverTimestamp()
+      };
+
+      try {
+        await addDoc(collection(db, "events"), data);
+        alert("Event successfully created!");
+        form.reset();
+      } catch (error) {
+        console.error("Error creating event:", error);
+        alert("Failed to create event. Check console for details.");
+      }
+    });
+  </script>
 </body>
 </html>
