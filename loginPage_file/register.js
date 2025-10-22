@@ -42,7 +42,8 @@ async function createUserDocument(userId, email) {
     await setDoc(doc(db, "users", userId), {
       email: email,
       createdAt: new Date(),
-      // Add any other initial user data you want to store
+      points: 0,
+      certifications: []
     });
   } catch (error) {
     console.error("Error creating user document:", error);
