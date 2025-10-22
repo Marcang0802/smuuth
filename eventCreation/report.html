@@ -71,7 +71,7 @@
     });
   </script>
 
-  <!-- Firebase & Firestore integration -->
+    <!-- Firebase & Firestore integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -96,19 +96,26 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const reasonValue = document.getElementById("reason").value === "Other"
-        ? document.getElementById("otherReasonBox").value.trim()
-        : document.getElementById("reason").value;
+      // Dynamically handle "Other" reason field
+      const reasonValue =
+        document.getElementById("reason").value === "Other"
+          ? document.getElementById("otherReasonBox").value.trim()
+          : document.getElementById("reason").value;
 
+      // Build Firestore document
       const data = {
         helperName: document.getElementById("helperName").value.trim(),
+        username: document.getElementById("email").value.trim(), // added username/email
         reason: reasonValue,
         description: document.getElementById("description").value.trim(),
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       };
 
       try {
+        // Add report to Firestore collection
         await addDoc(collection(db, "reports"), data);
+
+        // Confirmation & redirect
         alert("Report successfully submitted!");
         form.reset();
         window.location.href = "thankyou.html";
@@ -118,5 +125,6 @@
       }
     });
   </script>
+
 </body>
 </html>
