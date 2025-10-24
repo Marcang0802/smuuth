@@ -47,7 +47,7 @@
 					<li><a href="reviews.html">Reviews</a></li>
 					<!-- <li><a href="logs.html">Logs</a></li> -->
 					<li><a class="ticker-btn" href="../loginPage_file/registration.html">Sign Up</a></li>		
-					<li><a class="ticker-btn" href="#">Login</a></li>				          				          	          				          		          				          
+					<li><a class="ticker-btn" href="../loginPage_file/login.html">Login</a></li>				          				          	          				          		          				          
 					</ul>
 				</nav><!-- #nav-menu-container -->		    		
 				</div>
@@ -290,7 +290,7 @@
 							</ul>
 						</div>
 					</div>
-					<!-- <div class="col-lg-6  col-md-12">
+					<div class="col-lg-6  col-md-12">
 						<div class="single-footer-widget newsletter">
 							<h6>Newsletter</h6>
 							<p>You can trust us. we only send promo offers, not a single spam.</p>
@@ -303,9 +303,9 @@
 											<div style="position: absolute; left: -5000px;">
 												<input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
 											</div>
-										</div>  -->
+										</div> 
 									
-										<!-- <div class="col-lg-4 col-md-12">
+										<div class="col-lg-4 col-md-12">
 											<button class="nw-btn primary-btn">Subscribe<span class="lnr lnr-arrow-right"></span></button>
 										</div> 
 									</div>		
@@ -327,8 +327,8 @@
 								<li><img src="img/i7.jpg" alt=""></li>
 								<li><img src="img/i8.jpg" alt=""></li>
 							</ul>
-						</div> 
-					</div>	-->					
+						</div>
+					</div>						
 				</div>
 
 				<div class="row footer-bottom d-flex justify-content-between">
@@ -394,6 +394,134 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 				}
 			}
 		</script>
+		<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+			import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+			import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+
+
+			const firebaseConfig = {
+				apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
+				authDomain: "wad2-505be.firebaseapp.com",
+				databaseURL: "https://wad2-505be-default-rtdb.asia-southeast1.firebasedatabase.app",
+				projectId: "wad2-505be",
+				storageBucket: "wad2-505be.firebasestorage.app",
+				messagingSenderId: "221863917439",
+				appId: "1:221863917439:web:2a517ca11c83e991388c4a",
+				measurementId: "G-L69GG585GF"
+			};
+
+			const app = initializeApp(firebaseConfig);
+			const db = getFirestore(app);
+			const auth = getAuth(app);
+
+			const eventList = document.getElementById("event-list");
+			let currentUser = null;
+			let currentUserRole = "user"; // default
+			// let currentUserRole = "user"; // IF ADMIN
+
+			async function loadEvents() {
+				eventList.innerHTML = ""; // clear static content
+				const snapshot = await getDocs(collection(db, "events"));
+				if (snapshot.empty) {
+				eventList.innerHTML = `<p class="text-center">No events available yet.</p>`;
+				return;
+				}
+
+				snapshot.forEach(docSnap => {
+					const event = docSnap.data();
+					const eventId = docSnap.id;
+
+					let adminControls = "";
+					let joinButton = "";
+
+					if (currentUser) {
+						// Guest users won't see these buttons
+						const isCreator = event.creatorId === currentUser.uid;
+						const isAdmin = currentUser.uid === "YOUR_SYSTEM_ADMIN_UID";
+
+						if (isCreator || isAdmin) {
+						adminControls = `
+							<div class="mt-2">
+							<button class="btn btn-sm btn-warning me-1" onclick="editEvent('${eventId}')">Edit</button>
+							<button class="btn btn-sm btn-danger" onclick="deleteEvent('${eventId}', '${event.name}')">Delete</button>
+							</div>
+						`;
+						}
+
+						if (!isCreator) {
+								joinButton = `<button class="btn btn-primary mt-2" onclick="joinEvent('${eventId}', '${event.name}', ${event.rewardPoints})">Join Event</button>`;
+							}
+						}
+					else {
+						joinButton = `<p class="text-muted mt-2">Log in to join this event</p>`;
+					}
+
+					const eventHTML = `
+						<div class="single-post job-listing d-flex flex-row mb-3">
+						<div class="thumb">
+							<img src="img/post.png" alt="">
+						</div>
+						<div class="post-content d-flex flex-column w-100">
+							<div class="details">
+							<div class="title">
+								<a href="#"><h4>${event.name}</h4></a>
+								<h6>${event.location}</h6>
+							</div>
+							<p>${event.description || "No description provided."}</p>
+							<h5>Manpower Needed: ${event.manpower}</h5>
+							<p class="address"><span class="lnr lnr-map"></span> ${event.location}</p>
+							<p class="address"><span class="lnr lnr-database"></span> ${event.rewardPoints} points</p>
+							${joinButton}
+							${adminControls}
+							</div>
+						</div>
+						</div>
+					`;
+
+					eventList.insertAdjacentHTML("beforeend", eventHTML);
+				});
+
+			}
+
+			window.joinEvent = async (eventId, eventName, rewardPoints) => {
+				try {
+				await addDoc(collection(db, "participations"), {
+					userId : currentUser.uid,
+					eventId,
+					status: "pending",
+					rewardPoints,
+					joinedAt: serverTimestamp()
+				});
+				alert(`You have requested to join "${eventName}"!`);
+				} catch (err) {
+				console.error("Join error:", err);
+				alert("Failed to join event. Try again later.");
+				}
+			};
+
+			onAuthStateChanged(auth, async (user) => {
+				if (user) {
+					currentUser = user;
+					console.log(currentUser)
+					try {
+						const userDoc = await getDoc(doc(db, "users", user.uid));
+						if (userDoc.exists()) {
+							currentUserRole = userDoc.data().role || "user";
+						}
+					} catch (err) {
+						console.error("Error fetching user role:", err);
+						currentUserRole = "user"; // fallback
+					}
+				} else {
+					currentUser = null;
+					currentUserRole = "guest";
+				}
+				loadEvents();
+			});
+		</script>
+
 	</body>
 </html>
 
