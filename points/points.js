@@ -51,9 +51,7 @@ async function updatePoints(amount, operation) {
   }
   else if (operation === '-') {
     if (currentPoints - amount < 0) { //so points don't go below 0
-      await updateDoc(userRef, {
-        point: 0
-      })
+     alert('Not enough points.')
     }
     else {
       await updateDoc(userRef, {
@@ -62,6 +60,7 @@ async function updatePoints(amount, operation) {
     }
   }
 }
+
 
 
 
