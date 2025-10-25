@@ -19,7 +19,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
 
-export async function getPoints() {
+async function getPoints() {
   // get userUID from the browser localStorage, change 'userUID' if needed
   let userUID = localStorage.getItem("userUID");
   // get user document reference from firestore
@@ -35,7 +35,7 @@ export async function getPoints() {
 }
 
 // operation = '+' or '-'
-export async function updatePoints(amount, operation) {
+async function updatePoints(amount, operation) {
   // get userUID from the browser localStorage, change 'userUID' if needed
   let userUID = localStorage.getItem("userUID");
   // get user document reference from firestore
@@ -62,6 +62,7 @@ export async function updatePoints(amount, operation) {
     }
   }
 }
+
 
 
 
