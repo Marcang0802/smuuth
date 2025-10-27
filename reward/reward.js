@@ -56,17 +56,27 @@ export async function getAllRewards() {
 
 
 export async function redeemReward(rewardID) {
-  let userUID = localStorage.getItem('userUID');
+  // let userUID = localStorage.getItem('userUID');
+  let userUID = '70WYaKM6EiOJzqFisKsG0qerZ913'
   const rewardRef = doc(db, 'rewards', rewardID);
   const reward = await getDoc(rewardRef);
   let redeemedUsers = reward.data().redeemedUser;
   if (redeemedUsers.length < (reward.data().redeemLimit)) {
-    if (updatePoints(reward.data().pointAmount, "-")) {
+    for(let user of redeemedUsers){ //check if already redeemed
+      if(userUID === user){
+        console.log("Already redeemed")
+        return
+      }
+    }
+    if (updatePoints(reward.data().pointAmount, "-") == true) {
       redeemedUsers.push(userUID)
       console.log(redeemedUsers)
       await updateDoc(rewardRef, {
         redeemedUser: redeemedUsers
       });
+    }
+    else{
+      return
     }
   }
   else {
