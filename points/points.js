@@ -19,8 +19,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
 
-export async function getPoints() {
+async function getPoints() {
   // get userUID from the browser localStorage, change 'userUID' if needed
+  // console.log("in")
   let userUID = localStorage.getItem("userUID");
   // get user document reference from firestore
   const userRef = doc(db, "users", userUID);
@@ -35,7 +36,7 @@ export async function getPoints() {
 }
 
 // operation = '+' or '-'
-export async function updatePoints(amount, operation) {
+async function updatePoints(amount, operation) {
   // get userUID from the browser localStorage, change 'userUID' if needed
   let userUID = localStorage.getItem("userUID");
   // get user document reference from firestore
@@ -48,21 +49,22 @@ export async function updatePoints(amount, operation) {
     await updateDoc(userRef, {
       point: currentPoints + amount
     });
+    return true
   }
   else if (operation === '-') {
     if (currentPoints - amount < 0) { //so points don't go below 0
-     alert('Not enough points.')
+      alert('Not enough points.')
+      console.log('Not enough points.')
+      return false
     }
     else {
       await updateDoc(userRef, {
         point: currentPoints - amount
       });
+      return true
     }
   }
 }
-
-
-
 
 
 
