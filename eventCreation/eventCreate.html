@@ -143,47 +143,48 @@
 
       let user = null;
 
-      onAuthStateChanged(auth, (u) => {
-        if (u) {
-          console.log(u)
-          user = u;
-        } else {
-          alert("You must be logged in to create events!");
-          window.location.href = "../loginPage_file/login.html";
-        }
-      });
+    onAuthStateChanged(auth, (u) => {
+      if (u) {
+        user = u;
 
-      const form = document.getElementById("eventForm");
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if (!user) return;
+        const form = document.getElementById("eventForm");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
 
-        const data = {
-          name: document.getElementById("eventName").value.trim(),
-          location: document.getElementById("eventLocation").value.trim(),
-          description: document.getElementById("eventDescription").value.trim(),
-          manpower: parseInt(document.getElementById("manpower").value),
-          qualifications: document.getElementById("qualifications").value.trim(),
-          startDatetime: document.getElementById("startDatetime").value,
-          endDatetime: document.getElementById("endDatetime").value,
-          rewardPoints: parseInt(document.getElementById("rewardPoints").value),
-          creatorId: user.uid,
-          creatorEmail: user.email,
-          createdAt: serverTimestamp(),
-          pending: [],
-          helpers: [],
-          rejected: []
-        };
+          const data = {
+            name: document.getElementById("eventName").value.trim(),
+            location: document.getElementById("eventLocation").value.trim(),
+            description: document.getElementById("eventDescription").value.trim(),
+            manpower: parseInt(document.getElementById("manpower").value),
+            qualifications: document.getElementById("qualifications").value.trim(),
+            startDatetime: document.getElementById("startDatetime").value,
+            endDatetime: document.getElementById("endDatetime").value,
+            rewardPoints: parseInt(document.getElementById("rewardPoints").value),
+            creatorId: user.uid,
+            creatorEmail: user.email,
+            createdAt: serverTimestamp(),
+            pending: [],
+            helpers: [],
+            rejected: []
+          };
 
-        try {
-          await addDoc(collection(db, "events"), data);
-          alert("Event successfully created!");
-          form.reset();
-        } catch (error) {
-          console.error("Error creating event:", error);
-          alert("Failed to create event. Check console for details.");
-        }
-      });
+          try {
+            await addDoc(collection(db, "events"), data);
+            window.location.href = "../homePage/events.html";
+          } catch (error) {
+            console.error("Error creating event:", error);
+            alert("Failed to create event. Check console for details.");
+          }
+        });
+
+      } else {
+        alert("You must be logged in to create events!");
+        window.location.href = "../loginPage_file/login.html";
+      }
+    });
+
+
+      
     </script>
   </body>
   </html>
