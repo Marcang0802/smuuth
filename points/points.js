@@ -19,7 +19,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
 
-async function getPoints() {
+export async function getPoints() {
   // get userUID from the browser localStorage, change 'userUID' if needed
   // console.log("in")
   let userUID = localStorage.getItem("userUID");
@@ -29,25 +29,25 @@ async function getPoints() {
   const userData = await getDoc(userRef);
 
   if (userData.exists()) {
-    return userData.data().point;
+    return userData.data().points;
   } else {
     console.log("User does not exist.");
   }
 }
 
 // operation = '+' or '-'
-async function updatePoints(amount, operation) {
+export async function updatePoints(amount, operation) {
   // get userUID from the browser localStorage, change 'userUID' if needed
   let userUID = localStorage.getItem("userUID");
   // get user document reference from firestore
   const userRef = doc(db, "users", userUID);
   const userData = await getDoc(userRef);
   // get current points
-  let currentPoints = userData.data().point
+  let currentPoints = userData.data().points
   
   if (operation === '+') {
     await updateDoc(userRef, {
-      point: currentPoints + amount
+      points: currentPoints + amount
     });
     return true
   }
@@ -59,7 +59,7 @@ async function updatePoints(amount, operation) {
     }
     else {
       await updateDoc(userRef, {
-        point: currentPoints - amount
+        points: currentPoints - amount
       });
       return true
     }
