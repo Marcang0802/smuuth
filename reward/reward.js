@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, updateDoc, getDoc, deleteDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
-
+import { updatePoints } from './points.js'
 
 const firebaseConfig = {
   apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
@@ -45,7 +45,8 @@ export async function getAllRewards() {
   const rewardRef = collection(db, "rewards");
   const querySnapshot = await getDocs(rewardRef);
   querySnapshot.forEach((doc) => {
-    let reward = {id: doc.id,
+    let reward = {
+      id: doc.id,
       data: doc.data()
     }
     rewardsArray.push(reward)
@@ -60,11 +61,13 @@ export async function redeemReward(rewardID) {
   const reward = await getDoc(rewardRef);
   let redeemedUsers = reward.data().redeemedUser;
   if (redeemedUsers.length < (reward.data().redeemLimit)) {
-    redeemedUsers.push(userUID)
-    console.log(redeemedUsers)
-    await updateDoc(rewardRef, {
-      redeemedUser: redeemedUsers
-    });
+    if (updatePoints(reward.data().pointAmount, "-")) {
+      redeemedUsers.push(userUID)
+      console.log(redeemedUsers)
+      await updateDoc(rewardRef, {
+        redeemedUser: redeemedUsers
+      });
+    }
   }
   else {
     alert('Sorry, no more rewards of this type!')
