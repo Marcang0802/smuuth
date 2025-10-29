@@ -26,7 +26,7 @@ googleLogin.addEventListener("click", function () {
             // The signed-in user info.
             const user = result.user;
             localStorage.setItem("userUID", user.uid); // Store user UID
-            window.location.href = "../homePage/index.html";
+            window.location.href = "profile.html";
             // IdP data available using getAdditionalUserInfo(result)
             // ...
         }).catch((error) => {
