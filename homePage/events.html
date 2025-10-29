@@ -452,7 +452,7 @@
         window.joinEvent = async (eventId, eventName, rewardPoints) => {
             try {
                 // await addDoc(collection(db, "participations"), {
-                //     userId: currentUser.uid,
+                let     userId = currentUser.uid
                 //     eventId,
                 //     status: "pending",
                 //     rewardPoints,
@@ -463,10 +463,15 @@
                 const eventData = await getDoc(eventRef);
 
                 let newPending = eventData.data().pending;
-                newPending.push("111");
-                await updateDoc(eventRef, {
-                    pending: newPending
-                });
+                if(newPending.includes(userId)){
+                    alert("You already requested to join the event !")
+                }else{
+                    newPending.push(userId);
+                    await updateDoc(eventRef, {
+                        pending: newPending
+                    });
+
+                }
 
             } catch (err) {
                 console.error("Join error:", err);
