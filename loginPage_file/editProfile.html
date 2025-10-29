@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile | SMU Event Helpers</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background: linear-gradient(135deg, #d6e4ff, #f8f9fa); min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: "Poppins", sans-serif; }
+    .card { max-width: 500px; border-radius: 20px; box-shadow: 0 6px 25px rgba(0,0,0,0.1); background-color: #fff; }
+    .card-header { background: #004aad; color: #fff; text-align: center; padding: 1.5rem; }
+    .form-label { font-weight: 500; color: #333; }
+    .btn { border-radius: 50px; font-weight: 600; margin: 6px 0; }
+    #otherSkillBox { display: none; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <h2 class="mb-0">Edit Profile</h2>
+    </div>
+    <div class="card-body p-4">
+      <form id="editProfileForm">
+        <div class="mb-3">
+          <label for="fullname" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="fullname" name="fullname" required readonly />
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone Number</label>
+          <input type="tel" class="form-control" id="phone" name="phone" required pattern="[0-9]{8,15}" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Skills</label>
+          <div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="skill1" name="skills" value="First Aid" />
+              <label class="form-check-label" for="skill1">First Aid</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="skill2" name="skills" value="Crowd Control" />
+              <label class="form-check-label" for="skill2">Crowd Control</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="skill3" name="skills" value="Photography" />
+              <label class="form-check-label" for="skill3">Photography</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="skill4" name="skills" value="Logistics" />
+              <label class="form-check-label" for="skill4">Logistics</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="skillOther" name="skills" value="Others" />
+              <label class="form-check-label" for="skillOther">Others</label>
+            </div>
+            <div id="otherSkillBox">
+              <input type="text" class="form-control mt-2" id="otherSkill" name="otherSkill" placeholder="Please specify your skill" />
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success w-100 py-2 mt-2">Save Changes</button>
+      </form>
+      <button class="btn btn-secondary w-100" id="backBtn">Back</button>
+    </div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
+      authDomain: "wad2-505be.firebaseapp.com",
+      databaseURL: "https://wad2-505be-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "wad2-505be",
+      storageBucket: "wad2-505be.firebasestorage.app",
+      messagingSenderId: "221863917439",
+      appId: "1:221863917439:web:2a517ca11c83e991388c4a",
+      measurementId: "G-L69GG585GF"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Show/hide "Other Skill" textbox
+    document.getElementById("skillOther").addEventListener("change", function() {
+      document.getElementById("otherSkillBox").style.display =
+        this.checked ? "block" : "none";
+    });
+
+    let docId = null;
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("You must be logged in to edit your profile!");
+        window.location.href = "../loginPage_file/login.html";
+        return;
+      }
+      // Query the profile based on current user's UID
+      const profilesRef = collection(db, "profiles");
+      const q = query(profilesRef, where("userId", "==", user.uid));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        alert("Profile not found. Please create your profile.");
+        window.location.href = "../profilePage/profile.html";
+        return;
+      }
+      const profileDoc = snap.docs[0];
+      const docData = profileDoc.data();
+      docId = profileDoc.id;
+
+      // Fill form fields
+      document.getElementById("fullname").value = docData.fullname || "";
+      document.getElementById("phone").value = docData.phone || "";
+      // Check skills checkboxes
+      if (Array.isArray(docData.skills)) {
+        docData.skills.forEach(skill => {
+          if (["First Aid","Crowd Control","Photography","Logistics"].includes(skill)) {
+            document.querySelector(`input[value="${skill}"]`).checked = true;
+          } else {
+            document.getElementById("skillOther").checked = true;
+            document.getElementById("otherSkillBox").style.display = "block";
+            document.getElementById("otherSkill").value = skill;
+          }
+        });
+      }
+    });
+
+    document.getElementById("editProfileForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const selectedSkills = [];
+      document.querySelectorAll('input[name="skills"]:checked').forEach((cb) => {
+        if (cb.value === "Others") {
+          const otherSkill = document.getElementById("otherSkill").value.trim();
+          if (otherSkill) selectedSkills.push(otherSkill);
+        } else {
+          selectedSkills.push(cb.value);
+        }
+      });
+
+      // Update Firestore document
+      try {
+        await updateDoc(doc(db, "profiles", docId), {
+          fullname: document.getElementById("fullname").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          skills: selectedSkills
+        });
+        alert("Profile updated!");
+        window.location.href = "../profilePage/viewProfile.html";
+      } catch (err) {
+        console.error("Error updating profile:", err);
+        alert("Failed to update profile. Please try again.");
+      }
+    });
+
+    document.getElementById("backBtn").onclick = () => {
+      window.location.href = "../profilePage/viewProfile.html";
+    };
+  </script>
+</body>
+</html>
