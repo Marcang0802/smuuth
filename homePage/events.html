@@ -497,6 +497,10 @@
             window.location.href = `../eventCreation/eventEdit.html?eventId=${eventId}`;
         };
 
+         window.viewapplicants = (eventId) => {
+            window.location.href = `../eventCreation/reviewApplicants.html?eventId=${eventId}`;
+        };
+
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             loadEvents();
