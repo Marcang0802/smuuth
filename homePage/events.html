@@ -467,6 +467,7 @@
                     alert("You already requested to join the event !")
                 }else{
                     newPending.push(userId);
+                    alert("You have successfully requested to join the event!")
                     await updateDoc(eventRef, {
                         pending: newPending
                     });
