@@ -93,7 +93,7 @@ onAuthStateChanged(auth, async (u) => {
         const userRef = doc(db,'users',applicant)
         const userData = await getDoc(userRef)
         if(userData.exists()){
-            let applicant = userData.data().name
+            let applicant = userData.data().email
         }
         li.innerText = applicant
         ol.appendChild(li)
