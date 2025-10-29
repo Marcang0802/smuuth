@@ -356,24 +356,26 @@
 						<div class="single-footer-widget newsletter">
 							<h6>Newsletter</h6>
 							<p>You can trust us. we only send promo offers, not a single spam.</p>
-							<div id="mc_embed_signup">
-								<form target="_blank" novalidate="true" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01" method="get" class="form-inline">
 
-									<div class="form-group row" style="width: 100%">
-										<div class="col-lg-8 col-md-12">
-											<input name="EMAIL" placeholder="Enter Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Email '" required="" type="email">
-											<div style="position: absolute; left: -5000px;">
-												<input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
-											</div>
-										</div> 
-									
-										<div class="col-lg-4 col-md-12">
-											<button class="nw-btn primary-btn">Subscribe<span class="lnr lnr-arrow-right"></span></button>
-										</div> 
-									</div>		
-									<div class="info"></div>
-								</form>
-							</div>		
+							<form id="subscribeForm" class="form-inline" novalidate>
+								<div class="form-group row" style="width: 100%">
+								<div class="col-lg-8 col-md-12">
+									<input id="emailInput"
+										type="email"
+										placeholder="Enter Email"
+										onfocus="this.placeholder=''"
+										onblur="this.placeholder='Enter Email'"
+										required>
+								</div>
+								<div class="col-lg-4 col-md-12">
+									<button id="subscribeBtn" type="submit" class="nw-btn primary-btn">
+									Subscribe<span class="lnr lnr-arrow-right"></span>
+									</button>
+								</div>
+								</div>
+								<div id="subscribeMessage" class="info mt-2"></div>
+							</form>
+							</div>	
 						</div>
 					</div>
 					<div class="col-lg-3  col-md-12">
@@ -412,68 +414,73 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 		<script src="js/vendor/jquery-2.2.4.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<script src="js/vendor/bootstrap.min.js"></script>			
+		<script src="js/vendor/bootstrap.min.js"></script>
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
-		<script src="js/easing.min.js"></script>			
+		<script src="js/easing.min.js"></script>
 		<script src="js/hoverIntent.js"></script>
-		<script src="js/superfish.min.js"></script>	
-		<script src="js/jquery.ajaxchimp.min.js"></script>
-		<script src="js/jquery.magnific-popup.min.js"></script>	
-		<script src="js/owl.carousel.min.js"></script>			
+		<script src="js/superfish.min.js"></script>
+		<!-- REMOVED: <script src="js/jquery.ajaxchimp.min.js"></script> -->
+		<script src="js/jquery.magnific-popup.min.js"></script>
+		<script src="js/owl.carousel.min.js"></script>
 		<script src="js/jquery.sticky.js"></script>
-		<script src="js/jquery.nice-select.min.js"></script>			
-		<script src="js/parallax.min.js"></script>		
-		<script src="js/mail-script.js"></script>	
-		<script src="js/main.js"></script>	
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+		<script src="js/jquery.nice-select.min.js"></script>
+		<script src="js/parallax.min.js"></script>
+		<!-- If mail-script.js had Mailchimp code, remove the file or strip those lines -->
+		<!-- REMOVED (if Mailchimp inside): <script src="js/mail-script.js"></script> -->
+		<script src="js/main.js"></script>
 
-		<script type="text/javascript">
-		(function() {
-			emailjs.init('VKk3x4Hb19VUPRuAh'); 
-		})();
-		</script>
+		<!-- EmailJS v4 (include ONCE) -->
+		<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 		<script>
-  
-				document.getElementById('subscribeForm').addEventListener('submit', function(event) {
-					event.preventDefault();
-					
-					const emailInput = document.getElementById('emailInput');
-					const subscribeBtn = document.getElementById('subscribeBtn');
-					const messageDiv = document.getElementById('subscribeMessage');
-					const email = emailInput.value.trim();
-					if (!email || !isValidEmail(email)) {
-					messageDiv.innerHTML = '<p style="color: red; margin-top: 10px;">Please enter a valid email</p>';
-					return;
-					}
-					subscribeBtn.disabled = true;
-					subscribeBtn.innerHTML = 'Subscribing...';
-					messageDiv.innerHTML = '';
-					emailjs.send('service_qxa591g', 'template_4ql5kl9', {
-					to_email: email,
-					to_name: email.split('@')[0],
-					from_name: 'SMUUTH',
-					message: 'Thank you for subscribing to SMUUTH!'
-					})
-					.then(function(response) {
-					console.log('Success:', response);
-					messageDiv.innerHTML = '<p style="color: green; margin-top: 10px; font-weight: bold;">✓ Success! Check your email for confirmation.</p>';
-					emailInput.value = '';
-					emailInput.placeholder = 'Enter Email';
-					subscribeBtn.disabled = false;
-					subscribeBtn.innerHTML = 'Subscribe<span class="lnr lnr-arrow-right"></span>';
-					
-					}, function(error) {
-					console.error('Error:', error);
-					messageDiv.innerHTML = '<p style="color: red; margin-top: 10px;">✗ Failed to subscribe. Please try again.</p>';
-					subscribeBtn.disabled = false;
-					subscribeBtn.innerHTML = 'Subscribe<span class="lnr lnr-arrow-right"></span>';
-					});
-				});
-				function isValidEmail(email) {
-					const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-					return regex.test(email);
-				}
-				</script>
+		document.addEventListener('DOMContentLoaded', () => {
+			emailjs.init({ publicKey: 'VKk3x4Hb19VUPRuAh' });
+
+			const form = document.getElementById('subscribeForm');
+			const emailInput = document.getElementById('emailInput');
+			const subscribeBtn = document.getElementById('subscribeBtn');
+			const messageDiv = document.getElementById('subscribeMessage');
+
+			if (!form || !emailInput || !subscribeBtn || !messageDiv) {
+			console.error('Subscribe form elements not found. Check IDs.');
+			return;
+			}
+
+			form.addEventListener('submit', (event) => {
+			event.preventDefault();
+
+			const email = emailInput.value.trim();
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+				messageDiv.innerHTML = '<p style="color:red;margin-top:10px;">Please enter a valid email</p>';
+				return;
+			}
+
+			subscribeBtn.disabled = true;
+			subscribeBtn.textContent = 'Subscribing...';
+			messageDiv.innerHTML = '';
+
+			emailjs.send('service_qxa591g', 'template_4ql5kl9', {
+				to_email: email,
+				to_name: email.split('@')[0],
+				from_name: 'SMUUTH',
+				message: 'Thank you for subscribing to SMUUTH!'
+			})
+			.then(() => {
+				messageDiv.innerHTML = '<p style="color:green;margin-top:100px;font-weight:bold;">✓ Success! Check your email for confirmation.</p>';
+				emailInput.value = '';
+				emailInput.placeholder = 'Enter Email';
+			})
+			.catch((error) => {
+				console.error('EmailJS error:', error);
+				messageDiv.innerHTML = '<p style="color:red;margin-top:10px;">✗ Failed to subscribe. Please try again.</p>';
+			})
+			.finally(() => {
+				subscribeBtn.disabled = false;
+				subscribeBtn.innerHTML = 'Subscribe<span class="lnr lnr-arrow-right"></span>';
+			});
+			});
+		});
+		</script>
 	</body>
 </html>
 
