@@ -400,10 +400,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 					</p>
 					<div class="col-lg-4 col-sm-12 footer-social">
-						<a href="#"><i class="fa fa-facebook"></i></a>
-						<a href="#"><i class="fa fa-twitter"></i></a>
-						<a href="#"><i class="fa fa-dribbble"></i></a>
-						<a href="#"><i class="fa fa-behance"></i></a>
+						<a href="https://www.facebook.com/staysmuth/"><i class="fa fa-facebook"></i></a>
+						<a href="https://x.com/Smuuth1"><i class="fa fa-twitter"></i></a>
+						
+						
 					</div>
 				</div>
 			</div>
@@ -425,6 +425,55 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		<script src="js/parallax.min.js"></script>		
 		<script src="js/mail-script.js"></script>	
 		<script src="js/main.js"></script>	
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+		<script type="text/javascript">
+		(function() {
+			emailjs.init('VKk3x4Hb19VUPRuAh'); 
+		})();
+		</script>
+		<script>
+  
+				document.getElementById('subscribeForm').addEventListener('submit', function(event) {
+					event.preventDefault();
+					
+					const emailInput = document.getElementById('emailInput');
+					const subscribeBtn = document.getElementById('subscribeBtn');
+					const messageDiv = document.getElementById('subscribeMessage');
+					const email = emailInput.value.trim();
+					if (!email || !isValidEmail(email)) {
+					messageDiv.innerHTML = '<p style="color: red; margin-top: 10px;">Please enter a valid email</p>';
+					return;
+					}
+					subscribeBtn.disabled = true;
+					subscribeBtn.innerHTML = 'Subscribing...';
+					messageDiv.innerHTML = '';
+					emailjs.send('service_qxa591g', 'template_4ql5kl9', {
+					to_email: email,
+					to_name: email.split('@')[0],
+					from_name: 'SMUUTH',
+					message: 'Thank you for subscribing to SMUUTH!'
+					})
+					.then(function(response) {
+					console.log('Success:', response);
+					messageDiv.innerHTML = '<p style="color: green; margin-top: 10px; font-weight: bold;">✓ Success! Check your email for confirmation.</p>';
+					emailInput.value = '';
+					emailInput.placeholder = 'Enter Email';
+					subscribeBtn.disabled = false;
+					subscribeBtn.innerHTML = 'Subscribe<span class="lnr lnr-arrow-right"></span>';
+					
+					}, function(error) {
+					console.error('Error:', error);
+					messageDiv.innerHTML = '<p style="color: red; margin-top: 10px;">✗ Failed to subscribe. Please try again.</p>';
+					subscribeBtn.disabled = false;
+					subscribeBtn.innerHTML = 'Subscribe<span class="lnr lnr-arrow-right"></span>';
+					});
+				});
+				function isValidEmail(email) {
+					const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+					return regex.test(email);
+				}
+				</script>
 	</body>
 </html>
 
