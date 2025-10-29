@@ -4244,6 +4244,12 @@ body.mobile-nav-active #mobile-nav-toggle {
 .eventImg{
   margin-top: 30px;
 }
+
+.profile-icon-btn i {
+  font-size: 25px;  /* adjust to your liking */
+  color: #fff;       /* so you can see it clearly */
+  line-height: 1;    /* ensures icon stays centered vertically */
+}
 /*
 ################
                End Blog Details  Page style
