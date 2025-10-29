@@ -37,7 +37,6 @@ async function createUserDocument(userId, email) {
       createdAt: new Date(),
       points: 0,
       certifications: [],
-      events: [],
     });
   } catch (error) {
     console.error("Error creating user document:", error);
