@@ -90,10 +90,10 @@ onAuthStateChanged(auth, async (u) => {
     let ol = document.createElement('ol')
     for(let applicant of applicants){
         let li = document.createElement('li')
-        const userRef = doc(db,'users',applicant)
+        const userRef = doc(db,'profiles',applicant)
         const userData = await getDoc(userRef)
         if(userData.exists()){
-            let applicant = userData.data().email
+            let applicant = userData.data().fullname
         }
         li.innerText = applicant
         ol.appendChild(li)

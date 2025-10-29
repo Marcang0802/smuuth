@@ -375,7 +375,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, serverTimestamp , doc, getDoc, updateDoc} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, serverTimestamp , doc, getDoc, updateDoc, query, where} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         
 
@@ -414,7 +414,7 @@
                 if (currentUser) {
                     const isCreator = event.creatorId === currentUser.uid;
                     const isAdmin = currentUser.uid === "YOUR_SYSTEM_ADMIN_UID";
-
+            
                     if (isCreator || isAdmin) {
                         adminControls = `
                         <div class="mt-2">
@@ -453,13 +453,16 @@
         window.joinEvent = async (eventId, eventName, rewardPoints) => {
             try {
                 // await addDoc(collection(db, "participations"), {
-                let     userId = currentUser.uid
-                //     eventId,
-                //     status: "pending",
-                //     rewardPoints,
-                //     joinedAt: serverTimestamp()
-                // });
-                // alert(`You have requested to join "${eventName}"!`);
+                let userId = currentUser.uid
+                const profileRef = collection(db, "profiles")
+                const q = query(profileRef, where("userId", "==", userId))
+                const querySnapshot = await getDocs(q)
+                querySnapshot.forEach((doc) => {
+                    console.log(`${doc.id} =>`, doc.data())
+                })
+                
+    
+              
                 const eventRef = await doc(db, "events", eventId);
                 const eventData = await getDoc(eventRef);
 
@@ -503,9 +506,10 @@
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
+       
             loadEvents();
         });
-
+       
     </script>
 </body>
 
