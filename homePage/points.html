@@ -60,7 +60,7 @@
 				<div class="container">
 					<div class="row d-flex align-items-center justify-content-center">
 						<div class="about-content col-lg-12">
-							<h1 class="text-white">
+							<h1 class="text-white" id="points">
 								Blog Posts				
 							</h1>	
 							<p class="text-white link-nav"><a href="index.html">Home </a>  <span class="lnr lnr-arrow-right"></span>  <a href="blog-home.html"> Blog Posts</a></p>
@@ -449,5 +449,13 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			<script src="js/parallax.min.js"></script>		
 			<script src="js/mail-script.js"></script>	
 			<script src="js/main.js"></script>	
+			<script type="module">
+				import { getPoints } from '../points/points.js'
+				let h1 = document.getElementById("points")
+				let points = await getPoints()
+				if(points != null){
+				h1.innerText = "Your Points: " + points
+				}
+			</script>
 		</body>
 	</html>
