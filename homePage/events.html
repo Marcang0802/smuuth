@@ -222,8 +222,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, serverTimestamp , doc, getDoc, updateDoc} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        
 
         const firebaseConfig = {
             apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
@@ -297,14 +298,23 @@
 
         window.joinEvent = async (eventId, eventName, rewardPoints) => {
             try {
-                await addDoc(collection(db, "participations"), {
-                    userId: currentUser.uid,
-                    eventId,
-                    status: "pending",
-                    rewardPoints,
-                    joinedAt: serverTimestamp()
+                // await addDoc(collection(db, "participations"), {
+                //     userId: currentUser.uid,
+                //     eventId,
+                //     status: "pending",
+                //     rewardPoints,
+                //     joinedAt: serverTimestamp()
+                // });
+                // alert(`You have requested to join "${eventName}"!`);
+                const eventRef = await doc(db, "events", eventId);
+                const eventData = await getDoc(eventRef);
+
+                let newPending = eventData.data().pending;
+                newPending.push("111");
+                await updateDoc(eventRef, {
+                    pending: newPending
                 });
-                alert(`You have requested to join "${eventName}"!`);
+
             } catch (err) {
                 console.error("Join error:", err);
                 alert("Failed to join event.");
