@@ -74,7 +74,7 @@ login.addEventListener("click", function (event) {
         .then((userCredential) => {
             const user = userCredential.user;
             localStorage.setItem("userUID", user.uid); // Store user UID
-            window.location.href = "../homePage/index.html";
+            window.location.replace("profile.html");
         })
         .catch((error) => {
             const errorCode = error.code;
