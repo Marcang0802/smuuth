@@ -99,7 +99,7 @@
       const snap = await getDocs(q);
       if (snap.empty) {
         alert("Profile not found. Please create your profile.");
-        window.location.href = "../profilePage/profile.html";
+        window.location.href = "../loginPage_file/profile.html";
         return;
       }
       const profileDoc = snap.docs[0];
@@ -143,7 +143,7 @@
           skills: selectedSkills
         });
         alert("Profile updated!");
-        window.location.href = "../profilePage/viewProfile.html";
+        window.location.href = "../loginPage_file/viewProfile.html";
       } catch (err) {
         console.error("Error updating profile:", err);
         alert("Failed to update profile. Please try again.");

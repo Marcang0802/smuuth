@@ -64,7 +64,7 @@
       <h2 class="mb-0">Your Profile</h2>
     </div>
     <div class="card-body p-4 text-center">
-      <img id="profilePic" src="../profilePage/default-avatar.png" alt="Profile Picture" class="profile-pic mb-3" />
+      <img id="profilePic" src="../loginPage_file/default-avatar.png" alt="Profile Picture" class="profile-pic mb-3" />
       <div class="info-header">Name:</div>
       <div id="userName" class="info-value mb-2"></div>
       <div class="info-header">Phone Number:</div>
@@ -107,7 +107,7 @@
 
       if (snap.empty) {
         alert("Profile not found. Please create your profile.");
-        window.location.href = "../profilePage/profile.html";
+        window.location.href = "../loginPage_file/profile.html";
         return;
       }
       // Support only single profile per account for this example
