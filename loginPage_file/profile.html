@@ -32,6 +32,19 @@
           <input type="tel" class="form-control" id="phone" name="phone" required pattern="[0-9]{8,15}" placeholder="E.g. 91234567" />
         </div>
         <div class="mb-3">
+          <label class="form-label">Role</label>
+          <div>
+            <div class="form-check form-check-inline">
+              <input type="radio" class="form-check-input" id="roleHelper" name="role" value="helper" required />
+              <label class="form-check-label" for="roleHelper">Helper</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input type="radio" class="form-check-input" id="roleAdmin" name="role" value="club admin" required />
+              <label class="form-check-label" for="roleAdmin">Club Admin</label>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
           <label class="form-label">Skills</label>
           <div>
             <div class="form-check">
@@ -112,9 +125,14 @@
           }
         });
 
+        // Get selected role
+        const roleRadio = document.querySelector('input[name="role"]:checked');
+        const selectedRole = roleRadio ? roleRadio.value : "";
+
         const data = {
           fullname: document.getElementById("fullname").value.trim(),
           phone: document.getElementById("phone").value.trim(),
+          role: selectedRole,
           skills: selectedSkills,
           userId: user.uid,
           email: user.email,
@@ -134,4 +152,3 @@
   </script>
 </body>
 </html>
-
