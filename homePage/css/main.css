@@ -1983,7 +1983,7 @@ h6 {
 }
 
 @media (max-width: 960px) {
-  .ticker-btn {
+  .ticker-btn headbar{
     display: none !important;
   }
 }
