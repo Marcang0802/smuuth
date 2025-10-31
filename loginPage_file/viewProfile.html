@@ -69,6 +69,8 @@
       <div id="userName" class="info-value mb-2"></div>
       <div class="info-header">Phone Number:</div>
       <div id="userPhone" class="info-value mb-2"></div>
+      <div class="info-header">Role:</div>
+      <div id="userRole" class="info-value mb-2"></div>
       <div class="info-header">Qualifications/Skills:</div>
       <div id="userSkills" class="info-value mb-3"></div>
       <button class="btn btn-primary w-75" id="editBtn">Edit Profile</button>
@@ -114,6 +116,7 @@
       const doc = snap.docs[0].data();
       document.getElementById("userName").textContent = doc.fullname || "";
       document.getElementById("userPhone").textContent = doc.phone || "";
+      document.getElementById("userRole").textContent = doc.role || "";
       document.getElementById("userSkills").textContent = Array.isArray(doc.skills) ? doc.skills.join(", ") : doc.skills || "";
 
       // Optionally use doc.photoUrl if you allow uploading profile pictures

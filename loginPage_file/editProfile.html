@@ -29,6 +29,10 @@
           <input type="tel" class="form-control" id="phone" name="phone" required pattern="[0-9]{8,15}" />
         </div>
         <div class="mb-3">
+          <label class="form-label">Role</label>
+          <input type="text" id="role" class="form-control" readonly />
+        </div>
+        <div class="mb-3">
           <label class="form-label">Skills</label>
           <div>
             <div class="form-check">
@@ -109,6 +113,7 @@
       // Fill form fields
       document.getElementById("fullname").value = docData.fullname || "";
       document.getElementById("phone").value = docData.phone || "";
+      document.getElementById("role").value = docData.role || "";
       // Check skills checkboxes
       if (Array.isArray(docData.skills)) {
         docData.skills.forEach(skill => {
@@ -135,7 +140,7 @@
         }
       });
 
-      // Update Firestore document
+      // Update Firestore document without changing role
       try {
         await updateDoc(doc(db, "profiles", docId), {
           fullname: document.getElementById("fullname").value.trim(),
