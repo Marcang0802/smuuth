@@ -60,7 +60,8 @@
         background-position: center;    
         background-repeat: no-repeat; }
     .card { max-width: 450px; border-radius: 20px; box-shadow: 0 6px 25px rgba(0,0,0,0.1); background-color: #fff; overflow: hidden; }
-    .card-header { background: #004aad; color: #fff; text-align: center; padding: 1.5rem; }
+    
+    #profile{color: white; text-align: center; padding: 1.5rem;}
     .profile-pic { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #faf9ff; background: #e7e7f7; margin: auto; display: block; }
     .info-header { font-weight: 600; font-size: 1.1rem; color: #333; margin-top: 15px; }
     .info-value { font-size: 1rem; color: #555; }
@@ -69,9 +70,7 @@
 </head>
 <body>
   <div class="card">
-    <div class="card-header">
-      <h2 class="mb-0">Your Profile</h2>
-    </div>
+    <h2 id='profile'>Your Profile</h2>
     <div class="card-body p-4 text-center">
       <img id="profilePic" src="../loginPage_file/default-avatar.png" alt="Profile Picture" class="profile-pic mb-3" />
       <div class="info-header">Name:</div>
