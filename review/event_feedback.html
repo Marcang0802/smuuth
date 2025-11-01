@@ -91,6 +91,7 @@
     .star.hover {
       color: #fbc02d;
     }
+    #event-rating{margin-left: 0px;}
   </style>
 </head>
 <body>
@@ -110,7 +111,7 @@
         </div>
 
         <div class="mb-3 text-center">
-          <label class="form-label d-block mb-2">Event Rating</label>
+          <label id="event-rating" class="form-label d-block mb-2">Event Rating</label>
           <div class="star-rating" id="starRating">
             <span class="star" data-value="1">&#9733;</span>
             <span class="star" data-value="2">&#9733;</span>
@@ -216,4 +217,5 @@ function updateStars(rating) {
   </script>
 </body>
 </html>
+
 
