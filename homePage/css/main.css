@@ -3316,7 +3316,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 @media (max-width: 991.98px) {
   .footer-social {
     text-align: left;
-    margin-top: 10px;
+    margin-top: 0px;
   }
 }
 
