@@ -14,6 +14,11 @@
     input, textarea { border-radius: 10px !important; }
     .form-control:focus { border-color: #004aad; box-shadow: 0 0 0 0.2rem rgba(0,74,173,0.25); }
     #otherSkillBox { display: none; margin-top: 10px; }
+    .profile-pic-container { position: relative; display: inline-block; cursor: pointer; margin: 20px auto; display: block; width: 110px; }
+    .profile-pic-container:hover .upload-overlay { opacity: 1; }
+    .profile-pic { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #faf9ff; background: #e7e7f7; display: block; }
+    .upload-overlay { position: absolute; top: 0; left: 0; width: 110px; height: 110px; border-radius: 50%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; color: white; font-size: 0.85rem; text-align: center; padding: 10px; pointer-events: none; }
+    #fileInput { display: none; }
   </style>
 </head>
 <body>
@@ -21,6 +26,13 @@
     <div class="card-header">
       <h2 class="mb-0">Create Profile</h2>
     </div>
+    <div class="profile-pic-container" id="profilePicContainer">
+        <img id="profilePic" src="../loginPage_file/default-avatar.png" alt="Profile Picture" class="profile-pic" />
+        <div class="upload-overlay">
+          <span>📷 Upload Photo</span>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" />
     <div class="card-body p-4">
       <form id="profileForm">
         <div class="mb-3">
@@ -80,6 +92,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
@@ -95,6 +108,51 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+    const storage = getStorage(app);
+
+    let uploadedPhotoUrl = null;
+
+    // Click on profile picture to upload
+    document.getElementById("profilePicContainer").onclick = () => {
+      document.getElementById("fileInput").click();
+    };
+
+    // Handle file selection
+    document.getElementById("fileInput").onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        alert("Please select an image file.");
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Image size should be less than 5MB.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        document.getElementById("profilePic").src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      try {
+        const user = auth.currentUser;
+        if (!user) {
+          alert("You must be logged in to upload a photo.");
+          return;
+        }
+
+        const storageRef = ref(storage, `profile_photos/${user.uid}/${Date.now()}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        uploadedPhotoUrl = await getDownloadURL(storageRef);
+        document.getElementById("profilePic").src = uploadedPhotoUrl;
+      } catch (error) {
+        console.error("Error uploading photo:", error);
+        alert("Failed to upload photo. Please try again.");
+      }
+    };
 
     // Show/hide "Other Skill" textbox based on checkbox
     document.getElementById("skillOther").addEventListener("change", function() {
@@ -138,6 +196,10 @@
           email: user.email,
           createdAt: new Date().toISOString()
         };
+
+        if (uploadedPhotoUrl) {
+          data.photoUrl = uploadedPhotoUrl;
+        }
 
         try {
           await addDoc(collection(db, "profiles"), data);
