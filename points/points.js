@@ -19,52 +19,61 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
 
-export async function getPoints() {
-  // get userUID from the browser localStorage, change 'userUID' if needed
-  // console.log("in")
-  let userUID = localStorage.getItem("userUID");
+export async function getPoints(profileID) {
   // get user document reference from firestore
-  const userRef = doc(db, "users", userUID);
+  const profilesRef = doc(db, "profiles", profileID);
   // Fetch the document
-  const userData = await getDoc(userRef);
+  const profileData = await getDoc(profilesRef);
 
-  if (userData.exists()) {
-    return userData.data().points;
+  if (profileData.exists()) {
+    return profileData.data().points;
   } else {
     console.log("User does not exist.");
   }
 }
 
 // operation = '+' or '-'
-export async function updatePoints(amount, operation) {
-  // get userUID from the browser localStorage, change 'userUID' if needed
-  let userUID = localStorage.getItem("userUID");
+export async function updatePoints(amount, operation, profileID) {
   // get user document reference from firestore
-  const userRef = doc(db, "users", userUID);
-  const userData = await getDoc(userRef);
+  const profilesRef = doc(db, "profiles", profileID);
+  const profilesData = await getDoc(profilesRef);
   // get current points
-  let currentPoints = userData.data().points
-  
+  let currentPoints = profilesData.data().points
+
   if (operation === '+') {
-    await updateDoc(userRef, {
+    await updateDoc(profilesRef, {
       points: currentPoints + amount
     });
     return true
   }
   else if (operation === '-') {
-    if (currentPoints - amount < 0) { //so points don't go below 0
+    if ((currentPoints - amount) < 0) { //so points don't go below 0
       alert('Not enough points.')
       console.log('Not enough points.')
       return false
     }
     else {
-      await updateDoc(userRef, {
+      await updateDoc(profilesRef, {
         points: currentPoints - amount
       });
       return true
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

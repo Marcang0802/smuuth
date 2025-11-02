@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, updateDoc, getDoc, deleteDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
-import { updatePoints } from './points.js'
+import { updatePoints } from '../points/points.js'
 
 const firebaseConfig = {
   apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
@@ -17,6 +17,21 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+//check if systemAdmin
+export async function getRole(profileID) {
+  // get user document reference from firestore
+  const profilesRef = doc(db, "profiles", profileID);
+  // Fetch the document
+  const profileData = await getDoc(profilesRef);
+
+  if (profileData.exists()) {
+    return profileData.data().role;
+  } else {
+    console.log("User does not exist.");
+  }
+}
+
 
 //System Admin only
 // data = {rewardName(str), pointAmount(int), redeemLimit(int), redeemedUser(array containing userID)}
@@ -37,6 +52,35 @@ export async function deleteReward(rewardID) {
   await deleteDoc(rewardRef);
 }
 
+export async function getAllRedeemedUsers(rewardID) {
+  const rewardsRef = doc(db, "rewards", rewardID);
+  // Fetch the document
+  const rewardData = await getDoc(rewardsRef);
+  if (rewardData.exists()) {
+    let profileUID = rewardData.data().redeemedUser;
+    let result = []
+    for (let id of profileUID) {
+      const profilesRef = doc(db, "profiles", id);
+      // Fetch the document
+      const profileData = await getDoc(profilesRef);
+
+      if (profileData.exists()) {
+        let object = {email: profileData.data().email,name: profileData.data().fullname};
+        result.push(object);
+      } 
+      else {
+        console.log("User does not exist.");
+      }
+
+    }
+    return result
+  } 
+  else {
+    console.log("Does not exist.");
+  }
+
+}
+
 //for helper and club admin
 //
 //function for population
@@ -55,27 +99,26 @@ export async function getAllRewards() {
 }
 
 
-export async function redeemReward(rewardID) {
-  // let userUID = localStorage.getItem('userUID');
-  let userUID = '70WYaKM6EiOJzqFisKsG0qerZ913'
+export async function redeemReward(rewardID, profileID) {
   const rewardRef = doc(db, 'rewards', rewardID);
   const reward = await getDoc(rewardRef);
   let redeemedUsers = reward.data().redeemedUser;
   if (redeemedUsers.length < (reward.data().redeemLimit)) {
-    for(let user of redeemedUsers){ //check if already redeemed
-      if(userUID === user){
+    for (let user of redeemedUsers) { //check if already redeemed
+      if (profileID === user) {
         console.log("Already redeemed")
         return
       }
     }
-    if (updatePoints(reward.data().pointAmount, "-") == true) {
-      redeemedUsers.push(userUID)
-      console.log(redeemedUsers)
+    let updateStatus = await updatePoints(reward.data().pointsAmount, "-", profileID)
+    if (updateStatus === true) {
+      redeemedUsers.push(profileID)
+      alert('successfully redeemed!')
       await updateDoc(rewardRef, {
         redeemedUser: redeemedUsers
       });
     }
-    else{
+    else {
       return
     }
   }
