@@ -228,6 +228,31 @@
     const auth = getAuth(app);
     const storage = getStorage(app);
 
+    onAuthStateChanged(auth, async(user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        const uid = user.uid;
+        let profileExist = false;
+        // Create a reference to the users collection
+        const profilesRef = collection(db, "profiles");
+        // Create a query against the collection
+        const q = query(profilesRef, where("userId", "==", user.uid));
+        // Fetch matching documents
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          profileExist = true;
+          localStorage.setItem('profileID',doc.id)
+        });
+        if(profileExist){
+          window.location.replace("../homepage/index.html");
+        }
+      } else {
+        // User is signed out
+        window.location.replace("./login.html");
+      }
+    });
+
+
     let uploadedPhotoUrl = null;
 
     // Click on profile picture to upload
