@@ -195,9 +195,10 @@
 
 
 	<script type="module">
-		import { getAllRewards, redeemReward } from '../reward/reward.js'
+		import { getAllRewards, redeemReward, getRole } from '../reward/reward.js'
 		let row = document.getElementById('rewardArea')
 		let rewardList = await getAllRewards();
+		let role = await getRole(profileID);
 		for (let reward of rewardList) {
 			// console.log(reward.data)
 			let div1 = document.createElement('div')
@@ -228,6 +229,16 @@
 				let rewardID = reward.id
 				let profileID = localStorage.getItem("profileID")
 				redeemReward(rewardID,profileID)
+			})
+		}
+		if (role == 'systemAdmin'){
+			let button = document.createElement("button")
+			button.setAttribute("class", "btn btn-danger")
+			button.innerText = "Manage Reward"
+			row.appendChild(button)
+
+			button.addEventListener('click', () => {
+				window.location.replace('manageReward.html');
 			})
 		}
 	</script>
