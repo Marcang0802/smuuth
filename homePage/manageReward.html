@@ -151,7 +151,7 @@
         </script>
     </div>
 
-    <!-- Firebase & Firestore integration -->
+   
     <script type="module">
         // Check if logged in
         import { checkLogin } from "../loginPage_file/authenticate.js";
@@ -189,12 +189,11 @@
         let user = null;
 
         // writing to the databse of new reward
-        onAuthStateChanged(auth, (u) => {
-            if (u) {
-                user = u;
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
                 const form = document.getElementById("rewardForm");
-                form.addEventListener("submit", async (e) => {
-                    e.preventDefault();
+                form.addEventListener("submit", async (event) => {
+                    event.preventDefault();
                     const data = {
                         rewardName: document.getElementById("rewardname").value.trim(),
                         pointsAmount: parseInt(document.getElementById("pointsAmount").value),
