@@ -213,6 +213,7 @@
     };
     document.getElementById("logoutBtn").onclick = async() => {
       try{
+        localStorage.clear()
         await signOut(auth);
         console.log('Sign Out Successful!')
       }catch(error){
