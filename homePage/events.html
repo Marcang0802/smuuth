@@ -77,7 +77,7 @@
         <div class="container">
             <div class="row justify-content-center d-flex">
                 <div class="col-lg-8 post-list" id="event-list">
-                    <div class="single-post job-listing d-flex flex-row" data-category="clubs">
+                    <!-- <div class="single-post job-listing d-flex flex-row" data-category="clubs">
                         <div class="thumb">
                             <img src="img/post.png" alt="">
 
@@ -193,7 +193,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-lg-4 sidebar">
                     <div class="single-slidebar">
@@ -403,7 +403,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        //check if login
         import { checkLogin } from "../loginPage_file/authenticate.js";
 
         checkLogin()
@@ -426,6 +425,64 @@
         const eventList = document.getElementById("event-list");
         let currentUser = null;
 
+        function normaliseCategory(v) {
+            const normalized = (v || '').toString().trim().toLowerCase().replace(/\s+/g, '-');
+            
+            return normalized;
+        }
+
+        function slug(v){ return (v ?? '').toString().trim().toLowerCase().replace(/\s+/g,'-'); }
+
+// canonical: map URL/legacy variants to your canonical slugs
+        function canonical(v) {
+            const s = slug(v);
+            const map = {
+                'all-categories': 'all',                 // from index.html
+                'community-service-projects': 'community-service', // from index.html
+                // add other synonyms here if your UI ever sends them
+            };
+            return map[s] || s;
+        }
+
+        function applyCategoryFilter(category) {
+            const wanted = slug(category || 'all');
+            let shown = 0;
+
+            const allCards = document.querySelectorAll('.single-post.job-listing');
+
+            allCards.forEach(card => {
+                const cat = slug(card.getAttribute('data-category') || 'others'); // ← canonicalize here
+                const match = (wanted === 'all') || (cat === wanted);
+                card.classList.toggle('d-none', !match)
+                card.classList.toggle('d-flex', match)
+                if (match) shown++;
+            });
+
+            // optional empty-state
+            let empty = document.getElementById('no-results');
+            if (!shown) {
+                if (!empty) {
+                empty = document.createElement('div');
+                empty.id = 'no-results';
+                empty.style.color = 'red';
+                empty.style.margin = '16px 0';
+                empty.textContent = 'No events match this category.';
+                document.getElementById('event-list').appendChild(empty);
+                }
+            } else if (empty) {
+                empty.remove();
+            }
+            }
+
+        function applyCategoryFilterFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const selected = params.get('category') || 'all';
+            console.log(`URL category parameter: "${selected}"`);
+            applyCategoryFilter(selected);
+        }
+
+
+
         async function loadEvents() {
             eventList.innerHTML = ""; // clear static content
             const snapshot = await getDocs(collection(db, "events"));
@@ -433,10 +490,14 @@
                 eventList.innerHTML = `<p class="text-center">No events available yet.</p>`;
                 return;
             }
-
+            
             snapshot.forEach(docSnap => {
                 const event = docSnap.data();
                 const eventId = docSnap.id;
+
+                const dataCat = slug(event.category || 'others');
+
+                console.log(`Processing event: ${event.name}, Category: ${event.category}`);
 
                 let adminControls = "";
                 let joinButton = "";
@@ -464,12 +525,12 @@
                 }
 
                 const eventHTML = `
-                <div class="single-post job-listing d-flex flex-row mb-3">
+                <div class="single-post job-listing d-flex flex-row mb-3" data-category="${canonical(event.category || 'Others')}">
                     <div class="thumb"><img src="img/post.png" alt=""></div>
                     <div class="post-content d-flex flex-column w-100">
                         <div class="details">
                             <div class="title"><a href="#"><h4>${event.name}</h4></a><h6>${event.location}</h6></div>
-							<p><strong>Category:</strong> ${event.category || 'Others'}</p>
+                            <p><strong>Category:</strong> ${event.category || 'Others'}</p>
                             <p>${event.description || "No description provided."}</p>
                             <h5>Manpower Needed: ${event.manpower}</h5>
                             <p class="address"><span class="lnr lnr-map"></span> ${event.location}</p>
@@ -481,6 +542,9 @@
                 </div>`;
                 eventList.insertAdjacentHTML("beforeend", eventHTML);
             });
+            applyCategoryFilterFromURL()
+            console.log(event.category)
+            
         }
 
         window.joinEvent = async (eventId, eventName, rewardPoints) => {
