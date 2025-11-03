@@ -637,8 +637,8 @@
 
 					<div class="single-slidebar">
 						<h4>Top rated reviews for events</h4>
-						<div class="active-relatedjob-carusel">
-							<div class="single-rated">
+						<div id="topRatedEvents" class="active-relatedjob-carusel">
+							<!-- <div class="single-rated">
 								<img class="img-fluid" src="img/r1.jpg" alt="">
 								<a href="single.html">
 									<h4>Creative Art Designer</h4>
@@ -685,7 +685,7 @@
 								</p>
 								<p class="address"><span class="lnr lnr-database"></span> 15k - 25k</p>
 								<a href="#" class="btns text-uppercase">Apply job</a>
-							</div>
+							</div> -->
 						</div>
 					</div>
 
@@ -955,3 +955,56 @@
 
 
 </html>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getFirestore, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
+  authDomain: "wad2-505be.firebaseapp.com",
+  databaseURL: "https://wad2-505be-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "wad2-505be",
+  storageBucket: "wad2-505be.firebasestorage.app",
+  messagingSenderId: "221863917439",
+  appId: "1:221863917439:web:2a517ca11c83e991388c4a",
+  measurementId: "G-L69GG585GF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadTopRatedEvents() {
+  const topContainer = document.getElementById('topRatedEvents');
+  topContainer.innerHTML = ''; // Clear any existing content
+
+  // Query top 3 events by stars descending
+  const eventsRef = collection(db, "events");
+  const q = query(eventsRef, orderBy("stars", "desc"), limit(3));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach(doc => {
+    const data = doc.data();
+
+    // Create event card dynamically - adjust HTML structure and classes as per your design
+    const card = document.createElement('div');
+    card.classList.add('single-rated');
+
+    card.innerHTML = `
+      <img class="img-fluid" src="${data.imageUrl || 'img/r1.jpg'}" alt="Event Image">
+      <a href="single.html"><h4>${data.name || 'No Event Name'}</h4></a>
+      <h6>${data.organizer || ''}</h6>
+      <p>${data.description ? (data.description.length > 100 ? data.description.substring(0, 100) + '...' : data.description) : ''}</p>
+      <h5>Rating: ${data.stars || 0} ★</h5>
+      <a href="#" class="btns text-uppercase">Apply</a>
+    `;
+
+    topContainer.appendChild(card);
+  });
+}
+
+// Load top rated events on page load
+window.addEventListener('load', () => {
+  loadTopRatedEvents();
+});
+</script>
