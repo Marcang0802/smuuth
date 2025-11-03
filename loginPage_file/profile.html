@@ -236,14 +236,10 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
         const uid = user.uid;
         let profileExist = false;
-        // Create a reference to the users collection
         const profilesRef = collection(db, "profiles");
-        // Create a query against the collection
         const q = query(profilesRef, where("userId", "==", user.uid));
-        // Fetch matching documents
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
           profileExist = true;
@@ -253,11 +249,9 @@
           window.location.replace("../homepage/index.html");
         }
       } else {
-        // User is signed out
         window.location.replace("./login.html");
       }
     });
-
 
     let uploadedPhotoUrl = null;
 
@@ -343,7 +337,9 @@
           skills: selectedSkills,
           userId: user.uid,
           email: user.email,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          points: 0,
+          joinedEvents: []
         };
 
         if (uploadedPhotoUrl) {
@@ -353,23 +349,6 @@
         try {
           await addDoc(collection(db, "profiles"), data);
           alert("Profile created!");
-
-          onAuthStateChanged(auth, async (user) => {
-            if (user) {
-              // User is signed in, see docs for a list of available properties
-              const uid = user.uid;
-              // Create a reference to the users collection
-              const profilesRef = collection(db, "profiles");
-              // Create a query against the collection
-              const q = query(profilesRef, where("userId", "==", user.uid));
-              // Fetch matching documents
-              const querySnapshot = await getDocs(q);
-              querySnapshot.forEach((doc) => {
-                localStorage.setItem('profileID', doc.id)
-              });
-            }
-          });
-          
           window.location.href = "../homePage/events.html";
         } catch (error) {
           console.error("Error saving profile:", error);

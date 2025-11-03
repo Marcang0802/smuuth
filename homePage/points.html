@@ -29,7 +29,7 @@
 	<link rel="stylesheet" href="css/animate.min.css">
 	<link rel="stylesheet" href="css/owl.carousel.css">
 	<link rel="stylesheet" href="css/main.css">
-	
+
 </head>
 
 <body>
@@ -78,13 +78,13 @@
 
 	<!-- Start blog-posts Area -->
 	<section class="post-area section-gap">
-    <div class="container">
-        <div class="row justify-content-center d-flex">
-            <div class="col-lg-8 post-list" id="rewardArea">
-                <!-- Reward cards go here -->
-            </div>
-        </div>
-    </div>
+		<div class="container">
+			<div class="row justify-content-center d-flex">
+				<div class="col-lg-8 post-list" id="rewardArea">
+					<!-- Reward cards go here -->
+				</div>
+			</div>
+		</div>
 	</section>
 
 	<!-- End blog-posts Area -->
@@ -191,7 +191,8 @@
 
 	<script type="module">
 		import { getPoints } from '../points/points.js'
-		let profileID = localStorage.getItem('profileID')
+		let profileID = localStorage.getItem('profileID');
+		console.log(profileID);
 		let h1 = document.getElementById("points")
 		let points = await getPoints(profileID)
 		if (points != null) {
@@ -203,7 +204,7 @@
 		let rewardList = await getAllRewards();
 		let role = await getRole(profileID);
 		for (let reward of rewardList) {
-  // <div class="single-post d-flex flex-row">
+			// <div class="single-post d-flex flex-row">
 			// Card (add job-listing, remove border)
 			const card = document.createElement('div');
 			card.className = 'single-post d-flex flex-row';
@@ -247,7 +248,7 @@
 			btns.className = 'btns';
 
 			// optional heart (keeps spacing like index)
-			
+
 
 			// Redeem MUST be the last li so theme applies the primary style
 			const liRedeem = document.createElement('li');
@@ -255,8 +256,8 @@
 			aRedeem.href = '#';
 			aRedeem.textContent = 'Redeem';
 			aRedeem.addEventListener('click', (e) => {
-			e.preventDefault();
-			redeemReward(reward.id, profileID);
+				e.preventDefault();
+				redeemReward(reward.id, profileID);
 			});
 			liRedeem.appendChild(aRedeem);
 			btns.appendChild(liRedeem);
@@ -275,14 +276,14 @@
 
 
 			if (reward.data.location) {
-			const loc = document.createElement('p');
-			loc.className = 'address';
-			loc.innerHTML = `<span class="lnr lnr-map"></span> ${reward.data.location}`;
-			details.appendChild(loc);
+				const loc = document.createElement('p');
+				loc.className = 'address';
+				loc.innerHTML = `<span class="lnr lnr-map"></span> ${reward.data.location}`;
+				details.appendChild(loc);
 			}
-			}
+		}
 
-		if (role == 'systemAdmin'){
+		if (role == 'systemAdmin') {
 			let button = document.createElement("button")
 			button.setAttribute("class", "btn btn-danger")
 			button.innerText = "Manage Reward"

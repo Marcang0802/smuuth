@@ -12,8 +12,8 @@ const firebaseConfig = {
   measurementId: "G-L69GG585GF"
 };
 
-const app = initializeApp(firebaseConfig)
-const auth = getAuth(app)
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 export function checkLogin(){
     onAuthStateChanged(auth,(user)=>{
