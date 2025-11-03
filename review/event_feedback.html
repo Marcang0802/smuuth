@@ -112,6 +112,10 @@
       margin-left: 0px;
       
     }
+
+    .btn + .btn {
+      margin-top: 4px !important;
+    }
   </style>
 </head>
 
@@ -154,8 +158,9 @@
             placeholder="Share your thoughts about the event..." required></textarea>
         </div>
         
-        <div class="d-grid gap-2 col-10 mx-auto">
+        <div class="d-grid col-10 mx-auto">
           <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Submit Feedback</button>
+          <button type="button" id="backBtn" class="btn btn-secondary w-100 py-2">Back</button>
         </div>
       </form>
     </div>
@@ -246,6 +251,12 @@
       }
     });
   </script>
+
+<script>
+  document.getElementById("backBtn").addEventListener("click", () => {
+    window.location.href = "../homePage/reviews.html";
+  });
+</script>
 </body>
 
 
