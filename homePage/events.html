@@ -499,7 +499,7 @@
                 let manpower = eventData.data().manpower;
                 if (newHelpers.includes(profileID)) {
                     alert("You already requested to join the event !")
-                } else if (newHelpers.length > manpower) {
+                } else if (newHelpers.length >= manpower) {
                     console.log('No more people needed.')
                     alert('Sorry, enough people have signed up for this event')
                 }
