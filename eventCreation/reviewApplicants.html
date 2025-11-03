@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Review Applicants | SMU Event Helpers</title>
@@ -7,18 +8,72 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
     /* Use your provided styles here */
-    body { background: linear-gradient(135deg, #d6e4ff, #f8f9fa); min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: "Poppins", sans-serif; }
-    .card { max-width: 600px; border: none; border-radius: 20px; box-shadow: 0 6px 25px rgba(0,0,0,0.1); overflow: hidden; background-color: #fff; transition: all 0.3s ease-in-out; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-    .card-header { background: #004aad; color: #fff; text-align: center; padding: 1.5rem; }
-    .form-label { font-weight: 500; color: #333; }
-    .btn-success { background-color: #28a745; border: none; font-weight: 600; transition: background-color 0.3s ease-in-out; }
-    .btn-success:hover { background-color: #218838; }
-    input, textarea { border-radius: 10px !important; }
-    .form-control:focus { border-color: #004aad; box-shadow: 0 0 0 0.2rem rgba(0,74,173,0.25); }
-    footer { text-align: center; margin-top: 30px; font-size: 0.9rem; color: #666; }
+    body {
+      background: linear-gradient(135deg, #d6e4ff, #f8f9fa);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .card {
+      max-width: 600px;
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      background-color: #fff;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+      background: #004aad;
+      color: #fff;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+      border: none;
+      font-weight: 600;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .btn-success:hover {
+      background-color: #218838;
+    }
+
+    input,
+    textarea {
+      border-radius: 10px !important;
+    }
+
+    .form-control:focus {
+      border-color: #004aad;
+      box-shadow: 0 0 0 0.2rem rgba(0, 74, 173, 0.25);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #666;
+    }
   </style>
 </head>
+
 <body>
   <div class="card">
     <div class="card-header">
@@ -29,113 +84,122 @@
         <div class="mb-3">
           <h1 class="form-label" id="eventName"> </h1>
         </div>
-        <div id="applicants"></div>
-        Applicants <br><br>
+        <div id="applicants">Applicants </div>
+        
 
-    
+
     </div>
-        <button type="submit" class="btn btn-success w-100 py-2 mt-2">
-          <i class="bi bi-pencil-square me-2"></i>Update Event
-        </button>
-      </form>
-    </div>
+    <button type="submit" class="btn btn-success w-100 py-2 mt-2">
+      <i class="bi bi-pencil-square me-2"></i>Update Event
+    </button>
+    </form>
   </div>
-<!-- Firebase & Firestore integration and code -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  </div>
+  <!-- Firebase & Firestore integration and code -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
-  authDomain: "wad2-505be.firebaseapp.com",
-  databaseURL: "https://wad2-505be-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "wad2-505be",
-  storageBucket: "wad2-505be.firebasestorage.app",
-  messagingSenderId: "221863917439",
-  appId: "1:221863917439:web:2a517ca11c83e991388c4a",
-  measurementId: "G-L69GG585GF"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
+      authDomain: "wad2-505be.firebaseapp.com",
+      databaseURL: "https://wad2-505be-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "wad2-505be",
+      storageBucket: "wad2-505be.firebasestorage.app",
+      messagingSenderId: "221863917439",
+      appId: "1:221863917439:web:2a517ca11c83e991388c4a",
+      measurementId: "G-L69GG585GF"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-// Extract eventId from URL
-function getEventId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("eventId");
-}
+    // Extract eventId from URL
+    function getEventId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("eventId");
+    }
 
-let user = null;
-const eventId = getEventId();
+    let user = null;
+    const eventId = getEventId();
 
-onAuthStateChanged(auth, async (u) => {
-  if (!u) {
-    alert("You must be logged in to edit events!");
-    window.location.href = "../loginPage_file/login.html";
-    return;
-  }
-  user = u;
+    onAuthStateChanged(auth, async (u) => {
+      if (!u) {
+        alert("You must be logged in to edit events!");
+        window.location.href = "../loginPage_file/login.html";
+        return;
+      }
+      user = u;
 
-  // Get existing event data and prefill form
-  const docRef = doc(db, "events", eventId);
-  const eventSnap = await getDoc(docRef);
-  if (eventSnap.exists()) {
-    const event = eventSnap.data().name;
-    //console.log(event)
-    document.getElementById("eventName").innerText = event || "";
-    const applicants = eventSnap.data().pending;
-    console.log(applicants)
-    let divApplicant = document.getElementById('applicants')
-    let ol = document.createElement('ol')
-    console.log("APPLICANTS")
-    console.log(applicants);
-    for(let applicant of applicants){
-        let li = document.createElement('li')
-        let applicantDisplay = "";
-        const userRef = doc(db,'profiles',applicant)
-        const userData = await getDoc(userRef)
-        console.log(applicant);
-        console.log(userData);
+      // Get existing event data and prefill form
+      const docRef = doc(db, "events", eventId);
+      const eventSnap = await getDoc(docRef);
+      if (eventSnap.exists()) {
+        const event = eventSnap.data().name;
+        //console.log(event)
+        document.getElementById("eventName").innerText = event || "";
+        const applicants = eventSnap.data().pending;
+        console.log(applicants)
+        let divApplicant = document.getElementById('applicants')
+        let ol = document.createElement('ol')
+        console.log("APPLICANTS")
+        console.log(applicants);
+        const profilesRef = collection(db, "profiles");
+        for (let applicant of applicants) {
+          // Create a query against the collection
+          const q = query(profilesRef, where("userId", "==", applicant));
+          // Fetch matching documents
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            applicant = doc.id
+          });
+          let li = document.createElement('li')
+          let applicantDisplay = "";
+          const userRef = doc(db, 'profiles', applicant)
+          const userData = await getDoc(userRef)
+          console.log(applicant);
+          console.log(userData);
 
-        if(userData.exists()){
+          if (userData.exists()) {
             applicantDisplay = userData.data().fullname
             console.log(applicant);
+          }
+          li.innerText = applicantDisplay
+          ol.appendChild(li)
+          console.log(li);
         }
-        li.innerText = applicantDisplay
-        ol.appendChild(li)
-        console.log(li);
-    }
-    console.log(ol)
-    divApplicant.appendChild(ol)
+        console.log(ol)
+        divApplicant.appendChild(ol)
 
 
-    
-  } else {
-    alert("Event not found!");
-    window.location.href = "../homePage/events.html";
-    return;
-  }
 
-  // Submit handler to update Firestore doc
-  const form = document.getElementById("reviewApplicantsForm");
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+      } else {
+        alert("Event not found!");
+        window.location.href = "../homePage/events.html";
+        return;
+      }
 
-    const data = {
-      name: document.getElementById("eventName").value.trim(),
-      
-    };
+      // Submit handler to update Firestore doc
+      const form = document.getElementById("reviewApplicantsForm");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    try {
-      await updateDoc(docRef, data);
-      window.location.href = "../homePage/events.html";
-    } catch (error) {
-      console.error("Error updating event:", error);
-      alert("Failed to update event. Check console for details.");
-    }
-  });
-});
-</script>
+        const data = {
+          name: document.getElementById("eventName").value.trim(),
+
+        };
+
+        try {
+          await updateDoc(docRef, data);
+          window.location.href = "../homePage/events.html";
+        } catch (error) {
+          console.error("Error updating event:", error);
+          alert("Failed to update event. Check console for details.");
+        }
+      });
+    });
+  </script>
 </body>
+
 </html>
