@@ -33,6 +33,8 @@ if (localStorage.getItem('profileID') == null) {
       });
     }
   });
+  //reload the screen
+  window.location.reload();
 }
 
 
