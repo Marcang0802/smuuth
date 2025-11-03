@@ -468,6 +468,7 @@
                     <div class="post-content d-flex flex-column w-100">
                         <div class="details">
                             <div class="title"><a href="#"><h4>${event.name}</h4></a><h6>${event.location}</h6></div>
+							<p><strong>Category:</strong> ${event.category || 'Others'}</p>
                             <p>${event.description || "No description provided."}</p>
                             <h5>Manpower Needed: ${event.manpower}</h5>
                             <p class="address"><span class="lnr lnr-map"></span> ${event.location}</p>
