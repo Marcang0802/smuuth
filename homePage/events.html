@@ -403,6 +403,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { checkLogin } from "../loginPage_file/authenticate.js";
 
 
         const firebaseConfig = {
@@ -546,6 +547,8 @@
 
             loadEvents();
         });
+
+        checkLogin();
 
     </script>
 </body>
