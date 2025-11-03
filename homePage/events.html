@@ -401,9 +401,11 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { checkLogin } from "../loginPage_file/authenticate.js";
+
+        checkLogin()
 
 
         const firebaseConfig = {
@@ -544,19 +546,53 @@
             window.location.href = `../eventCreation/reviewApplicants.html?eventId=${eventId}`;
         };
 		
-		window.endEvent = (eventId) => {
-            const endConfirm = confirm("Are you sure you want to end the event?");
-            if (endConfirm){
-                window.location.href = `../eventCreation/endEvent.html?eventId=${eventId}`;
+		window.endEvent = async (eventId, eventName) => {
+            if (!confirm(`Are you sure you want to end "${eventName}"?`)) return;
+            try {
+                const eventRef = doc(db, "events", eventId);
+                const eventSnap = await getDoc(eventRef);
+                if (!eventSnap.exists()) {
+                    alert("Event not found.");
+                    return;
+                }
+                const eventData = eventSnap.data();
+                console.log(eventData);
+                const helpers = eventData.helpers || [];
+                const reward = eventData.rewardPoints || 0;
+                await addDoc(collection(db, "complete_events"), {
+                    ...eventData,
+                    endedAt: serverTimestamp() 
+                });
+                console.log(helpers);
+                for (const helperId of helpers) {
+                    const profileRef = doc(db, "profiles", helperId);
+                    const profileSnap = await getDoc(profileRef);
+
+                    if (profileSnap.exists()) {
+                        const currentPoints = profileSnap.data().points || 0;
+                        await updateDoc(profileRef, {
+                            points: currentPoints + reward,
+                        });
+                    } else {
+                        console.warn(`Profile not found for helper: ${helperId}`);
+                    }
+                }
+                await deleteDoc(doc(db, "events", eventId));
+                alert(`"${eventName}" has ended. ${reward} points awarded to ${helpers.length} helper(s).`);
+                loadEvents();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to delete event.");
             }
         };
+		
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
 
             loadEvents();
         });
 
-        checkLogin();
+        
 
     </script>
 </body>
