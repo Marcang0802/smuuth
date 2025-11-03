@@ -491,7 +491,7 @@
                 // })
 
                 let profileID = localStorage.getItem('profileID')
-
+                console.log(profileID)
                 const eventRef = await doc(db, "events", eventId);
                 const eventData = await getDoc(eventRef);
 
@@ -501,11 +501,13 @@
                     alert("You already requested to join the event !")
                 } else if (newHelpers.length > manpower) {
                     console.log('No more people needed.')
-                    alert('No more needed')
+                    alert('Sorry, enough people have signed up for this event')
                 }
                 else {
+                    alert("You have successfully applied to join the event !")
+                    newHelpers.push(profileID)
                     await updateDoc(eventRef, {
-                        pending: newHelpers
+                        helpers: newHelpers
                     });
                 }
 
