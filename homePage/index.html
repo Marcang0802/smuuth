@@ -956,6 +956,7 @@
 
 </html>
 
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getFirestore, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -974,37 +975,125 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function loadTopRatedEvents() {
+async function loadTopRatedFeedback() {
   const topContainer = document.getElementById('topRatedEvents');
-  topContainer.innerHTML = ''; // Clear any existing content
+  
+  if (!topContainer) {
+    console.error("Element with id 'topRatedEvents' not found!");
+    return;
+  }
 
-  // Query top 3 events by stars descending
-  const eventsRef = collection(db, "events");
-  const q = query(eventsRef, orderBy("stars", "desc"), limit(3));
-  const querySnapshot = await getDocs(q);
+  topContainer.innerHTML = '<p>Loading...</p>';
 
-  querySnapshot.forEach(doc => {
-    const data = doc.data();
+  const feedbackRef = collection(db, "feedback");
+  const q = query(feedbackRef, orderBy("rating", "desc"), limit(3));
 
-    // Create event card dynamically - adjust HTML structure and classes as per your design
-    const card = document.createElement('div');
-    card.classList.add('single-rated');
+  try {
+    const snapshot = await getDocs(q);
 
-    card.innerHTML = `
-      <img class="img-fluid" src="${data.imageUrl || 'img/r1.jpg'}" alt="Event Image">
-      <a href="single.html"><h4>${data.name || 'No Event Name'}</h4></a>
-      <h6>${data.organizer || ''}</h6>
-      <p>${data.description ? (data.description.length > 100 ? data.description.substring(0, 100) + '...' : data.description) : ''}</p>
-      <h5>Rating: ${data.stars || 0} ★</h5>
-      <a href="#" class="btns text-uppercase">Apply</a>
-    `;
+    if (snapshot.empty) {
+      topContainer.innerHTML = "<p>No top rated feedback found.</p>";
+      return;
+    }
 
-    topContainer.appendChild(card);
-  });
+    topContainer.innerHTML = ''; // Clear loading message
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      // Create card using correct fields from feedback documents
+      const card = document.createElement('div');
+      card.classList.add('single-rated');
+      card.innerHTML = `
+        <h4>${data.eventName || 'Unknown Event'}</h4>
+        <h5>Rating: ${data.rating || 0} ★</h5>
+        <p>${data.feedback || ''}</p>
+        <p><strong>By:</strong> ${data.helperName || 'Anonymous'}</p>
+      `;
+
+      topContainer.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Error loading feedback:", err);
+    topContainer.innerHTML = `<p>Error loading feedback: ${err.message}</p>`;
+  }
 }
 
-// Load top rated events on page load
 window.addEventListener('load', () => {
-  loadTopRatedEvents();
+  console.log("Page loaded, calling loadTopRatedFeedback");
+  loadTopRatedFeedback();
 });
+
+
 </script>
+
+<!-- to test for errors -->
+<!-- <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
+  authDomain: "wad2-505be.firebaseapp.com",
+  databaseURL: "https://wad2-505be-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "wad2-505be",
+  storageBucket: "wad2-505be.firebasestorage.app",
+  messagingSenderId: "221863917439",
+  appId: "1:221863917439:web:2a517ca11c83e991388c4a",
+  measurementId: "G-L69GG585GF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function testFirestore() {
+  try {
+    // Try to read ALL documents without any query
+    console.log("Testing basic read...");
+    const eventsRef = collection(db, "events");
+    const snapshot = await getDocs(eventsRef);
+    
+    console.log("Total documents in 'events' collection:", snapshot.size);
+    
+    if (snapshot.empty) {
+      console.log("Collection is empty or doesn't exist");
+    } else {
+      snapshot.forEach(doc => {
+        console.log("Document ID:", doc.id);
+        console.log("Document data:", doc.data());
+        console.log("Has 'stars' field?", doc.data().stars !== undefined);
+        console.log("---");
+      });
+    }
+  } catch (error) {
+    console.error("Error:", error.code, error.message);
+  }
+}
+
+window.addEventListener('load', testFirestore);
+</script>
+```
+
+## What to check based on the results:
+
+**If still 0 documents:**
+- Collection might be named something other than "events"
+- Firestore security rules are blocking reads
+- You're using Realtime Database instead of Firestore (I see you have a databaseURL in your config)
+
+**If you see documents but no `stars` field:**
+- Add the `stars` field to your documents, OR
+- Remove the `orderBy("stars", "desc")` from your query
+
+**Check your Firestore security rules** in Firebase Console:
+- Go to Firestore Database → Rules
+- Make sure you have read permission. For testing, you can use:
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;  // WARNING: Only for testing!
+    }
+  }
+} -->
