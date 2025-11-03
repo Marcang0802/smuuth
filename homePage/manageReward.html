@@ -185,14 +185,13 @@
 
         let user = null;
 
+        // writing to the databse of new reward
         onAuthStateChanged(auth, (u) => {
             if (u) {
                 user = u;
-
                 const form = document.getElementById("rewardForm");
                 form.addEventListener("submit", async (e) => {
                     e.preventDefault();
-
                     const data = {
                         rewardName: document.getElementById("rewardname").value.trim(),
                         pointsAmount: parseInt(document.getElementById("pointsAmount").value),
@@ -200,7 +199,6 @@
                         redeemedUser: [],
                         createdAt: serverTimestamp()
                     };
-
                     try {
                         await addDoc(collection(db, "rewards"), data);
                         alert('added successfully')
@@ -209,19 +207,19 @@
                         alert("Failed to add reward. Check console for details.");
                     }
                 });
-
             } else {
                 alert("You must be logged in to manage rewards!");
                 window.location.href = "../loginPage_file/login.html";
             }
         });
 
+        //iterate through all rewards, storing them in a table 
         import { getAllRewards, redeemReward, deleteReward, getAllRedeemedUsers } from '../reward/reward.js'
         let rewardTable = document.getElementById('rewardTable')
         let rewardList = await getAllRewards();
         let count = 1
         for (let reward of rewardList) {
-            // console.log(reward.data)
+            // table building
             let tr = document.createElement('tr')
             rewardTable.appendChild(tr)
 
@@ -248,10 +246,13 @@
             td.appendChild(Delete)
             tr.appendChild(td)
 
+            //button to see all redeemed users
             button1.addEventListener('click', async () => {
                 alert('in console')
                 console.log(await getAllRedeemedUsers(reward.id))
             })
+
+            //button to delete reward from firebase
             Delete.addEventListener('click', () => {
                 deleteReward(reward.id)
             })

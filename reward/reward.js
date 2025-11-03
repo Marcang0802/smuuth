@@ -18,13 +18,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-//check if systemAdmin
+//Get the user's role
 export async function getRole(profileID) {
   // get user document reference from firestore
   const profilesRef = doc(db, "profiles", profileID);
   // Fetch the document
   const profileData = await getDoc(profilesRef);
-
   if (profileData.exists()) {
     return profileData.data().role;
   } else {
@@ -33,8 +32,9 @@ export async function getRole(profileID) {
 }
 
 
-//System Admin only
+//For manageReward.html
 // data = {rewardName(str), pointAmount(int), redeemLimit(int), redeemedUser(array containing userID)}
+// writes to the database
 export async function addReward(data) {
   try {
     await addDoc(collection(db, "rewards"), data);
@@ -45,6 +45,7 @@ export async function addReward(data) {
   }
 }
 
+//delete data from database
 export async function deleteReward(rewardID) {
   // Create a reference to the user document
   const rewardRef = doc(db, "rewards", rewardID);
@@ -52,26 +53,28 @@ export async function deleteReward(rewardID) {
   await deleteDoc(rewardRef);
 }
 
+//get all redeemedUser (refer to data on top)
 export async function getAllRedeemedUsers(rewardID) {
+  //create a reference 
   const rewardsRef = doc(db, "rewards", rewardID);
   // Fetch the document
   const rewardData = await getDoc(rewardsRef);
   if (rewardData.exists()) {
+    //get the array of ids
     let profileUID = rewardData.data().redeemedUser;
     let result = []
     for (let id of profileUID) {
       const profilesRef = doc(db, "profiles", id);
       // Fetch the document
       const profileData = await getDoc(profilesRef);
-
       if (profileData.exists()) {
+        //create obj of email and name of id, then push
         let object = {email: profileData.data().email,name: profileData.data().fullname};
         result.push(object);
       } 
       else {
         console.log("User does not exist.");
       }
-
     }
     return result
   } 
@@ -83,7 +86,7 @@ export async function getAllRedeemedUsers(rewardID) {
 
 //for helper and club admin
 //
-//function for population
+//function for population, returns an array of all rewards in the database
 export async function getAllRewards() {
   const rewardsArray = [];
   const rewardRef = collection(db, "rewards");
@@ -98,7 +101,7 @@ export async function getAllRewards() {
   return rewardsArray;
 }
 
-
+//writes to the databse of the profileid
 export async function redeemReward(rewardID, profileID) {
   const rewardRef = doc(db, 'rewards', rewardID);
   const reward = await getDoc(rewardRef);
@@ -110,20 +113,21 @@ export async function redeemReward(rewardID, profileID) {
         return
       }
     }
-    let updateStatus = await updatePoints(reward.data().pointsAmount, "-", profileID)
+    let updateStatus = await updatePoints(reward.data().pointsAmount, "-", profileID)//check if updating points successful
     if (updateStatus === true) {
       redeemedUsers.push(profileID)
       alert('successfully redeemed!')
       await updateDoc(rewardRef, {
-        redeemedUser: redeemedUsers
+        redeemedUser: redeemedUsers // update the array
       });
-      window.location.reload()
+      window.location.reload() // reload the window to showcase points updating
     }
     else {
       return
     }
   }
   else {
+    // if rewardLimit reached, therefore no more rewards left
     alert('Sorry, no more rewards of this type!')
     console.log("Sorry, no more rewards of this type!")
   }

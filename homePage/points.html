@@ -190,13 +190,16 @@
 	<script src="js/main.js"></script>
 
 	<script type="module">
+		// check if login
 		import { checkLogin } from "../loginPage_file/authenticate.js";
 
         checkLogin()
-		
+
 		import { getPoints } from '../points/points.js'
+		// getting the profileid
 		let profileID = localStorage.getItem('profileID');
 		console.log(profileID);
+		//populating the points
 		let h1 = document.getElementById("points")
 		let points = await getPoints(profileID)
 		if (points != null) {
@@ -207,6 +210,7 @@
 		let row = document.getElementById('rewardArea')
 		let rewardList = await getAllRewards();
 		let role = await getRole(profileID);
+		// iterate through the reward list and populate the screen
 		for (let reward of rewardList) {
 			// <div class="single-post d-flex flex-row">
 			// Card (add job-listing, remove border)

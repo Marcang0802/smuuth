@@ -234,6 +234,8 @@
     const auth = getAuth(app);
     const storage = getStorage(app);
 
+
+    //check if profile exist, and put profileid in local storage
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         let profileExist = false;

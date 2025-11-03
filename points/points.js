@@ -20,6 +20,8 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
+
+//if profileID not initialized, will initialize
 if (localStorage.getItem('profileID') == null) {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -63,7 +65,7 @@ export async function updatePoints(amount, operation, profileID) {
     return true
   }
   else if (operation === '-') {
-    if ((currentPoints - amount) < 0) { //so points don't go below 0
+    if ((currentPoints - amount) < 0) { //Check if points will go below 0
       alert('Not enough points.')
       console.log('Not enough points.')
       return false
