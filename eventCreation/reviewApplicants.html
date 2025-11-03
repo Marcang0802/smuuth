@@ -92,13 +92,17 @@ onAuthStateChanged(auth, async (u) => {
         let li = document.createElement('li')
         const userRef = doc(db,'profiles',applicant)
         const userData = await getDoc(userRef)
+        let applicantDisplay = "";
+
         if(userData.exists()){
-            let applicant = userData.data().fullname
+            applicantDisplay = userData.data().fullname
+            // console.log(applicant);
         }
-        li.innerText = applicant
+        li.innerText = applicantDisplay
         ol.appendChild(li)
+        // console.log(li);
     }
-    console.log(ol)
+    // console.log(ol)
     divApplicant.appendChild(ol)
 
 
