@@ -34,6 +34,7 @@ export async function getPoints(profileID) {
 
 // operation = '+' or '-'
 export async function updatePoints(amount, operation, profileID) {
+  amount = Number(amount);
   // get user document reference from firestore
   const profilesRef = doc(db, "profiles", profileID);
   const profilesData = await getDoc(profilesRef);
@@ -60,6 +61,7 @@ export async function updatePoints(amount, operation, profileID) {
     }
   }
 }
+
 
 
 
