@@ -401,7 +401,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { checkLogin } from "../loginPage_file/authenticate.js";
 
@@ -546,12 +546,29 @@
             window.location.href = `../eventCreation/reviewApplicants.html?eventId=${eventId}`;
         };
 		
-		window.endEvent = (eventId) => {
-            const endConfirm = confirm("Are you sure you want to end the event?");
-            if (endConfirm){
-                window.location.href = `../eventCreation/endEvent.html?eventId=${eventId}`;
+		window.endEvent = async (eventId, eventName) => { // Will add points awarding soon
+            if (!confirm(`Are you sure you want to end "${eventName}"?`)) return;
+            try {
+                const eventRef = doc(db, "events", eventId);
+                const eventSnap = await getDoc(eventRef);
+                if (!eventSnap.exists()) {
+                    alert("Event not found.");
+                    return;
+                }
+                const eventData = eventSnap.data();
+                await addDoc(collection(db, "complete_events"), {
+                    ...eventData,
+                    endedAt: serverTimestamp() 
+                });
+                await deleteDoc(doc(db, "events", eventId));
+                alert(`"${eventName}" has ended. The points rewards has been awarded to participating helpers.`);
+                loadEvents();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to delete event.");
             }
         };
+		
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
 
