@@ -2370,8 +2370,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .banner-content h1 {
-  font-size: 48px;
-  font-weight: 300;
+  font-size: 65px;
+  font-weight: bold;
   line-height: 1em;
   margin-top: 20px;
 }
@@ -2382,7 +2382,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 @media (max-width: 991.98px) {
   .banner-content h1 {
-    font-size: 36px;
+    font-size: 45px;
   }
 }
 
@@ -2394,7 +2394,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 @media (max-width: 1199.98px) {
   .banner-content h1 {
-    font-size: 45px;
+    font-size: 55px;
   }
 }
 
