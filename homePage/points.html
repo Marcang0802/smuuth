@@ -29,6 +29,7 @@
 	<link rel="stylesheet" href="css/animate.min.css">
 	<link rel="stylesheet" href="css/owl.carousel.css">
 	<link rel="stylesheet" href="css/main.css">
+	
 </head>
 
 <body>
@@ -76,117 +77,23 @@
 	<!-- End banner Area -->
 
 	<!-- Start blog-posts Area -->
-	<div class="popular-post-area pt-100">
-		<div class="container col-10">
-			<div class="row align-items-center">
-				<div class="active-popular-post-carusel">
-					<div class="single-popular-post d-flex flex-row">
-						<div class="thumb">
-							<img class="img-fluid" src="img/p1.png" alt="">
-							<a class="btns text-uppercase" href="#">view job post</a>
-						</div>
-						<div class="details">
-							<a href="#">
-								<h4>Creative Designer</h4>
-							</a>
-							<h6>Los Angeles</h6>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod temporinc
-								ididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis.
-							</p>
-						</div>
-					</div>
-					<div class="single-popular-post d-flex flex-row">
-						<div class="thumb">
-							<img src="img/p2.png" alt="">
-							<a class="btns text-uppercase" href="#">view job post</a>
-						</div>
-						<div class="details">
-							<a href="#">
-								<h4>Creative Designer</h4>
-							</a>
-							<h6>Los Angeles</h6>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod temporinc
-								ididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis.
-							</p>
-						</div>
-					</div>
-					<div class="single-popular-post d-flex flex-row">
-						<div class="thumb">
-							<img src="img/p1.png" alt="">
-							<a class="btns text-uppercase" href="#">view job post</a>
-						</div>
-						<div class="details">
-							<a href="#">
-								<h4>Creative Designer</h4>
-							</a>
-							<h6>Los Angeles</h6>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod temporinc
-								ididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis.
-							</p>
-						</div>
-					</div>
-					<div class="single-popular-post d-flex flex-row">
-						<div class="thumb">
-							<img src="img/p2.png" alt="">
-							<a class="btns text-uppercase" href="#">view job post</a>
-						</div>
-						<div class="details">
-							<a href="#">
-								<h4>Creative Designer</h4>
-							</a>
-							<h6>Los Angeles</h6>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod temporinc
-								ididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis.
-							</p>
-						</div>
-					</div>
-					<div class="single-popular-post d-flex flex-row">
-						<div class="thumb">
-							<img src="img/p1.png" alt="">
-							<a class="btns text-uppercase" href="#">view job post</a>
-						</div>
-						<div class="details">
-							<a href="#">
-								<h4>Creative Designer</h4>
-							</a>
-							<h6>Los Angeles</h6>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod temporinc
-								ididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis.
-							</p>
-						</div>
-					</div>
-					<div class="single-popular-post d-flex flex-row">
-						<div class="thumb">
-							<img src="img/p2.png" alt="">
-							<a class="btns text-uppercase" href="#">view job post</a>
-						</div>
-						<div class="details">
-							<a href="#">
-								<h4>Creative Designer</h4>
-							</a>
-							<h6>Los Angeles</h6>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod temporinc
-								ididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis.
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<section class="post-area section-gap">
+    <div class="container">
+        <div class="row justify-content-center d-flex">
+            <div class="col-lg-8 post-list" id="rewardArea">
+                <!-- Reward cards go here -->
+            </div>
+        </div>
+    </div>
+	</section>
+
 	<!-- End blog-posts Area -->
 
 	<!-- start footer Area -->
 	<footer class="footer-area section-gap">
 		<div class="container">
 			<div class="row">
-				<!-- <div class="col-lg-3  col-md-12">
+				<div class="col-lg-3  col-md-12">
 					<div class="single-footer-widget">
 						<h6>Top Products</h6>
 						<ul class="footer-nav">
@@ -196,7 +103,7 @@
 							<li><a href="#">Marketing Service</a></li>
 						</ul>
 					</div>
-				</div> -->
+				</div>
 				<div class="col-lg-6  col-md-12">
 					<div class="single-footer-widget newsletter">
 						<h6>Newsletter</h6>
@@ -255,9 +162,8 @@
 				<div class="col-lg-4 col-sm-12 footer-social">
 					<a href="#"><i class="fa fa-facebook"></i></a>
 					<a href="#"><i class="fa fa-twitter"></i></a>
-					<a href="https://www.instagram.com/smuuthevents?igsh=ZTJ2OWs2MHB2OW94&utm_source=qr"><i
-							class="fa fa-instagram"></i></a>
-					<!-- <a href="#"><i class="fa fa-behance"></i></a> -->
+					<a href="#"><i class="fa fa-dribbble"></i></a>
+					<a href="#"><i class="fa fa-behance"></i></a>
 				</div>
 			</div>
 		</div>
@@ -297,38 +203,86 @@
 		let rewardList = await getAllRewards();
 		let role = await getRole(profileID);
 		for (let reward of rewardList) {
-			// console.log(reward.data)
-			let div1 = document.createElement('div')
-			div1.setAttribute("class", 'card col-4 m-3 p-1')
-			div1.setAttribute("style", "width: 18rem")
-			row.appendChild(div1)
+  // <div class="single-post d-flex flex-row">
+			// Card (add job-listing, remove border)
+			const card = document.createElement('div');
+			card.className = 'single-post d-flex flex-row';
+			row.appendChild(card);
 
-			let div2 = document.createElement("div")
-			div2.setAttribute("class", "card-body")
-			div1.appendChild(div2)
+			const thumb = document.createElement('div')
+			thumb.className = 'thumb'
+			const img = document.createElement('img')
+			img.className = 'img-fluid'
+			img.src = '../img/lilykong.jpg'
+			img.alt = ''
+			thumb.appendChild(img)
+			card.appendChild(thumb)
 
-			let rewardname = document.createElement("h5")
-			rewardname.setAttribute("class", "card-title")
-			rewardname.innerText = reward.data.rewardName
-			div2.appendChild(rewardname)
+			// Details
+			const details = document.createElement('div');
+			details.className = 'details';
+			card.appendChild(details);
 
-			let pointsrequired = document.createElement("p")
-			pointsrequired.setAttribute("class", "card-subtitle mb-2 text-body-secondary")
-			pointsrequired.innerText = "Points Required : " + reward.data.pointsAmount
-			div2.appendChild(pointsrequired)
+			// Title row
+			const titleDiv = document.createElement('div');
+			titleDiv.className = 'title d-flex flex-row justify-content-between';
+			details.appendChild(titleDiv);
 
-			let button = document.createElement("button")
-			button.setAttribute("class", "btn btn-primary")
-			button.innerText = "Redeem Now!"
-			div2.appendChild(button)
+			// Left: titles
+			const titlesDiv = document.createElement('div');
+			titlesDiv.className = 'titles';
+			titleDiv.appendChild(titlesDiv);
 
-			button.addEventListener('click', () => {
-				let rewardID = reward.id
-				let profileID = localStorage.getItem("profileID")
-				redeemReward(rewardID, profileID)
-			})
-		}
-		if (role == 'systemAdmin') {
+			const a = document.createElement('a');
+			a.href = '#';
+			const h4 = document.createElement('h4');
+			h4.textContent = reward.data.rewardName;
+			a.appendChild(h4);
+			titlesDiv.appendChild(a);
+
+			// (no subtitle since you removed it)
+
+			// Right: actions
+			const btns = document.createElement('ul');
+			btns.className = 'btns';
+
+			// optional heart (keeps spacing like index)
+			
+
+			// Redeem MUST be the last li so theme applies the primary style
+			const liRedeem = document.createElement('li');
+			const aRedeem = document.createElement('a');
+			aRedeem.href = '#';
+			aRedeem.textContent = 'Redeem';
+			aRedeem.addEventListener('click', (e) => {
+			e.preventDefault();
+			redeemReward(reward.id, profileID);
+			});
+			liRedeem.appendChild(aRedeem);
+			btns.appendChild(liRedeem);
+
+			titleDiv.appendChild(btns);
+
+			// Body/meta (optional)
+			const h5 = document.createElement('h5');
+			h5.textContent = reward.data.type ? `Reward Type: ${reward.data.type}` : 'Reward';
+			details.appendChild(h5);
+
+			const pointsLine = document.createElement('p');
+			pointsLine.className = 'address';
+			pointsLine.innerHTML = `<span class="lnr lnr-database"></span> Points required: ${reward.data.pointsAmount}`;
+			details.appendChild(pointsLine);
+
+
+			if (reward.data.location) {
+			const loc = document.createElement('p');
+			loc.className = 'address';
+			loc.innerHTML = `<span class="lnr lnr-map"></span> ${reward.data.location}`;
+			details.appendChild(loc);
+			}
+			}
+
+		if (role == 'systemAdmin'){
 			let button = document.createElement("button")
 			button.setAttribute("class", "btn btn-danger")
 			button.innerText = "Manage Reward"
