@@ -129,7 +129,6 @@
         await addDoc(collection(db, "reports"), data);
 
         // Confirmation & redirect
-        alert("Report successfully submitted!");
         form.reset();
         window.location.href = "thankyou.html";
       } catch (error) {
