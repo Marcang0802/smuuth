@@ -106,7 +106,7 @@ export async function redeemReward(rewardID, profileID) {
   if (redeemedUsers.length < (reward.data().redeemLimit)) {
     for (let user of redeemedUsers) { //check if already redeemed
       if (profileID === user) {
-        console.log("Already redeemed")
+        alert("Already redeemed")
         return
       }
     }
@@ -117,6 +117,7 @@ export async function redeemReward(rewardID, profileID) {
       await updateDoc(rewardRef, {
         redeemedUser: redeemedUsers
       });
+      window.location.reload()
     }
     else {
       return

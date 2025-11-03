@@ -1,6 +1,6 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
@@ -20,19 +20,18 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const profilesRef = collection(db, "profiles");
-    const q = query(profilesRef, where("userId", "==", user.uid));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      localStorage.setItem('profileID', doc.id)
-    });
-  }
-});
-
-
+if (localStorage.getItem('profileID') == null) {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const profilesRef = collection(db, "profiles");
+      const q = query(profilesRef, where("userId", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        localStorage.setItem('profileID', doc.id)
+      });
+    }
+  });
+}
 
 
 export async function getPoints(profileID) {

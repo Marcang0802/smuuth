@@ -30,19 +30,19 @@ function validatePassword(password) {
   return password.length >= 6;
 }
 
-async function createUserDocument(userId, email) {
-  try {
-    await setDoc(doc(db, "users", userId), {
-      email,
-      createdAt: new Date(),
-      points: 0,
-      certifications: [],
-    });
-  } catch (error) {
-    console.error("Error creating user document:", error);
-    throw error;
-  }
-}
+// async function createUserDocument(userId, email) {
+//   try {
+//     await setDoc(doc(db, "users", userId), {
+//       email,
+//       createdAt: new Date(),
+//       points: 0,
+//       certifications: [],
+//     });
+//   } catch (error) {
+//     console.error("Error creating user document:", error);
+//     throw error;
+//   }
+// }
 
 // DOM Elements
 document.addEventListener("DOMContentLoaded", function() {
@@ -75,8 +75,8 @@ document.addEventListener("DOMContentLoaded", function() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      await createUserDocument(user.uid, email);
-      localStorage.setItem("userUID", user.uid);
+      // await createUserDocument(user.uid, email);
+      // localStorage.setItem("userUID", user.uid);
       window.location.href = "login.html";
     } catch (error) {
       console.error("Registration error:", error);
@@ -103,16 +103,16 @@ document.addEventListener("DOMContentLoaded", function() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Check if user already exists in Firestore
-      const userDocRef = doc(db, "users", user.uid);
-      const userSnapshot = await getDoc(userDocRef);
+      // // Check if user already exists in Firestore
+      // const userDocRef = doc(db, "users", user.uid);
+      // const userSnapshot = await getDoc(userDocRef);
 
-      if (!userSnapshot.exists()) {
-        await createUserDocument(user.uid, user.email);
-      }
+      // if (!userSnapshot.exists()) {
+      //   await createUserDocument(user.uid, user.email);
+      // }
 
-      localStorage.setItem("userUID", user.uid);
-      window.location.href = "homePage/index.html";
+      // localStorage.setItem("userUID", user.uid);
+      window.location.href = "./profile.html";
     } catch (error) {
       console.error("Google Sign Up Error:", error);
       errorMessageDisplay.innerText = "Google Sign Up failed. Please try again.";
