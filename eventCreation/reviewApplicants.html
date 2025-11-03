@@ -139,7 +139,7 @@
         const event = eventSnap.data().name;
         //console.log(event)
         document.getElementById("eventName").innerText = event || "";
-        const applicants = eventSnap.data().pending;
+        const applicants = eventSnap.data().helpers;
         console.log(applicants)
         let divApplicant = document.getElementById('applicants')
         let ol = document.createElement('ol')
