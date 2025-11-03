@@ -236,7 +236,6 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const uid = user.uid;
         let profileExist = false;
         const profilesRef = collection(db, "profiles");
         const q = query(profilesRef, where("userId", "==", user.uid));
@@ -349,7 +348,7 @@
         try {
           await addDoc(collection(db, "profiles"), data);
           alert("Profile created!");
-          window.location.href = "../homePage/events.html";
+          window.location.href = "../homePage/index.html";
         } catch (error) {
           console.error("Error saving profile:", error);
           alert("Failed to create profile. Please try again.");
