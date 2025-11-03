@@ -134,14 +134,14 @@
       document.getElementById("userPhone").textContent = doc.phone || "";
       document.getElementById("userRole").textContent = doc.role || "";
       document.getElementById("userSkills").textContent = Array.isArray(doc.skills) ? doc.skills.join(", ") : doc.skills || "";
-
-      // Optionally use doc.photoUrl if you allow uploading profile pictures
-      // Otherwise keep default avatar
+      // Set profile picture from Firestore photoUrl or fallback
       if (doc.photoUrl) {
         document.getElementById("profilePic").src = doc.photoUrl;
+      } else {
+        document.getElementById("profilePic").src = "../loginPage_file/default-avatar.png";
       }
     });
-
+    
     document.getElementById("editBtn").onclick = () => {
       window.location.href = "../loginPage_file/editProfile.html";
     };
