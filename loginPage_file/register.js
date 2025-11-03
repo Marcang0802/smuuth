@@ -61,22 +61,20 @@ document.addEventListener("DOMContentLoaded", function() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     errorMessageDisplay.innerText = "";
-
     if (!validateEmail(email)) {
       errorMessageDisplay.innerText = "Invalid email format.";
       return;
     }
-
     if (!validatePassword(password)) {
       errorMessageDisplay.innerText = "Password must be at least 6 characters.";
       return;
     }
-
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       // await createUserDocument(user.uid, email);
       // localStorage.setItem("userUID", user.uid);
+      alert('You can now log in!');
       window.location.href = "login.html";
     } catch (error) {
       console.error("Registration error:", error);

@@ -142,11 +142,14 @@
         </table>
 
     </div>
-    <!-- <div>
-        <button type="button" onclick="()=>{
-            window.location.replace('./points.html')
-        }">Return</button>
-    </div> -->
+
+    <div>
+        <button type="button" onclick="goBack">Return</button>
+        <script>
+            //button to go back to points.html
+            function goBack() { window.location.replace('./points.html') }
+        </script>
+    </div>
 
     <!-- Firebase & Firestore integration -->
     <script type="module">
@@ -160,8 +163,8 @@
         let profileID = localStorage.getItem('profileID');
         let role = await getRole(profileID);
         if (role != 'systemAdmin') {
-                window.location.replace('./index.html');
-            }
+            window.location.replace('./index.html');
+        }
 
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
