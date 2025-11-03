@@ -132,6 +132,11 @@
           <input type="text" class="form-control" id="helperId" name="helperId" required placeholder="Enter email">
         </div>
 
+        <div class="mb-3">
+          <label for="eventName" class="form-label">Event Name</label>
+          <input type="text" class="form-control" id="eventName" name="eventName" required placeholder="Enter event name">
+        </div>
+
         <div class="d-grid gap-2 col-10 mx-auto mb-3 text-center">
           <label id="event-rating" class="form-label d-block mt-2">Event Rating</label>
           <div class="star-rating" id="starRating">
@@ -225,6 +230,7 @@
         helperName: document.getElementById("helperName").value.trim(),
         helperId: document.getElementById("helperId").value.trim(),
         rating: selectedRating,
+        eventName: document.getElementById("eventName").value.trim(),
         feedback: document.getElementById("description").value.trim(),
         createdAt: serverTimestamp(),
       };
