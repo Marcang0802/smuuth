@@ -45,7 +45,7 @@
 						<li><a href="events.html">Events</a></li>
 						<li><a href="calendar.html">Calendar</a></li>
 						<li><a href="points.html">Points</a></li>
-						<li><a class="ticker-btn" href="reviews.html">Feedback Form</a></li>
+						<li><a class="ticker-btn" href="../review/event_feedback.html">Feedback Form</a></li>
 						<li>
 							<a href="../loginPage_file/ViewProfile.html" class="profile-icon-btn" aria-label="Profile">
 								<i class="fa fa-user"></i>
@@ -360,7 +360,7 @@
                 <div class="col-lg-4 col-sm-12 footer-social">
                     <a href="#"><i class="fa fa-facebook"></i></a>
                     <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/smuuthevents?igsh=ZTJ2OWs2MHB2OW94&utm_source=qr"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
                     <!-- <a href="#"><i class="fa fa-tiktok"></i></a> -->
                 </div>
             </div>
@@ -466,6 +466,9 @@
             try {
                 // await addDoc(collection(db, "participations"), {
                 let userId = currentUser.uid
+                let userFullName = currentUser.fullname;
+                let userEmail = currentUser.email;
+                let userSkills = currentUser.skills
                 const profileRef = collection(db, "profiles")
                 const q = query(profileRef, where("userId", "==", userId))
                 const querySnapshot = await getDocs(q)
@@ -483,6 +486,9 @@
                     alert("You already requested to join the event !")
                 }else{
                     newPending.push(userId);
+                    newPending.push(userFullName);
+                    newPending.push(userEmail);
+                    newPending.push(userSkills);
                     alert("You have successfully requested to join the event!")
                     await updateDoc(eventRef, {
                         pending: newPending
