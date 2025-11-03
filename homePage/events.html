@@ -474,6 +474,70 @@
             }
             }
 
+        function applyKeywordFilter(keywords) {
+            const q = (keywords || '').trim().toLowerCase();
+            const terms = q.split(/\s+/).filter(Boolean); // multi-word support
+            let shown = 0;
+
+            const allCards = document.querySelectorAll('.single-post.job-listing');
+
+            allCards.forEach(card => {
+                const name = (card.querySelector('.title h4')?.textContent || '').toLowerCase();
+                const desc = (card.querySelector('.details p:nth-of-type(2)')?.textContent || '').toLowerCase();
+                const haystack = `${name} ${desc}`;
+
+                const match = terms.length === 0 ? true : terms.every(t => haystack.includes(t));
+
+                card.classList.toggle('d-none', !match);
+                card.classList.toggle('d-flex', match);
+                if (match) shown++;
+            });
+
+            // optional empty-state (reuses same element id as your category filter)
+            let empty = document.getElementById('no-results');
+            if (!shown) {
+                if (!empty) {
+                empty = document.createElement('div');
+                empty.id = 'no-results';
+                empty.style.color = 'red';
+                empty.style.margin = '16px 0';
+                empty.textContent = 'No events match these keywords.';
+                document.getElementById('event-list').appendChild(empty);
+                } else {
+                empty.textContent = 'No events match these keywords.';
+                }
+            } else if (empty) {
+                empty.remove();
+            }
+        }
+        function applyKeywordFilterFromURL() {
+            const params = new URLSearchParams(location.search);
+            const q = params.get('keywords') || '';
+            applyKeywordFilter(q);
+        }
+
+        function showAll() {
+            document.querySelectorAll('.single-post.job-listing').forEach(card => {
+                card.classList.remove('d-none');
+                card.classList.add('d-flex');
+            });
+            const empty = document.getElementById('no-results');
+            if (empty) empty.remove();
+        }
+
+// prefer keywords over category
+        function applyFiltersFromURL() {
+        const params = new URLSearchParams(location.search);
+        const q = (params.get('keywords') || '').trim();
+        const cat = params.get('category') || 'all';
+        if (q) {
+            showAll();              // don’t let category hide matches
+            applyKeywordFilter(q);  // search by name/description only
+        } else {
+            applyCategoryFilter(cat);
+        }
+        }
+
         function applyCategoryFilterFromURL() {
             const params = new URLSearchParams(window.location.search);
             const selected = params.get('category') || 'all';
@@ -496,6 +560,8 @@
                 const eventId = docSnap.id;
 
                 const dataCat = slug(event.category || 'others');
+                const dataName = (event.name || '').toLowerCase()
+                const dataDesc = (event.description || '').toLowerCase()
 
                 console.log(`Processing event: ${event.name}, Category: ${event.category}`);
 
@@ -525,7 +591,7 @@
                 }
 
                 const eventHTML = `
-                <div class="single-post job-listing d-flex flex-row mb-3" data-category="${canonical(event.category || 'Others')}">
+                <div class="single-post job-listing d-flex flex-row mb-3" data-category="${canonical(dataCat || 'Others')}" data-name="${dataName}" data-desc="${dataDesc}">
                     <div class="thumb"><img src="img/post.png" alt=""></div>
                     <div class="post-content d-flex flex-column w-100">
                         <div class="details">
@@ -542,7 +608,7 @@
                 </div>`;
                 eventList.insertAdjacentHTML("beforeend", eventHTML);
             });
-            applyCategoryFilterFromURL()
+            applyFiltersFromURL();
             console.log(event.category)
             
         }
