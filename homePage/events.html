@@ -546,7 +546,7 @@
             window.location.href = `../eventCreation/reviewApplicants.html?eventId=${eventId}`;
         };
 		
-		window.endEvent = async (eventId, eventName) => { // Will add points awarding soon
+		window.endEvent = async (eventId, eventName) => {
             if (!confirm(`Are you sure you want to end "${eventName}"?`)) return;
             try {
                 const eventRef = doc(db, "events", eventId);
@@ -556,12 +556,29 @@
                     return;
                 }
                 const eventData = eventSnap.data();
+                console.log(eventData);
+                const helpers = eventData.helpers || [];
+                const reward = eventData.rewardPoints || 0;
                 await addDoc(collection(db, "complete_events"), {
                     ...eventData,
                     endedAt: serverTimestamp() 
                 });
+                console.log(helpers);
+                for (const helperId of helpers) {
+                    const profileRef = doc(db, "profiles", helperId);
+                    const profileSnap = await getDoc(profileRef);
+
+                    if (profileSnap.exists()) {
+                        const currentPoints = profileSnap.data().points || 0;
+                        await updateDoc(profileRef, {
+                            points: currentPoints + reward,
+                        });
+                    } else {
+                        console.warn(`Profile not found for helper: ${helperId}`);
+                    }
+                }
                 await deleteDoc(doc(db, "events", eventId));
-                alert(`"${eventName}" has ended. The points rewards has been awarded to participating helpers.`);
+                alert(`"${eventName}" has ended. ${reward} points awarded to ${helpers.length} helper(s).`);
                 loadEvents();
             } catch (err) {
                 console.error(err);
