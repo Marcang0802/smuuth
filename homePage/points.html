@@ -190,6 +190,10 @@
 	<script src="js/main.js"></script>
 
 	<script type="module">
+		import { checkLogin } from "../loginPage_file/authenticate.js";
+
+        checkLogin()
+		
 		import { getPoints } from '../points/points.js'
 		let profileID = localStorage.getItem('profileID');
 		console.log(profileID);

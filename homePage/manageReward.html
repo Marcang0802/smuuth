@@ -150,6 +150,20 @@
 
     <!-- Firebase & Firestore integration -->
     <script type="module">
+        // Check if logged in
+        import { checkLogin } from "../loginPage_file/authenticate.js";
+
+        checkLogin()
+
+        // Check if role is System Admin
+        import { getRole } from '../reward/reward.js'
+        let profileID = localStorage.getItem('profileID');
+        let role = await getRole(profileID);
+        if (role != 'systemAdmin') {
+                window.location.replace('./index.html');
+            }
+
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -213,7 +227,7 @@
 
             let number = document.createElement("td")
             number.innerText = count;
-            count+=1;
+            count += 1;
             tr.appendChild(number)
 
             let rewardname = document.createElement("td")
@@ -234,9 +248,9 @@
             td.appendChild(Delete)
             tr.appendChild(td)
 
-            button1.addEventListener('click', async() => {
+            button1.addEventListener('click', async () => {
                 alert('in console')
-                console.log( await getAllRedeemedUsers(reward.id))
+                console.log(await getAllRedeemedUsers(reward.id))
             })
             Delete.addEventListener('click', () => {
                 deleteReward(reward.id)
