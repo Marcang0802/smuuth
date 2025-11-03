@@ -447,7 +447,9 @@
                             <button class="btn btn-sm btn-warning me-1" onclick="editEvent('${eventId}')">Edit</button>
                             <button class="btn btn-sm btn-danger" onclick="deleteEvent('${eventId}', '${event.name}')">Delete</button>
                             <button class="btn btn-sm btn-success" onclick="viewapplicants('${eventId}', '${event.name}')">View Applicants</button>
+                            <button class="btn btn-sm" onclick="endEvent('${eventId}', '${event.name}')">End Event</button>
                         </div>`;
+						// End event method is tentative
                     }
 
                     if (!isCreator) {
@@ -540,7 +542,13 @@
         window.viewapplicants = (eventId) => {
             window.location.href = `../eventCreation/reviewApplicants.html?eventId=${eventId}`;
         };
-
+		
+		window.endEvent = (eventId) => {
+            const endConfirm = confirm("Are you sure you want to end the event?");
+            if (endConfirm){
+                window.location.href = `../eventCreation/endEvent.html?eventId=${eventId}`;
+            }
+        };
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
 
