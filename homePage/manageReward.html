@@ -68,13 +68,15 @@
                 </div>
             </div>
             <div id="rewardList" class="col-8 overflow-auto" style="height: 400px;">
-                <table class="table table-bordered overflow-auto " id="rewardTable">
-                    <tr>
-                        <th>Number</th>
-                        <th>Reward name</th>
-                        <th>Redeemed Users</th>
-                        <th>Delete</th>
-                    </tr>
+                <table class="table table-bordered " id="rewardTable">
+                    <thead style="position: sticky; top:0">
+                        <tr>
+                            <th>Number</th>
+                            <th>Reward name</th>
+                            <th>Redeemed Users</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
                 </table>
             </div>
         </div>
@@ -218,7 +220,7 @@
             })
 
             //button to delete reward from firebase
-            Delete.addEventListener('click', async() => {
+            Delete.addEventListener('click', async () => {
                 await deleteReward(reward.id)
                 window.location.reload();
             })

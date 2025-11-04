@@ -79,10 +79,15 @@
 	<!-- Start blog-posts Area -->
 	<section class="post-area section-gap">
 		<div class="container">
-			<div class="row justify-content-center d-flex">
-				<div class="col-lg-8 post-list" id="rewardArea">
-					<!-- Reward cards go here -->
-				</div>
+			<div class="row justify-content-center d-flex" id="rewardArea">
+				<!-- <div class="col-lg-4 post-list" id="rewardArea">
+					 Reward cards go here 
+				</div> -->
+			</div>
+			<div class="row justify-content-center d-flex" id="manageArea">
+				<!-- <div class="col-lg-4 post-list" id="rewardArea">
+					 Reward cards go here 
+				</div> -->
 			</div>
 		</div>
 	</section>
@@ -210,19 +215,24 @@
 		let row = document.getElementById('rewardArea')
 		let rewardList = await getAllRewards();
 		let role = await getRole(profileID);
+
 		// iterate through the reward list and populate the screen
 		for (let reward of rewardList) {
 			// <div class="single-post d-flex flex-row">
 			// Card (add job-listing, remove border)
+			let col = document.createElement("div");
+			col.setAttribute('class','col-lg-6 post-list');
+			row.appendChild(col);
+
 			const card = document.createElement('div');
 			card.className = 'single-post d-flex flex-row';
-			row.appendChild(card);
+			col.appendChild(card);
 
 			const thumb = document.createElement('div')
 			thumb.className = 'thumb'
 			const img = document.createElement('img')
-			img.className = 'img-fluid'
-			img.src = '../img/lilykong.jpg'
+			img.className = 'img-fluid w-50'
+			img.src = './img/lilykong.jpg'
 			img.alt = ''
 			thumb.appendChild(img)
 			card.appendChild(thumb)
@@ -266,37 +276,35 @@
 			aRedeem.addEventListener('click', (e) => {
 				e.preventDefault();
 				redeemReward(reward.id, profileID);
-				
 			});
 			liRedeem.appendChild(aRedeem);
 			btns.appendChild(liRedeem);
-
 			titleDiv.appendChild(btns);
 
-			// Body/meta (optional)
-			const h5 = document.createElement('h5');
-			h5.textContent = reward.data.type ? `Reward Type: ${reward.data.type}` : 'Reward';
-			details.appendChild(h5);
+			// Body/meta (optional) //???
+			// const h5 = document.createElement('h5');
+			// h5.textContent = reward.data.type ? `Reward Type: ${reward.data.type}` : 'Reward';
+			// details.appendChild(h5);
 
 			const pointsLine = document.createElement('p');
 			pointsLine.className = 'address';
 			pointsLine.innerHTML = `<span class="lnr lnr-database"></span> Points required: ${reward.data.pointsAmount}`;
 			details.appendChild(pointsLine);
 
-
-			if (reward.data.location) {
-				const loc = document.createElement('p');
-				loc.className = 'address';
-				loc.innerHTML = `<span class="lnr lnr-map"></span> ${reward.data.location}`;
-				details.appendChild(loc);
-			}
+			// if (reward.data.location) {
+			// 	const loc = document.createElement('p');
+			// 	loc.className = 'address';
+			// 	loc.innerHTML = `<span class="lnr lnr-map"></span> ${reward.data.location}`;
+			// 	details.appendChild(loc);
+			// }
 		}
 
 		if (role == 'systemAdmin') {
 			let button = document.createElement("button")
 			button.setAttribute("class", "btn btn-danger")
 			button.innerText = "Manage Reward"
-			row.appendChild(button)
+			let area = document.getElementById("manageArea");
+			area.appendChild(button)
 
 			button.addEventListener('click', () => {
 				window.location.replace('manageReward.html');
