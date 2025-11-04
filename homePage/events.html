@@ -27,6 +27,131 @@
     <link rel="stylesheet" href="css/animate.min.css">
     <link rel="stylesheet" href="css/owl.carousel.css">
     <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* Tabs Styling */
+        .events-tabs-container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .events-tabs {
+            display: flex;
+            border-bottom: 2px solid #f9f9ff;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: #f9f9ff;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: #222222;
+            transition: all 0.3s ease;
+            position: relative;
+            outline: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .tab-btn:focus {
+            outline: none;
+        }
+
+        .tab-btn:hover {
+            background: #e8e8ff;
+            color: #49e4fa;
+        }
+
+        .tab-btn.active {
+            background: #49e4fa;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(73, 228, 250, 0.3);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #49e4fa;
+        }
+
+        /* Events List Container */
+        #event-list {
+            max-height: 700px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 10px;
+        }
+
+        /* Custom Scrollbar */
+        #event-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #event-list::-webkit-scrollbar-track {
+            background: #f9f9ff;
+            border-radius: 10px;
+        }
+
+        #event-list::-webkit-scrollbar-thumb {
+            background: #49e4fa;
+            border-radius: 10px;
+        }
+
+        #event-list::-webkit-scrollbar-thumb:hover {
+            background: #38d3e8;
+        }
+
+        /* Event Card Enhancement */
+        .single-post.job-listing {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .single-post.job-listing:hover {
+            box-shadow: 0 4px 15px rgba(73, 228, 250, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #777777;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h4 {
+            color: #222222;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #777777;
+        }
+    </style>
 </head>
 
 <body>
@@ -122,7 +247,22 @@
     <section class="post-area section-gap">
         <div class="container">
             <div class="row justify-content-center d-flex">
-                <div class="col-lg-8 post-list " id="event-list">
+                <div class="col-lg-8 post-list ">
+                    <!-- Tabs Navigation -->
+                    <div class="events-tabs-container">
+                        <div class="events-tabs">
+                            <button class="tab-btn active" data-tab="all-events">
+                                <i class="fa fa-th-list"></i> All Events
+                            </button>
+                            <button class="tab-btn" data-tab="my-events">
+                                <i class="fa fa-star"></i> My Events
+                            </button>
+                            <button class="tab-btn" data-tab="joined-events">
+                                <i class="fa fa-check-circle"></i> Joined Events
+                            </button>
+                        </div>
+                        <!-- Events List -->
+                        <div id="event-list">
                     <!-- <div class="single-post job-listing d-flex flex-row" data-category="clubs">
                         <div class="thumb">
                             <img src="img/post.png" alt="">
@@ -240,6 +380,8 @@
                             </div>
                         </div>
                     </div> -->
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-4 sidebar">
                     <div class="single-slidebar">
@@ -485,6 +627,7 @@
         const auth = getAuth(app);
         const eventList = document.getElementById("event-list");
         let currentUser = null;
+        let tabsInitialized = false;
 
         //if profileID not initialized, initialize
         if (localStorage.getItem("profileID") == null) {
@@ -668,7 +811,13 @@
                 }
 
                 const eventHTML = `
-                <div class="single-post job-listing d-flex flex-row mb-3" data-category="${canonical(dataCat || 'Others')}" data-name="${dataName}" data-desc="${dataDesc}">
+                <div class="single-post job-listing d-flex flex-row mb-3"
+                     data-category="${canonical(dataCat || 'Others')}"
+                     data-name="${dataName}"
+                     data-desc="${dataDesc}"
+                     data-creator-id="${event.creatorId || ''}"
+                     data-event-id="${eventId}"
+                     data-helpers='${JSON.stringify(event.helpers || [])}'>
                     <div class="thumb"><img src="img/post.png" alt=""></div>
                     <div class="post-content d-flex flex-column w-100">
                         <div class="details">
@@ -686,8 +835,113 @@
                 eventList.insertAdjacentHTML("beforeend", eventHTML);
             });
             applyFiltersFromURL();
-            console.log(event.category)
 
+            // Initialize tab listeners after events are loaded (only once)
+            if (!tabsInitialized) {
+                initializeTabs();
+                tabsInitialized = true;
+            }
+        }
+
+        // Tab filtering functions
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            console.log('Initializing tabs, found:', tabButtons.length);
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Tab clicked:', this.getAttribute('data-tab'));
+
+                    // Remove active class from all buttons
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    // Get the tab type
+                    const tabType = this.getAttribute('data-tab');
+
+                    // Apply the appropriate filter
+                    filterEventsByTab(tabType);
+                });
+            });
+        }
+
+        function filterEventsByTab(tabType) {
+            console.log('Filtering by tab:', tabType);
+            console.log('Current user:', currentUser);
+            console.log('Profile ID:', localStorage.getItem('profileID'));
+
+            const allCards = document.querySelectorAll('.single-post.job-listing');
+            const profileID = localStorage.getItem('profileID');
+            let shown = 0;
+
+            console.log('Total cards found:', allCards.length);
+
+            allCards.forEach(card => {
+                let shouldShow = false;
+
+                if (tabType === 'all-events') {
+                    // Show all events
+                    shouldShow = true;
+                } else if (tabType === 'my-events') {
+                    // Show only events created by the user
+                    const creatorId = card.getAttribute('data-creator-id');
+                    console.log('Checking my-events:', { creatorId, currentUserUid: currentUser?.uid });
+                    shouldShow = currentUser && creatorId === currentUser.uid;
+                } else if (tabType === 'joined-events') {
+                    // Show only events the user has joined
+                    const helpersStr = card.getAttribute('data-helpers');
+                    console.log('Helpers string:', helpersStr);
+                    try {
+                        const helpers = JSON.parse(helpersStr);
+                        console.log('Parsed helpers:', helpers, 'ProfileID:', profileID);
+                        shouldShow = profileID && helpers.includes(profileID);
+                    } catch (e) {
+                        console.error('Error parsing helpers:', e);
+                        shouldShow = false;
+                    }
+                }
+
+                card.classList.toggle('d-none', !shouldShow);
+                card.classList.toggle('d-flex', shouldShow);
+                if (shouldShow) shown++;
+            });
+
+            console.log('Events shown:', shown);
+
+            // Show empty state if no events
+            showEmptyState(tabType, shown);
+        }
+
+        function showEmptyState(tabType, count) {
+            let empty = document.getElementById('tab-empty-state');
+
+            if (count === 0) {
+                if (!empty) {
+                    empty = document.createElement('div');
+                    empty.id = 'tab-empty-state';
+                    empty.className = 'empty-state';
+                }
+
+                let emptyMessage = '';
+                let emptyIcon = 'fa-calendar-times-o';
+
+                if (tabType === 'my-events') {
+                    emptyMessage = '<h4>No Events Created</h4><p>You haven\'t created any events yet. Click "Create Event" to get started!</p>';
+                    emptyIcon = 'fa-star-o';
+                } else if (tabType === 'joined-events') {
+                    emptyMessage = '<h4>No Joined Events</h4><p>You haven\'t joined any events yet. Browse all events and join one!</p>';
+                    emptyIcon = 'fa-calendar-check-o';
+                } else {
+                    emptyMessage = '<h4>No Events Available</h4><p>There are no events at the moment. Check back later!</p>';
+                }
+
+                empty.innerHTML = `<i class="fa ${emptyIcon}"></i>${emptyMessage}`;
+                document.getElementById('event-list').appendChild(empty);
+            } else if (empty) {
+                empty.remove();
+            }
         }
 
         window.joinEvent = async (eventId, eventName, rewardPoints) => {
@@ -733,6 +987,8 @@
                         helpers: newHelpers
                     });
                     alert("You have successfully joined to help the event !")
+                    // Reload events to update the tabs
+                    loadEvents();
                 }
             }
             catch (err) {
