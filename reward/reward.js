@@ -51,6 +51,7 @@ export async function deleteReward(rewardID) {
   const rewardRef = doc(db, "rewards", rewardID);
   // Delete the document
   await deleteDoc(rewardRef);
+  alert('Deleted')
 }
 
 //get all redeemedUser (refer to data on top)

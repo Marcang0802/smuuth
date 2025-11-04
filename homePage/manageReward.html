@@ -2,11 +2,24 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8" />
     <title>Manage Rewards | SMU Event Helpers</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+    <!--
+			CSS
+			============================================= -->
+    <link rel="stylesheet" href="css/linearicons.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/main.css">
     <style>
         body {
             background: linear-gradient(135deg, #d6e4ff, #f8f9fa);
@@ -25,137 +38,80 @@
             background-position: center;
             background-repeat: no-repeat;
         }
-
-        .card {
-            max-width: 450px;
-            border-radius: 20px;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
-            background-color: rgba(0, 0, 0, 0.7);
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .card-header {
-            background: #004aad;
-            color: #fff;
-            text-align: center;
-            padding: 1.5rem;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .btn-success {
-            background-color: #28a745;
-            border: none;
-            font-weight: 600;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-        input,
-        textarea {
-            border-radius: 10px !important;
-        }
-
-        .form-control:focus {
-            border-color: #004aad;
-            box-shadow: 0 0 0 0.2rem rgba(0, 74, 173, 0.25);
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        #event {
-            color: white;
-            text-align: center;
-            padding: 1.5rem;
-        }
-
-        .form-label {
-            color: white;
-        }
-
-        .btn {
-            border-radius: 50px;
-            font-weight: 600;
-            margin: 6px 0;
-            background-color: #007bff;
-            ;
-            border: none;
-            font-weight: 600;
-        }
-
-        .btn:hover {
-            background-color: rgb(41, 41, 255);
-        }
     </style>
 </head>
 
 <body>
-    <div class="card">
-        <h2 id="reward" class="bi bi-calendar-event me-2">Add Reward</h2>
-        <div class="card-body p-4">
-            <form id="rewardForm">
-                <div class="mb-3">
-                    <label for="rewardName" class="form-label">Name of Reward</label>
-                    <input type="text" class="form-control" id="rewardname" name="rewardName" required />
-                </div>
 
-                <div class="mb-3">
-                    <label for="pointsAmount" class="form-label">Points Amount</label>
-                    <input type="number" class="form-control" id="pointsAmount" name="pointsAmount" required />
+    <div class="container">
+        <div class="row">
+            <div class="card text-center col-4">
+                <h2 id="reward" class="bi bi-calendar-event me-2 mt-4">Add Reward</h2>
+                <div class="card-body p-4">
+                    <form id="rewardForm">
+                        <div class="mb-3">
+                            <label for="rewardName" class="form-label">Name of Reward</label>
+                            <input type="text" class="form-control" id="rewardname" name="rewardName" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="pointsAmount" class="form-label">Points Amount</label>
+                            <input type="number" class="form-control" id="pointsAmount" name="pointsAmount" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="redeemLimit" class="form-label">Redeem Limit</label>
+                            <input type="number" class="form-control" id="redeemLimit" name="redeemLimit" required />
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 py-2 mt-2">
+                            <i class="bi bi-plus-circle me-2"></i>Add reward
+                        </button>
+                    </form>
                 </div>
+            </div>
+            <div id="rewardList" class="col-8 overflow-auto">
+                <table class="table table-bordered overflow-auto " id="rewardTable">
+                    <tr>
+                        <th>Number</th>
+                        <th>Reward name</th>
+                        <th>Redeemed Users</th>
+                        <th>Delete</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
-                <div class="mb-3">
-                    <label for="redeemLimit" class="form-label">Redeem Limit</label>
-                    <input type="number" class="form-control" id="redeemLimit" name="redeemLimit" required />
-                </div>
 
-                <button type="submit" class="btn btn-success w-100 py-2 mt-2">
-                    <i class="bi bi-plus-circle me-2"></i>Add reward
-                </button>
-            </form>
+        <div class="row">
+            <button class="btn btn-primary col-2 mx-auto my-4" type="button" id="returnButton">Return</button>
+            <script>
+                function doSomething() {
+                    window.location.replace("./points.html");
+                }
+                let returnButton = document.getElementById('returnButton');
+                returnButton.addEventListener("click", doSomething);
+            </script>
         </div>
     </div>
-    <div id="rewardList">
-        <table class="table table-bordered" id="rewardTable">
-            <tr>
-                <th>Number</th>
-                <th>Reward name</th>
-                <th>Redeemed Users</th>
-                <th>Delete</th>
-            </tr>
-        </table>
 
-    </div>
+    <script src="js/vendor/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
+    <script src="js/easing.min.js"></script>
+    <script src="js/hoverIntent.js"></script>
+    <script src="js/superfish.min.js"></script>
+    <script src="js/jquery.ajaxchimp.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.sticky.js"></script>
+    <script src="js/jquery.nice-select.min.js"></script>
+    <script src="js/parallax.min.js"></script>
+    <script src="js/mail-script.js"></script>
+    <script src="js/main.js"></script>
 
-    <div>
-        <button type="button" id="returnButton">Return</button>
-        <script>
-            function doSomething(){
-                window.location.replace("./points.html");
-            }
-            let returnButton = document.getElementById('returnButton');
-            returnButton.addEventListener("click",doSomething);
 
-        </script>
-    </div>
-
-   
     <script type="module">
         // Check if logged in
         import { checkLogin } from "../loginPage_file/authenticate.js";
@@ -208,6 +164,7 @@
                     try {
                         await addDoc(collection(db, "rewards"), data);
                         alert('added successfully')
+                        window.location.reload();
                     } catch (error) {
                         console.error("Error adding reward", error);
                         alert("Failed to add reward. Check console for details.");
@@ -235,12 +192,13 @@
             tr.appendChild(number)
 
             let rewardname = document.createElement("td")
+            rewardname.setAttribute("class", "font-weight-bold")
             rewardname.innerText = reward.data.rewardName
             tr.appendChild(rewardname)
 
             let redeemedUsers = document.createElement("td")
             let button1 = document.createElement("button")
-            button1.setAttribute("class", "btn btn-success")
+            button1.setAttribute("class", "btn btn-info")
             button1.innerText = "See User Names"
             redeemedUsers.appendChild(button1)
             tr.appendChild(redeemedUsers)
@@ -249,6 +207,7 @@
             let Delete = document.createElement("button")
             Delete.setAttribute("class", "btn btn-danger")
             Delete.innerText = "Delete Reward."
+
             td.appendChild(Delete)
             tr.appendChild(td)
 
@@ -259,8 +218,9 @@
             })
 
             //button to delete reward from firebase
-            Delete.addEventListener('click', () => {
-                deleteReward(reward.id)
+            Delete.addEventListener('click', async() => {
+                await deleteReward(reward.id)
+                window.location.reload();
             })
         }
     </script>
