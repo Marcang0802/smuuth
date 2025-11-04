@@ -26,6 +26,21 @@
     }
     #helper{color: white;}
     .form-label{color: white;}
+    #backBtn {
+      background-color: #007bff;
+      border-radius: 50px;
+      font-weight: 600;
+      border: none;
+      margin: 6px 0;
+
+      border: none;
+      /* max-width: 85%; */
+      margin-top: 20px;
+    }
+
+    #backBtn:hover {
+      background-color: rgb(41, 41, 255);
+    }
   </style>
 </head>
 <body>
@@ -64,6 +79,7 @@
         </div>
 
         <button type="submit" class="btn btn-danger w-100">Submit Report</button>
+        <button type="button" id="backBtn" class="btn btn-secondary w-100 py-2">Back</button>
       </form>
     </div>
   </div>
@@ -137,6 +153,11 @@
       }
     });
   </script>
+  <script>
+  document.getElementById("backBtn").addEventListener("click", () => {
+    window.location.href = "../homePage/reviews.html";
+  });
+</script>
 
 </body>
 </html>
