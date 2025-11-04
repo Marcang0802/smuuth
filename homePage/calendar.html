@@ -98,79 +98,31 @@
 				<div class="col-lg-12">
 					<div class="calendar-api">
 						<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js'></script>
-						<script>
-
-							document.addEventListener('DOMContentLoaded', function () {
+						<script type="module">
+							import { getAllJoinedEvents } from '../calendar/calender.js';
+							document.addEventListener('DOMContentLoaded', async function () {
+								const profileID = '624y2Zv3yVv1MwMx40YV'; //replace later
+								let joinedEvents = await getAllJoinedEvents(profileID);
+								console.log(joinedEvents)
+								let calendarEvents = joinedEvents.map(event => ({
+								title: event.eventName,
+								start: event.start.split('T')[0],  // Extract just the date, e.g. "2025-11-05"
+								end: event.end.split('T')[0],      // Extract just the date
+								allDay: true       
+							}));
+								console.log(calendarEvents)
 								var calendarEl = document.getElementById('calendar');
 								var calendar = new FullCalendar.Calendar(calendarEl, {
-									initialView: 'dayGridMonth'
+									initialView: 'dayGridMonth',
+									events: calendarEvents
 								});
 								calendar.render();
 							});
 
 						</script>
 
+
 						<div id='calendar'></div>
-					</div>
-					<!-- <div class="single-price no-padding">
-								<div class="price-top">
-									<h4>Real basic</h4>
-								</div>
-								<ul class="lists">
-									<li>2.5 GB Space</li>
-									<li>Secure Online Transfer</li>
-									<li>Unlimited Styles</li>
-									<li>Customer Service</li>
-								</ul>
-								<div class="price-bottom">
-									<div class="price-wrap d-flex flex-row justify-content-center">
-										<span class="price">$</span><h1> 39 </h1><span class="time">Per <br> Month</span>
-									</div>
-									<a href="#" class="primary-btn header-btn">Get Started</a>
-								</div>
-								
-							</div> -->
-				</div>
-				<!-- <div class="col-lg-4">
-					<div class="single-price no-padding">
-						<div class="price-top">
-							<h4>Real Standred</h4>
-						</div>
-						<ul class="lists">
-							<li>10 GB Space</li>
-							<li>Secure Online Transfer</li>
-							<li>Unlimited Styles</li>
-							<li>Customer Service</li>
-						</ul>
-						<div class="price-bottom">
-							<div class="price-wrap d-flex flex-row justify-content-center">
-								<span class="price">$</span>
-								<h1> 69 </h1><span class="time">Per <br> Month</span>
-							</div>
-							<a href="#" class="primary-btn header-btn">Get Started</a>
-						</div>
-					</div>
-				</div> -->
-				<!-- <div class="col-lg-4">
-					<div class="single-price no-padding">
-						<div class="price-top">
-							<h4>Real Ultimate</h4>
-						</div>
-						<ul class="lists">
-							<li>Unlimited Space</li>
-							<li>Secure Online Transfer</li>
-							<li>Unlimited Styles</li>
-							<li>Customer Service</li>
-						</ul>
-						<div class="price-bottom">
-							<div class="price-wrap d-flex flex-row justify-content-center">
-								<span class="price">$</span>
-								<h1> 99 </h1><span class="time">Per <br> Month</span>
-							</div>
-							<a href="#" class="primary-btn header-btn">Get Started</a>
-						</div>
-					</div>
-				</div> -->
 			</div>
 		</div>
 	</section>
