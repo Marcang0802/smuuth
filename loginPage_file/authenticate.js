@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { showCustomAlert } from "../homePage/js/custom-alert-module.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,10 +16,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export function checkLogin(){
-    onAuthStateChanged(auth,(user)=>{
+export async function checkLogin(){
+    onAuthStateChanged(auth, async (user)=>{
         if(!user){
-            alert('Acccess Denied')
+            await showCustomAlert('Access Denied. Please log in to continue.', 'warning', 'Access Denied');
             window.location.replace('../landingPage.html')
         }
     })

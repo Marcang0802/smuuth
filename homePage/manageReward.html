@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/animate.min.css">
     <link rel="stylesheet" href="css/owl.carousel.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/custom-alert.css">
     <style>
         body {
             background: linear-gradient(135deg, #d6e4ff, #f8f9fa);
@@ -112,6 +113,7 @@
     <script src="js/parallax.min.js"></script>
     <script src="js/mail-script.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/custom-alert.js"></script>
 
 
     <script type="module">
@@ -165,15 +167,15 @@
                     };
                     try {
                         await addDoc(collection(db, "rewards"), data);
-                        alert('added successfully')
+                        await showCustomAlert('Reward added successfully!', 'success');
                         window.location.reload();
                     } catch (error) {
                         console.error("Error adding reward", error);
-                        alert("Failed to add reward. Check console for details.");
+                        await showCustomAlert("Failed to add reward. Please check console for details.", 'error');
                     }
                 });
             } else {
-                alert("You must be logged in to manage rewards!");
+                await showCustomAlert("You must be logged in to manage rewards!", 'warning');
                 window.location.href = "../loginPage_file/login.html";
             }
         });
@@ -215,8 +217,9 @@
 
             //button to see all redeemed users
             button1.addEventListener('click', async () => {
-                alert('in console')
-                console.log(await getAllRedeemedUsers(reward.id))
+                const users = await getAllRedeemedUsers(reward.id);
+                console.log(users);
+                await showCustomAlert('Redeemed users data logged in console', 'info');
             })
 
             //button to delete reward from firebase

@@ -151,10 +151,150 @@
         .empty-state p {
             color: #777777;
         }
+
+        /* Custom Alert Modal */
+        .custom-alert-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .custom-alert-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-alert-box {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease;
+            text-align: center;
+        }
+
+        .custom-alert-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .custom-alert-icon.success {
+            color: #4CAF50;
+        }
+
+        .custom-alert-icon.error {
+            color: #f44336;
+        }
+
+        .custom-alert-icon.warning {
+            color: #ff9800;
+        }
+
+        .custom-alert-icon.info {
+            color: #49e4fa;
+        }
+
+        .custom-alert-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 15px;
+        }
+
+        .custom-alert-message {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            color: #777777;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .custom-alert-btn {
+            background: #49e4fa;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 40px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .custom-alert-btn:hover {
+            background: #38d3e8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(73, 228, 250, 0.4);
+        }
+
+        .custom-alert-btn:active {
+            transform: translateY(0);
+        }
+
+        .custom-alert-btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .custom-alert-btn.secondary {
+            background: #f9f9ff;
+            color: #222222;
+        }
+
+        .custom-alert-btn.secondary:hover {
+            background: #e8e8ff;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Custom Alert Modal -->
+    <div class="custom-alert-overlay" id="customAlertOverlay">
+        <div class="custom-alert-box">
+            <div class="custom-alert-icon" id="customAlertIcon">
+                <i class="fa fa-info-circle"></i>
+            </div>
+            <h3 class="custom-alert-title" id="customAlertTitle">Alert</h3>
+            <p class="custom-alert-message" id="customAlertMessage"></p>
+            <div class="custom-alert-btn-group" id="customAlertButtons">
+                <button class="custom-alert-btn" id="customAlertOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
 
     <header id="header" id="home">
         <div class="container">
@@ -629,6 +769,121 @@
         let currentUser = null;
         let tabsInitialized = false;
 
+        // Custom Alert System
+        function showCustomAlert(message, type = 'info', title = null) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customAlertOverlay');
+                const icon = document.getElementById('customAlertIcon');
+                const titleEl = document.getElementById('customAlertTitle');
+                const messageEl = document.getElementById('customAlertMessage');
+                const okBtn = document.getElementById('customAlertOkBtn');
+
+                // Set icon based on type
+                const icons = {
+                    success: '<i class="fa fa-check-circle"></i>',
+                    error: '<i class="fa fa-times-circle"></i>',
+                    warning: '<i class="fa fa-exclamation-triangle"></i>',
+                    info: '<i class="fa fa-info-circle"></i>'
+                };
+
+                icon.innerHTML = icons[type] || icons.info;
+                icon.className = `custom-alert-icon ${type}`;
+
+                // Set title
+                const titles = {
+                    success: 'Success!',
+                    error: 'Error',
+                    warning: 'Warning',
+                    info: 'Information'
+                };
+                titleEl.textContent = title || titles[type] || 'Alert';
+
+                // Set message
+                messageEl.textContent = message;
+
+                // Show overlay
+                overlay.classList.add('show');
+
+                // Handle OK button
+                const handleOk = () => {
+                    overlay.classList.remove('show');
+                    okBtn.removeEventListener('click', handleOk);
+                    overlay.removeEventListener('click', handleOverlayClick);
+                    resolve(true);
+                };
+
+                // Handle clicking outside
+                const handleOverlayClick = (e) => {
+                    if (e.target === overlay) {
+                        handleOk();
+                    }
+                };
+
+                okBtn.addEventListener('click', handleOk);
+                overlay.addEventListener('click', handleOverlayClick);
+            });
+        }
+
+        function showCustomConfirm(message, title = 'Confirm') {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customAlertOverlay');
+                const icon = document.getElementById('customAlertIcon');
+                const titleEl = document.getElementById('customAlertTitle');
+                const messageEl = document.getElementById('customAlertMessage');
+                const buttonsContainer = document.getElementById('customAlertButtons');
+
+                // Set icon for confirmation
+                icon.innerHTML = '<i class="fa fa-question-circle"></i>';
+                icon.className = 'custom-alert-icon warning';
+
+                // Set title and message
+                titleEl.textContent = title;
+                messageEl.textContent = message;
+
+                // Create Yes/No buttons
+                buttonsContainer.innerHTML = `
+                    <button class="custom-alert-btn secondary" id="customAlertNoBtn">Cancel</button>
+                    <button class="custom-alert-btn" id="customAlertYesBtn">Confirm</button>
+                `;
+
+                // Show overlay
+                overlay.classList.add('show');
+
+                const yesBtn = document.getElementById('customAlertYesBtn');
+                const noBtn = document.getElementById('customAlertNoBtn');
+
+                const handleYes = () => {
+                    overlay.classList.remove('show');
+                    cleanup();
+                    resolve(true);
+                };
+
+                const handleNo = () => {
+                    overlay.classList.remove('show');
+                    cleanup();
+                    resolve(false);
+                };
+
+                const cleanup = () => {
+                    yesBtn.removeEventListener('click', handleYes);
+                    noBtn.removeEventListener('click', handleNo);
+                    overlay.removeEventListener('click', handleOverlayClick);
+                    // Reset to single OK button
+                    buttonsContainer.innerHTML = '<button class="custom-alert-btn" id="customAlertOkBtn">OK</button>';
+                };
+
+                const handleOverlayClick = (e) => {
+                    if (e.target === overlay) {
+                        handleNo();
+                    }
+                };
+
+                yesBtn.addEventListener('click', handleYes);
+                noBtn.addEventListener('click', handleNo);
+                overlay.addEventListener('click', handleOverlayClick);
+            });
+        }
+
         //if profileID not initialized, initialize
         if (localStorage.getItem("profileID") == null) {
             onAuthStateChanged(auth, async (user) => {
@@ -966,11 +1221,11 @@
                 let newHelpers = eventData.data().helpers;
                 let manpower = eventData.data().manpower;
                 if (newHelpers.includes(profileID)) {
-                    alert("You already requested to join the event !")
+                    await showCustomAlert("You already requested to join the event!", 'warning', 'Already Joined');
                 }
                 else if (newHelpers.length >= manpower) {
                     console.log('No more people needed.')
-                    alert('Sorry, enough people have signed up for this event')
+                    await showCustomAlert('Sorry, enough people have signed up for this event', 'warning', 'Event Full');
                 }
                 else {
                     newHelpers.push(profileID)
@@ -986,27 +1241,28 @@
                     await updateDoc(eventRef, {
                         helpers: newHelpers
                     });
-                    alert("You have successfully joined to help the event !")
+                    await showCustomAlert("You have successfully joined to help the event!", 'success', 'Success!');
                     // Reload events to update the tabs
                     loadEvents();
                 }
             }
             catch (err) {
                 console.error("Join error:", err);
-                alert("Failed to join event.");
+                await showCustomAlert("Failed to join event. Please try again.", 'error', 'Error');
             }
         }
             ;
 
         window.deleteEvent = async (eventId, eventName) => {
-            if (!confirm(`Are you sure you want to delete "${eventName}"?`)) return;
+            const confirmed = await showCustomConfirm(`Are you sure you want to delete "${eventName}"?`, 'Delete Event');
+            if (!confirmed) return;
             try {
                 await deleteDoc(doc(db, "events", eventId));
                 loadEvents();
-                alert(`"${eventName}" has been deleted.`);
+                await showCustomAlert(`"${eventName}" has been deleted successfully.`, 'success', 'Event Deleted');
             } catch (err) {
                 console.error(err);
-                alert("Failed to delete event.");
+                await showCustomAlert("Failed to delete event. Please try again.", 'error', 'Error');
             }
         };
 
@@ -1019,12 +1275,13 @@
         };
 
         window.endEvent = async (eventId, eventName) => {
-            if (!confirm(`Are you sure you want to end "${eventName}"?`)) return;
+            const confirmed = await showCustomConfirm(`Are you sure you want to end "${eventName}"? This will award points to all helpers.`, 'End Event');
+            if (!confirmed) return;
             try {
                 const eventRef = doc(db, "events", eventId);
                 const eventSnap = await getDoc(eventRef);
                 if (!eventSnap.exists()) {
-                    alert("Event not found.");
+                    await showCustomAlert("Event not found.", 'error', 'Error');
                     return;
                 }
                 const eventData = eventSnap.data();
@@ -1050,11 +1307,11 @@
                     }
                 }
                 await deleteDoc(doc(db, "events", eventId));
-                alert(`"${eventName}" has ended. ${reward} points awarded to ${helpers.length} helper(s).`);
+                await showCustomAlert(`"${eventName}" has ended successfully! ${reward} points awarded to ${helpers.length} helper(s).`, 'success', 'Event Ended');
                 loadEvents();
             } catch (err) {
                 console.error(err);
-                alert("Failed to delete event.");
+                await showCustomAlert("Failed to end event. Please try again.", 'error', 'Error');
             }
         };
 

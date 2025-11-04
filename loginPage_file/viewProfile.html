@@ -49,6 +49,8 @@
   <meta charset="UTF-8" />
   <title>Your Profile | SMU Event Helpers</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../homePage/css/custom-alert.css" />
   <style>
     body {
       background: linear-gradient(135deg, #d6e4ff, #f8f9fa);
@@ -156,6 +158,7 @@
     </div>
 
   </div>
+  <script src="../homePage/js/custom-alert.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -177,7 +180,7 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        alert("You must be logged in to view your profile!");
+        await showCustomAlert("You must be logged in to view your profile!", 'warning', 'Login Required');
         window.location.href = "../loginPage_file/login.html";
         return;
       }
@@ -187,7 +190,7 @@
       const snap = await getDocs(q);
 
       if (snap.empty) {
-        alert("Profile not found. Please create your profile.");
+        await showCustomAlert("Profile not found. Please create your profile.", 'info', 'Profile Not Found');
         window.location.href = "../loginPage_file/profile.html";
         return;
       }
@@ -215,7 +218,7 @@
       try{
         localStorage.clear()
         await signOut(auth);
-        alert('Log Out Successful!')
+        await showCustomAlert('You have been logged out successfully!', 'success', 'Logout Successful');
       }catch(error){
         console.log('Error', error)
       }

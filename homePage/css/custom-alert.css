@@ -1,0 +1,126 @@
+/* Custom Alert Modal System */
+.custom-alert-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+}
+
+.custom-alert-overlay.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-alert-box {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.3s ease;
+    text-align: center;
+}
+
+.custom-alert-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.custom-alert-icon.success {
+    color: #4CAF50;
+}
+
+.custom-alert-icon.error {
+    color: #f44336;
+}
+
+.custom-alert-icon.warning {
+    color: #ff9800;
+}
+
+.custom-alert-icon.info {
+    color: #49e4fa;
+}
+
+.custom-alert-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 15px;
+}
+
+.custom-alert-message {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #777777;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.custom-alert-btn {
+    background: #49e4fa;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.custom-alert-btn:hover {
+    background: #38d3e8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(73, 228, 250, 0.4);
+}
+
+.custom-alert-btn:active {
+    transform: translateY(0);
+}
+
+.custom-alert-btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.custom-alert-btn.secondary {
+    background: #f9f9ff;
+    color: #222222;
+}
+
+.custom-alert-btn.secondary:hover {
+    background: #e8e8ff;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
