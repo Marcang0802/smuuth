@@ -471,7 +471,7 @@
         const eventList = document.getElementById("event-list");
         let currentUser = null;
 
-        if (localStorage.setItem("profileID", profileID) == null) {
+        if (localStorage.getItem("profileID") == null) {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     const profilesRef = collection(db, "profiles");
