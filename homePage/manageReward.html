@@ -144,10 +144,14 @@
     </div>
 
     <div>
-        <button type="button" onclick="goBack">Return</button>
+        <button type="button" id="returnButton">Return</button>
         <script>
-            //button to go back to points.html
-            function goBack() { window.location.replace('./points.html') }
+            function doSomething(){
+                window.location.replace("./points.html");
+            }
+            let returnButton = document.getElementById('returnButton');
+            returnButton.addEventListener("click",doSomething);
+
         </script>
     </div>
 
