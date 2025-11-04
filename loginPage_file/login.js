@@ -25,7 +25,7 @@ googleLogin.addEventListener("click", function () {
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
-            localStorage.setItem("userUID", user.uid); // Store user UID
+            // localStorage.setItem("userUID", user.uid); // Store user UID
             window.location.replace("profile.html");
             // IdP data available using getAdditionalUserInfo(result)
             // ...

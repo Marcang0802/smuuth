@@ -351,7 +351,8 @@
           await addDoc(collection(db, "profiles"), data);
           alert("Profile created!");
           window.location.href = "../homePage/index.html";
-        } catch (error) {
+        }
+        catch (error) {
           console.error("Error saving profile:", error);
           alert("Failed to create profile. Please try again.");
         }
