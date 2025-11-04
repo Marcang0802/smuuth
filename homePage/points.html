@@ -85,9 +85,6 @@
 				</div> -->
 			</div>
 			<div class="row justify-content-center d-flex" id="manageArea">
-				<!-- <div class="col-lg-4 post-list" id="rewardArea">
-					 Reward cards go here 
-				</div> -->
 			</div>
 		</div>
 	</section>
@@ -198,7 +195,7 @@
 		// check if login
 		import { checkLogin } from "../loginPage_file/authenticate.js";
 
-        checkLogin()
+		checkLogin()
 
 		import { getPoints } from '../points/points.js'
 		// getting the profileid
@@ -221,7 +218,7 @@
 			// <div class="single-post d-flex flex-row">
 			// Card (add job-listing, remove border)
 			let col = document.createElement("div");
-			col.setAttribute('class','col-lg-6 post-list');
+			col.setAttribute('class', 'col-lg-4 post-list');// size
 			row.appendChild(col);
 
 			const card = document.createElement('div');
