@@ -471,6 +471,7 @@
         const eventList = document.getElementById("event-list");
         let currentUser = null;
 
+        //if profileID not initialized, initialize
         if (localStorage.getItem("profileID") == null) {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
@@ -483,7 +484,6 @@
                     });
                 }
             });
-
         }
 
 
