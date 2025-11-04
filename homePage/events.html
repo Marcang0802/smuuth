@@ -63,20 +63,20 @@
         <div class="container">
             <div class="row d-flex align-items-center justify-content-center">
                 <div class="about-content col-lg-12">
-                    
+
                     <!-- <p class="text-white link-nav"><a href="index.html">Home </a> <span
                             class="lnr lnr-arrow-right"></span> <a href="events.html">Events</a></p> -->
                     <div class="container">
                         <h1 class="text-white" style="margin-bottom: 100px;">Events</h1>
-			<div class="row d-flex align-items-center justify-content-center">
-				<div class="banner-content col-lg-12" style="margin-bottom: 0px;">
-					<form action="events.html" method="get" class="serach-form-area">
-						<div class="row justify-content-center form-wrap">
-							<div class="col-lg-4 form-cols">
-								<input type="text" class="form-control" name="keywords"
-									placeholder="What events do you want to help out in?">
-							</div>
-							<!-- <div class="col-lg-3 form-cols">
+                        <div class="row d-flex align-items-center justify-content-center">
+                            <div class="banner-content col-lg-12" style="margin-bottom: 0px;">
+                                <form action="events.html" method="get" class="serach-form-area">
+                                    <div class="row justify-content-center form-wrap">
+                                        <div class="col-lg-4 form-cols">
+                                            <input type="text" class="form-control" name="keywords"
+                                                placeholder="What events do you want to help out in?">
+                                        </div>
+                                        <!-- <div class="col-lg-3 form-cols">
 										<div class="default-select" id="default-selects">
 											<select>
 												<option value="1">Select area</option>
@@ -87,29 +87,30 @@
 											</select>
 										</div>
 									</div> -->
-							<div class="col-lg-4 form-cols">
-								<div class="default-select" id="default-selects">
-									<select name="category">
-										<option value="all">All Categories</option>
-										<option value="sports">Sports</option>
-										<option value="clubs">Clubs</option>
-										<option value="performing-arts">Performing Arts</option>
-										<option value="community-service">Community Service Projects</option>
-										<option value="others">Others</option>
-									</select>
-								</div>
-							</div>
-							<div class="col-lg-2 form-cols">
-								<button type="submit" class="btn btn-info">
-									<span class="lnr lnr-magnifier"></span> Search
-								</button>
-							</div>
-						</div>
-					</form>
-					<!-- <p class="text-white"> <span>Search by tags:</span> Tecnology, Business, Consulting, IT Company, Design, Development</p> -->
-				</div>
-			</div>
-		</div>
+                                        <div class="col-lg-4 form-cols">
+                                            <div class="default-select" id="default-selects">
+                                                <select name="category">
+                                                    <option value="all">All Categories</option>
+                                                    <option value="sports">Sports</option>
+                                                    <option value="clubs">Clubs</option>
+                                                    <option value="performing-arts">Performing Arts</option>
+                                                    <option value="community-service">Community Service Projects
+                                                    </option>
+                                                    <option value="others">Others</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2 form-cols">
+                                            <button type="submit" class="btn btn-info">
+                                                <span class="lnr lnr-magnifier"></span> Search
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- <p class="text-white"> <span>Search by tags:</span> Tecnology, Business, Consulting, IT Company, Design, Development</p> -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -117,7 +118,7 @@
     <!-- End banner Area -->
 
     <!-- Start post Area -->
-    
+
     <section class="post-area section-gap">
         <div class="container">
             <div class="row justify-content-center d-flex">
@@ -472,13 +473,13 @@
 
         function normaliseCategory(v) {
             const normalized = (v || '').toString().trim().toLowerCase().replace(/\s+/g, '-');
-            
+
             return normalized;
         }
 
-        function slug(v){ return (v ?? '').toString().trim().toLowerCase().replace(/\s+/g,'-'); }
+        function slug(v) { return (v ?? '').toString().trim().toLowerCase().replace(/\s+/g, '-'); }
 
-// canonical: map URL/legacy variants to your canonical slugs
+        // canonical: map URL/legacy variants to your canonical slugs
         function canonical(v) {
             const s = slug(v);
             const map = {
@@ -507,17 +508,17 @@
             let empty = document.getElementById('no-results');
             if (!shown) {
                 if (!empty) {
-                empty = document.createElement('div');
-                empty.id = 'no-results';
-                empty.style.color = 'red';
-                empty.style.margin = '16px 0';
-                empty.textContent = 'No events match this category.';
-                document.getElementById('event-list').appendChild(empty);
+                    empty = document.createElement('div');
+                    empty.id = 'no-results';
+                    empty.style.color = 'red';
+                    empty.style.margin = '16px 0';
+                    empty.textContent = 'No events match this category.';
+                    document.getElementById('event-list').appendChild(empty);
                 }
             } else if (empty) {
                 empty.remove();
             }
-            }
+        }
 
         function applyKeywordFilter(keywords) {
             const q = (keywords || '').trim().toLowerCase();
@@ -542,14 +543,14 @@
             let empty = document.getElementById('no-results');
             if (!shown) {
                 if (!empty) {
-                empty = document.createElement('div');
-                empty.id = 'no-results';
-                empty.style.color = 'red';
-                empty.style.margin = '16px 0';
-                empty.textContent = 'No events match these keywords.';
-                document.getElementById('event-list').appendChild(empty);
+                    empty = document.createElement('div');
+                    empty.id = 'no-results';
+                    empty.style.color = 'red';
+                    empty.style.margin = '16px 0';
+                    empty.textContent = 'No events match these keywords.';
+                    document.getElementById('event-list').appendChild(empty);
                 } else {
-                empty.textContent = 'No events match these keywords.';
+                    empty.textContent = 'No events match these keywords.';
                 }
             } else if (empty) {
                 empty.remove();
@@ -570,17 +571,17 @@
             if (empty) empty.remove();
         }
 
-// prefer keywords over category
+        // prefer keywords over category
         function applyFiltersFromURL() {
-        const params = new URLSearchParams(location.search);
-        const q = (params.get('keywords') || '').trim();
-        const cat = params.get('category') || 'all';
-        if (q) {
-            showAll();              // don’t let category hide matches
-            applyKeywordFilter(q);  // search by name/description only
-        } else {
-            applyCategoryFilter(cat);
-        }
+            const params = new URLSearchParams(location.search);
+            const q = (params.get('keywords') || '').trim();
+            const cat = params.get('category') || 'all';
+            if (q) {
+                showAll();              // don’t let category hide matches
+                applyKeywordFilter(q);  // search by name/description only
+            } else {
+                applyCategoryFilter(cat);
+            }
         }
 
         function applyCategoryFilterFromURL() {
@@ -599,7 +600,7 @@
                 eventList.innerHTML = `<p class="text-center">No events available yet.</p>`;
                 return;
             }
-            
+
             snapshot.forEach(docSnap => {
                 const event = docSnap.data();
                 const eventId = docSnap.id;
@@ -625,7 +626,7 @@
                             <button class="btn btn-sm btn-success" onclick="viewapplicants('${eventId}', '${event.name}')">View Applicants</button>
                             <button class="btn btn-sm" onclick="endEvent('${eventId}', '${event.name}')">End Event</button>
                         </div>`;
-						// End event method is tentative
+                        // End event method is tentative
                     }
 
                     if (!isCreator) {
@@ -655,7 +656,7 @@
             });
             applyFiltersFromURL();
             console.log(event.category)
-            
+
         }
 
         window.joinEvent = async (eventId, eventName, rewardPoints) => {
@@ -681,21 +682,28 @@
                 let manpower = eventData.data().manpower;
                 if (newHelpers.includes(profileID)) {
                     alert("You already requested to join the event !")
-                } else if (newHelpers.length >= manpower) {
+                } 
+                else if (newHelpers.length >= manpower) {
                     console.log('No more people needed.')
                     alert('Sorry, enough people have signed up for this event')
                 }
                 else {
-                    alert("You have successfully applied to join the event !")
                     newHelpers.push(profileID)
+                    //record in profiles joinedEvents
+                    const profileRef = await doc(db, "profiles", profileID);
+                    const profileSnap = await getDoc(profileRef);
+                    let newJoinedEvents = profileSnap.data().joinedEvents;
+                    newJoinedEvents.push(eventId);
+                    await updateDoc(profileRef,{
+                        joinedEvents: newJoinedEvents
+                    });
+                    //record in events helpers
                     await updateDoc(eventRef, {
                         helpers: newHelpers
                     });
+                    alert("You have successfully joined to help the event !")
                 }
-
-
             }
-
             catch (err) {
                 console.error("Join error:", err);
                 alert("Failed to join event.");
@@ -722,8 +730,8 @@
         window.viewapplicants = (eventId) => {
             window.location.href = `../eventCreation/reviewApplicants.html?eventId=${eventId}`;
         };
-		
-		window.endEvent = async (eventId, eventName) => {
+
+        window.endEvent = async (eventId, eventName) => {
             if (!confirm(`Are you sure you want to end "${eventName}"?`)) return;
             try {
                 const eventRef = doc(db, "events", eventId);
@@ -738,7 +746,7 @@
                 const reward = eventData.rewardPoints || 0;
                 await addDoc(collection(db, "complete_events"), {
                     ...eventData,
-                    endedAt: serverTimestamp() 
+                    endedAt: serverTimestamp()
                 });
                 console.log(helpers);
                 for (const helperId of helpers) {
@@ -762,14 +770,14 @@
                 alert("Failed to delete event.");
             }
         };
-		
+
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
 
             loadEvents();
         });
 
-        
+
 
     </script>
 </body>
