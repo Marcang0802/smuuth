@@ -975,23 +975,7 @@
 
 	const app = initializeApp(firebaseConfig);
 	const db = getFirestore(app);
-	const auth = getAuth(app);
-
-	if (localStorage.setItem("profileID", profileID) == null) {
-		onAuthStateChanged(auth, async (user) => {
-			if (user) {
-				const profilesRef = collection(db, "profiles");
-				const q = query(profilesRef, where("userId", "==", user.uid));
-				const querySnapshot = await getDocs(q);
-				querySnapshot.forEach((doc) => {
-					let profileID = doc.id;
-					localStorage.setItem("profileID", profileID);
-				});
-			}
-		});
-
-	}
-
+	
 	async function loadTopRatedFeedback() {
 		const topContainer = document.getElementById('topRatedEvents');
 

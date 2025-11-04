@@ -471,6 +471,22 @@
         const eventList = document.getElementById("event-list");
         let currentUser = null;
 
+        if (localStorage.setItem("profileID", profileID) == null) {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    const profilesRef = collection(db, "profiles");
+                    const q = query(profilesRef, where("userId", "==", user.uid));
+                    const querySnapshot = await getDocs(q);
+                    querySnapshot.forEach((doc) => {
+                        let profileID = doc.id;
+                        localStorage.setItem("profileID", profileID);
+                    });
+                }
+            });
+
+        }
+
+
         function normaliseCategory(v) {
             const normalized = (v || '').toString().trim().toLowerCase().replace(/\s+/g, '-');
 
@@ -682,7 +698,7 @@
                 let manpower = eventData.data().manpower;
                 if (newHelpers.includes(profileID)) {
                     alert("You already requested to join the event !")
-                } 
+                }
                 else if (newHelpers.length >= manpower) {
                     console.log('No more people needed.')
                     alert('Sorry, enough people have signed up for this event')
@@ -694,7 +710,7 @@
                     const profileSnap = await getDoc(profileRef);
                     let newJoinedEvents = profileSnap.data().joinedEvents;
                     newJoinedEvents.push(eventId);
-                    await updateDoc(profileRef,{
+                    await updateDoc(profileRef, {
                         joinedEvents: newJoinedEvents
                     });
                     //record in events helpers
