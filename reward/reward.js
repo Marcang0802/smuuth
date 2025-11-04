@@ -81,7 +81,6 @@ export async function getAllRedeemedUsers(rewardID) {
   else {
     console.log("Does not exist.");
   }
-
 }
 
 //for helper and club admin

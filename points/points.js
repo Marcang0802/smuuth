@@ -25,12 +25,13 @@ const storage = getStorage(app);
 if (localStorage.getItem('profileID') == null) {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      console.log(user.uid)
+      // console.log(user.uid)
       const profilesRef = collection(db, "profiles");
       const q = query(profilesRef, where("userId", "==", user.uid));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        localStorage.setItem('profileID', doc.id);
+        let profileID = doc.id;
+        localStorage.setItem('profileID', profileID);
         window.location.reload();
       });
     }
