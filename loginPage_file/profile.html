@@ -234,6 +234,9 @@
     const auth = getAuth(app);
     const storage = getStorage(app);
 
+    //clear leftover data from previous session
+    localStorage.clear()
+
 
     //check if profile exist, and put profileid in local storage
     onAuthStateChanged(auth, async (user) => {
