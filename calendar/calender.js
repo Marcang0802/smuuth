@@ -33,7 +33,7 @@ export async function getAllJoinedEvents(profileID) {
         const eventsRef = doc(db, "events", ID);
         const eventSnap = await getDoc(eventsRef);
         //check if event exists
-        if (eventSnap.exist()) {
+        if (eventSnap.exists()) {
             let eventName = eventSnap.data().name;
             let start = eventSnap.data().startDatetime;
             let end = eventSnap.data().endDatetime;
