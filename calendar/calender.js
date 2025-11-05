@@ -20,7 +20,7 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 
 
-export async function getAllJoinedEvents(profileID){
+export async function getAllJoinedEvents(profileID) {
     //get an Array of joinedEvents ID
     const profilesRef = doc(db, "profiles", profileID);
     const profileSnap = await getDoc(profilesRef);
@@ -29,15 +29,20 @@ export async function getAllJoinedEvents(profileID){
 
     //match the ID to the events
     let result = [];
-    for( let ID of joinedEventsID){
+    for (let ID of joinedEventsID) {
         const eventsRef = doc(db, "events", ID);
         const eventSnap = await getDoc(eventsRef);
-
-        let eventName = eventSnap.data().name;
-        let start = eventSnap.data().startDatetime;
-        let end = eventSnap.data().endDatetime;
-        let eventObj = {eventName: eventName, start: start, end: end};
-        result.push(eventObj);
+        //check if event exists
+        if (eventSnap.exist()) {
+            let eventName = eventSnap.data().name;
+            let start = eventSnap.data().startDatetime;
+            let end = eventSnap.data().endDatetime;
+            let eventObj = { eventName: eventName, start: start, end: end };
+            result.push(eventObj);
+        }
+        else{
+            result.push('event Not found')
+        }
     }
     return result;
 }
