@@ -41,7 +41,7 @@ export async function getAllJoinedEvents(profileID) {
             result.push(eventObj);
         }
         else{
-            result.push('event Not found')
+            console.log('event Not found')
         }
     }
     return result;
