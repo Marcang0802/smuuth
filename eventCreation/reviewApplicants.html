@@ -73,6 +73,34 @@
       border-color: #004aad;
       box-shadow: 0 0 0 0.2rem rgba(0, 74, 173, 0.25);
     }
+    .back-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: 2px solid white;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 1000;
+    }
+
+    .back-button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: translateX(-5px);
+    }
+
+    .back-button i {
+        font-size: 18px;
+    }
 
     footer {
       text-align: center;
@@ -84,6 +112,9 @@
 </head>
 
 <body>
+  <a href="../homePage/events.html" class="back-button">
+      <i class="fa fa-arrow-left"></i> Back
+  </a>
   <div class="card">
     <div class="card-header">
       <h2 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Review Applicants</h2>
@@ -189,7 +220,7 @@
         window.location.href = "../homePage/events.html";
         return;
       }
-
+      
       // Submit handler to update Firestore doc
       const form = document.getElementById("reviewApplicantsForm");
       form.addEventListener("submit", async (e) => {
