@@ -30,6 +30,168 @@
 	<link rel="stylesheet" href="css/animate.min.css">
 	<link rel="stylesheet" href="css/owl.carousel.css">
 	<link rel="stylesheet" href="css/main.css">
+	<style>
+		/* Tabs Styling */
+		.rewards-tabs-container {
+			background: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			margin-bottom: 20px;
+		}
+
+		.rewards-tabs {
+			display: flex;
+			border-bottom: 2px solid #f9f9ff;
+			margin-bottom: 20px;
+			gap: 10px;
+		}
+
+		.tab-btn {
+			flex: 1;
+			padding: 12px 20px;
+			background: #f9f9ff;
+			border: none;
+			border-radius: 5px 5px 0 0;
+			cursor: pointer;
+			font-family: 'Poppins', sans-serif;
+			font-weight: 500;
+			font-size: 14px;
+			color: #222222;
+			transition: all 0.3s ease;
+			position: relative;
+			outline: none;
+		}
+
+		.tab-btn:hover {
+			background: #e8e8ff;
+			color: #49e4fa;
+		}
+
+		.tab-btn.active {
+			background: #49e4fa;
+			color: #fff;
+			box-shadow: 0 2px 8px rgba(73, 228, 250, 0.3);
+		}
+
+		.tab-btn.active::after {
+			content: '';
+			position: absolute;
+			bottom: -2px;
+			left: 0;
+			right: 0;
+			height: 2px;
+			background: #49e4fa;
+		}
+
+		/* Rewards List Container */
+		#rewardArea {
+			max-height: 700px;
+			overflow-y: auto;
+			overflow-x: hidden;
+			padding-right: 10px;
+		}
+
+		/* Custom Scrollbar */
+		#rewardArea::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		#rewardArea::-webkit-scrollbar-track {
+			background: #f9f9ff;
+			border-radius: 10px;
+		}
+
+		#rewardArea::-webkit-scrollbar-thumb {
+			background: #49e4fa;
+			border-radius: 10px;
+		}
+
+		#rewardArea::-webkit-scrollbar-thumb:hover {
+			background: #38d3e8;
+		}
+
+		/* Reward Card Enhancement */
+		.single-post.reward-card {
+			background: #fff;
+			border: 1px solid #f0f0f0;
+			border-radius: 8px;
+			margin-bottom: 20px;
+			transition: all 0.3s ease;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+			padding: 25px;
+			min-height: 200px;
+		}
+
+		.single-post.reward-card:hover {
+			box-shadow: 0 4px 15px rgba(73, 228, 250, 0.2);
+			transform: translateY(-2px);
+		}
+
+		.single-post.reward-card .thumb {
+			padding-right: 20px;
+			display: flex;
+			align-items: center;
+		}
+
+		.single-post.reward-card .thumb img {
+			width: 80px !important;
+			height: auto !important;
+		}
+
+		.single-post.reward-card .post-content {
+			padding: 10px 0;
+		}
+
+		.single-post.reward-card .details {
+			padding: 0 20px !important;
+		}
+
+		.single-post.reward-card .title h4 {
+			font-size: 20px;
+			margin-bottom: 15px;
+		}
+
+		.single-post.reward-card p {
+			margin-bottom: 12px;
+			font-size: 15px;
+		}
+
+		.single-post.reward-card .btn {
+			padding: 10px 25px;
+			font-size: 14px;
+			font-weight: 600;
+		}
+
+		/* 2 rewards per row */
+		.reward-col {
+			width: 50%;
+			padding: 0 15px;
+			margin-bottom: 30px;
+		}
+
+		/* Empty State */
+		.empty-state {
+			text-align: center;
+			padding: 60px 20px;
+			color: #777777;
+		}
+
+		.empty-state i {
+			font-size: 64px;
+			color: #e0e0e0;
+			margin-bottom: 20px;
+		}
+
+		.empty-state h4 {
+			color: #222222;
+			margin-bottom: 10px;
+		}
+
+		.empty-state p {
+			color: #777777;
+		}
+	</style>
 
 </head>
 
@@ -92,10 +254,20 @@
 	<!-- Start blog-posts Area -->
 	<section class="post-area section-gap">
 		<div class="container">
+			<!-- Tabs Navigation -->
+			<div class="rewards-tabs-container">
+				<div class="rewards-tabs">
+					<button class="tab-btn active" data-tab="available-rewards">
+						<i class="fa fa-gift"></i> Available Rewards
+					</button>
+					<button class="tab-btn" data-tab="redeemed-rewards">
+						<i class="fa fa-check-circle"></i> Redeemed Rewards
+					</button>
+				</div>
+			</div>
+
 			<div class="row justify-content-center d-flex" id="rewardArea">
-				<!-- <div class="col-lg-4 post-list" id="rewardArea">
-					 Reward cards go here 
-				</div> -->
+				<!-- Reward cards go here -->
 			</div>
 			<div class="row justify-content-center d-flex" id="manageArea">
 			</div>
@@ -235,86 +407,84 @@
 
 		// iterate through the reward list and populate the screen
 		for (let reward of rewardList) {
-			// <div class="single-post d-flex flex-row">
-			// Card (add job-listing, remove border)
+			// Check if user has redeemed this reward
+			const hasRedeemed = reward.data.redeemedUser && reward.data.redeemedUser.includes(profileID);
+
+			// Create column wrapper for 2 per row layout
 			let col = document.createElement("div");
-			col.setAttribute('class', 'col-lg-4 post-list');// size
+			col.setAttribute('class', 'reward-col');
+			col.setAttribute('data-redeemed', hasRedeemed ? 'true' : 'false');
 			row.appendChild(col);
 
+			// Create card with event-like structure
 			const card = document.createElement('div');
-			card.className = 'single-post d-flex flex-row';
+			card.className = 'single-post reward-card d-flex flex-row';
 			col.appendChild(card);
 
-			const thumb = document.createElement('div')
-			thumb.className = 'thumb'
-			const img = document.createElement('img')
-			img.className = 'img-fluid'
-			img.src = './img/SMUUTH_words_pastel_ultraclean.png'
-			img.style = "height:48px;width:auto;display:block"
-			img.alt = ''
-			thumb.appendChild(img)
-			card.appendChild(thumb)
+			// Thumbnail
+			const thumb = document.createElement('div');
+			thumb.className = 'thumb';
+			const img = document.createElement('img');
+			img.className = 'img-fluid';
+			img.src = './img/SMUUTH_words_pastel_ultraclean.png';
+			img.style = "height:48px;width:auto;display:block";
+			img.alt = 'logo.png';
+			thumb.appendChild(img);
+			card.appendChild(thumb);
 
-			// Details
+			// Post content wrapper
+			const postContent = document.createElement('div');
+			postContent.className = 'post-content d-flex flex-column w-100';
+			card.appendChild(postContent);
+
+			// Details section
 			const details = document.createElement('div');
-			details.className = 'details';
-			card.appendChild(details);
+			details.className = 'details px-4';
+			postContent.appendChild(details);
 
-			// Title row
+			// Title
 			const titleDiv = document.createElement('div');
-			titleDiv.className = 'title d-flex flex-row justify-content-between';
-			details.appendChild(titleDiv);
-
-			// Left: titles
-			const titlesDiv = document.createElement('div');
-			titlesDiv.className = 'titles';
-			titleDiv.appendChild(titlesDiv);
-
+			titleDiv.className = 'title';
 			const a = document.createElement('a');
 			a.href = '#';
 			const h4 = document.createElement('h4');
 			h4.textContent = reward.data.rewardName;
 			a.appendChild(h4);
-			titlesDiv.appendChild(a);
+			titleDiv.appendChild(a);
+			details.appendChild(titleDiv);
 
-			// (no subtitle since you removed it)
-
-			// Right: actions
-			const btns = document.createElement('ul');
-			btns.className = 'btns';
-
-			// optional heart (keeps spacing like index)
-
-
-			// Redeem MUST be the last li so theme applies the primary style
-			const liRedeem = document.createElement('li');
-			const aRedeem = document.createElement('a');
-			aRedeem.href = '#';
-			aRedeem.textContent = 'Redeem';
-			aRedeem.addEventListener('click', (e) => {
-				e.preventDefault();
-				redeemReward(reward.id, profileID);
-			});
-			liRedeem.appendChild(aRedeem);
-			btns.appendChild(liRedeem);
-			titleDiv.appendChild(btns);
-
-			// Body/meta (optional) //???
-			// const h5 = document.createElement('h5');
-			// h5.textContent = reward.data.type ? `Reward Type: ${reward.data.type}` : 'Reward';
-			// details.appendChild(h5);
-
+			// Points required
 			const pointsLine = document.createElement('p');
 			pointsLine.className = 'address';
-			pointsLine.innerHTML = `<span class="lnr lnr-database"></span> Points required: ${reward.data.pointsAmount}`;
+			pointsLine.innerHTML = `<span class="lnr lnr-database"></span> ${reward.data.pointsAmount} points`;
 			details.appendChild(pointsLine);
 
-			// if (reward.data.location) {
-			// 	const loc = document.createElement('p');
-			// 	loc.className = 'address';
-			// 	loc.innerHTML = `<span class="lnr lnr-map"></span> ${reward.data.location}`;
-			// 	details.appendChild(loc);
-			// }
+			// Redeem limit info
+			const limitLine = document.createElement('p');
+			limitLine.innerHTML = `<strong>Available:</strong> ${reward.data.redeemLimit - (reward.data.redeemedUser ? reward.data.redeemedUser.length : 0)} / ${reward.data.redeemLimit}`;
+			details.appendChild(limitLine);
+
+			// Redeem button
+			const btnDiv = document.createElement('div');
+			btnDiv.className = 'mt-2';
+			const redeemBtn = document.createElement('button');
+			redeemBtn.className = 'btn btn-primary';
+
+			if (hasRedeemed) {
+				redeemBtn.textContent = 'Redeemed';
+				redeemBtn.className = 'btn btn-success';
+				redeemBtn.disabled = true;
+				redeemBtn.style.cursor = 'not-allowed';
+			} else {
+				redeemBtn.textContent = 'Redeem';
+				redeemBtn.addEventListener('click', (e) => {
+					e.preventDefault();
+					redeemReward(reward.id, profileID);
+				});
+			}
+
+			btnDiv.appendChild(redeemBtn);
+			details.appendChild(btnDiv);
 		}
 
 		if (role == 'systemAdmin') {
@@ -388,6 +558,90 @@
                 overlay.addEventListener('click', handleOverlayClick);
             });
         }
+
+		// Tab filtering functions
+		function initializeTabs() {
+			const tabButtons = document.querySelectorAll('.tab-btn');
+
+			tabButtons.forEach(button => {
+				button.addEventListener('click', function(e) {
+					e.preventDefault();
+
+					// Remove active class from all buttons
+					tabButtons.forEach(btn => btn.classList.remove('active'));
+					// Add active class to clicked button
+					this.classList.add('active');
+
+					// Get the tab type
+					const tabType = this.getAttribute('data-tab');
+
+					// Apply the appropriate filter
+					filterRewardsByTab(tabType);
+				});
+			});
+		}
+
+		function filterRewardsByTab(tabType) {
+			const allRewardCards = document.querySelectorAll('.reward-col');
+			let shown = 0;
+
+			allRewardCards.forEach(card => {
+				const isRedeemed = card.getAttribute('data-redeemed') === 'true';
+				let shouldShow = false;
+
+				if (tabType === 'available-rewards') {
+					// Show only rewards that haven't been redeemed
+					shouldShow = !isRedeemed;
+				} else if (tabType === 'redeemed-rewards') {
+					// Show only rewards that have been redeemed
+					shouldShow = isRedeemed;
+				}
+
+				if (shouldShow) {
+					card.style.display = 'inline-block';
+					shown++;
+				} else {
+					card.style.display = 'none';
+				}
+			});
+
+			// Show empty state if no rewards
+			showEmptyState(tabType, shown);
+		}
+
+		function showEmptyState(tabType, count) {
+			let empty = document.getElementById('rewards-empty-state');
+
+			if (count === 0) {
+				if (!empty) {
+					empty = document.createElement('div');
+					empty.id = 'rewards-empty-state';
+					empty.className = 'empty-state';
+					empty.style.width = '100%';
+				}
+
+				let emptyMessage = '';
+				let emptyIcon = 'fa-gift';
+
+				if (tabType === 'available-rewards') {
+					emptyMessage = '<h4>No Available Rewards</h4><p>All rewards have been redeemed or there are no rewards at the moment.</p>';
+					emptyIcon = 'fa-gift';
+				} else if (tabType === 'redeemed-rewards') {
+					emptyMessage = '<h4>No Redeemed Rewards</h4><p>You haven\'t redeemed any rewards yet. Check out the available rewards!</p>';
+					emptyIcon = 'fa-check-circle';
+				}
+
+				empty.innerHTML = `<i class="fa ${emptyIcon}"></i>${emptyMessage}`;
+				document.getElementById('rewardArea').appendChild(empty);
+			} else if (empty) {
+				empty.remove();
+			}
+		}
+
+		// Initialize tabs after rewards are loaded
+		initializeTabs();
+		// Show available rewards by default
+		filterRewardsByTab('available-rewards');
 	</script>
 </body>
 
