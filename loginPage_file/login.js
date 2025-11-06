@@ -102,6 +102,7 @@ login.addEventListener("click", function (event) {
                     const q = query(profilesRef, where("userId", "==", user.uid));
                     const querySnapshot = await getDocs(q);
                     querySnapshot.forEach((doc) => {
+                        console.log('a')
                         profileExist = true;
                         localStorage.setItem('profileID', doc.id)
                     });
