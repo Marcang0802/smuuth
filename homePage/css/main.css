@@ -3167,12 +3167,35 @@ body.mobile-nav-active #mobile-nav-toggle {
   background: #49e4fa;
 }
 
-.single-review .title {
+.single-review {
+  background-color: #222;
+  border-radius: 10px;
+  padding: 25px;
+  align-items: flex-start;
+  height: 190px;
+  overflow: hidden;
+}
+
+.single-review p {
+  margin-bottom: 0;
+  font-size: 14px;
+
+  /* Cut-off long text */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* number of visible lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.single-review .title h4 {
   margin: 20px 0;
+  color: white;
 }
 
 .single-review .star {
-  margin-left: 20px;
+  margin-top: 20px;
+  margin-left: 40px;
 }
 
 .single-review .star .checked {
