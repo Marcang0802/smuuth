@@ -560,7 +560,7 @@
 			}
 		});
 	}
-
+	//top rated feedback
 	async function loadTopRatedFeedback() {
 		const topContainer = document.getElementById('topRatedEvents');
 
@@ -583,7 +583,7 @@
 			}
 
 			topContainer.innerHTML = ''; // Clear loading message
-
+			
 			snapshot.forEach(doc => {
 				const data = doc.data();
 
