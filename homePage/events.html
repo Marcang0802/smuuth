@@ -1037,7 +1037,8 @@
                 } else {
                     joinButton = `<p class="text-muted mt-2">Log in to join this event</p>`;
                 }
-
+                let startDatetime = event.startDatetime.replace("T", " ")
+                let endDatetime = event.endDatetime.replace("T", " ")
                 const eventHTML = `
                 <div class="single-post job-listing d-flex flex-row mb-3"
                      data-category="${canonical(dataCat || 'Others')}"
@@ -1055,6 +1056,8 @@
                             <p>${event.description || "No description provided."}</p>
                             <h5>Manpower Needed: ${event.manpower}</h5>
                             <p class="address"><span class="lnr lnr-map"></span> ${event.location}</p>
+                            <p>Start DateTime: ${startDatetime}</p>
+                            <p>End DateTime: ${endDatetime}</p>
                             <p class="address"><span class="lnr lnr-database"></span> ${event.rewardPoints} points</p>
                             ${joinButton}
                             ${adminControls}
@@ -1062,6 +1065,7 @@
                     </div>
                 </div>`;
                 eventList.insertAdjacentHTML("beforeend", eventHTML);
+                
             });
             applyFiltersFromURL();
 
