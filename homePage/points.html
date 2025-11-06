@@ -233,6 +233,8 @@
 		let rewardList = await getAllRewards();
 		let role = await getRole(profileID);
 
+		
+
 		// iterate through the reward list and populate the screen
 		for (let reward of rewardList) {
 			// <div class="single-post d-flex flex-row">
@@ -327,6 +329,66 @@
 				window.location.replace('manageReward.html');
 			})
 		}
+
+		function showCustomConfirm(message, title = 'Confirm') {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customAlertOverlay');
+                const icon = document.getElementById('customAlertIcon');
+                const titleEl = document.getElementById('customAlertTitle');
+                const messageEl = document.getElementById('customAlertMessage');
+                const buttonsContainer = document.getElementById('customAlertButtons');
+
+                // Set icon for confirmation
+                icon.innerHTML = '<i class="fa fa-question-circle"></i>';
+                icon.className = 'custom-alert-icon warning';
+
+                // Set title and message
+                titleEl.textContent = title;
+                messageEl.textContent = message;
+
+                // Create Yes/No buttons
+                buttonsContainer.innerHTML = `
+                    <button class="custom-alert-btn secondary" id="customAlertNoBtn">Cancel</button>
+                    <button class="custom-alert-btn" id="customAlertYesBtn">Confirm</button>
+                `;
+
+                // Show overlay
+                overlay.classList.add('show');
+
+                const yesBtn = document.getElementById('customAlertYesBtn');
+                const noBtn = document.getElementById('customAlertNoBtn');
+
+                const handleYes = () => {
+                    overlay.classList.remove('show');
+                    cleanup();
+                    resolve(true);
+                };
+
+                const handleNo = () => {
+                    overlay.classList.remove('show');
+                    cleanup();
+                    resolve(false);
+                };
+
+                const cleanup = () => {
+                    yesBtn.removeEventListener('click', handleYes);
+                    noBtn.removeEventListener('click', handleNo);
+                    overlay.removeEventListener('click', handleOverlayClick);
+                    // Reset to single OK button
+                    buttonsContainer.innerHTML = '<button class="custom-alert-btn" id="customAlertOkBtn">OK</button>';
+                };
+
+                const handleOverlayClick = (e) => {
+                    if (e.target === overlay) {
+                        handleNo();
+                    }
+                };
+
+                yesBtn.addEventListener('click', handleYes);
+                noBtn.addEventListener('click', handleNo);
+                overlay.addEventListener('click', handleOverlayClick);
+            });
+        }
 	</script>
 </body>
 

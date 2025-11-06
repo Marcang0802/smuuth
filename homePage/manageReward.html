@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div id="rewardList" class="col-8 overflow-auto" style="height: 400px;">
-                <table class="table table-bordered " id="rewardTable">
+                <table class="table table-bordered" id="rewardTable">
                     <thead style="position: sticky; top:0">
                         <tr>
                             <th>Number</th>
@@ -153,7 +153,7 @@
         let user = null;
 
         // writing to the databse of new reward
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const form = document.getElementById("rewardForm");
                 form.addEventListener("submit", async (event) => {
@@ -175,7 +175,6 @@
                     }
                 });
             } else {
-                await showCustomAlert("You must be logged in to manage rewards!", 'warning');
                 window.location.href = "../loginPage_file/login.html";
             }
         });
@@ -188,6 +187,7 @@
         for (let reward of rewardList) {
             // table building
             let tr = document.createElement('tr')
+            tr.setAttribute("style","background:#a998f6;")
             rewardTable.appendChild(tr)
 
             let number = document.createElement("td")
