@@ -288,13 +288,14 @@
 	<!-- End calto-action Area -->
 
 	<!-- Start testimonial Area -->
-	<section class="testimonial-area section-gap" id="review">
+	<section class="testimonial-area section-gap" id="review"
+		style="background: linear-gradient(to right, hsla(254, 78%, 82%, 0.3), hsla(249, 94%, 72%, 0.3));">
 		<div class="container">
 			<div class="row d-flex justify-content-center">
 				<div class="menu-content pb-60 col-lg-8">
 					<div class="title text-center">
 						<h1 class="mb-10">Reviews from our fellow students</h1>
-						<p>Who finds themselves back with SMUUTH</p>
+						<p style="color:black">Who finds themselves back with SMUUTH</p>
 					</div>
 				</div>
 			</div>
@@ -379,94 +380,89 @@
 
 	<!-- start footer Area -->
 	<footer class="footer-area section-gap">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-6 col-md-12">
-        <div class="single-footer-widget newsletter">
-          <h6>Newsletter</h6>
-          <p>You can trust us. We only send promo offers, not a single spam.</p>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-12">
+					<div class="single-footer-widget newsletter">
+						<h6>Newsletter</h6>
+						<p>You can trust us. We only send promo offers, not a single spam.</p>
 
-          <form id="newsletter-form">
-            <div class="form-group row" style="width: 100%">
-              <div class="col-lg-8 col-md-12">
-                <input
-                  name="to_email"
-                  placeholder="Enter Email"
-                  onfocus="this.placeholder=''"
-                  onblur="this.placeholder='Enter Email'"
-                  required
-                  type="email"
-                />
-              </div>
+						<form id="newsletter-form">
+							<div class="form-group row" style="width: 100%">
+								<div class="col-lg-8 col-md-12">
+									<input name="to_email" placeholder="Enter Email" onfocus="this.placeholder=''"
+										onblur="this.placeholder='Enter Email'" required type="email" />
+								</div>
 
-              <div class="col-lg-4 col-md-12">
-                <button type="submit" class="nw-btn primary-btn">
-                  Subscribe<span class="lnr lnr-arrow-right"></span>
-                </button>
-              </div>
-            </div>
+								<div class="col-lg-4 col-md-12">
+									<button type="submit" class="nw-btn primary-btn">
+										Subscribe<span class="lnr lnr-arrow-right"></span>
+									</button>
+								</div>
+							</div>
 
-            <div class="info" id="newsletter-response"></div>
-          </form>
-        </div>
-      </div>
-    </div>
+							<div class="info" id="newsletter-response"></div>
+						</form>
+					</div>
+				</div>
+			</div>
 
-    <div class="row footer-bottom d-flex justify-content-between">
-      <p class="col-lg-8 col-sm-12 footer-text m-0 text-white">
-        Copyright &copy;
-        <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is
-        made with <i class="fa fa-heart-o" aria-hidden="true"></i> by
-        <a href="https://colorlib.com" target="_blank">Colorlib</a>
-      </p>
-      <div class="col-lg-4 col-sm-12 footer-social">
-        <a href="#"><i class="fa fa-facebook"></i></a>
-        <a href="#"><img src="img/tiktok logo.png.svg" alt="tiktok logo"></a>
-        <a href="https://www.instagram.com/smuuthevents?igsh=ZTJ2OWs2MHB2OW94&utm_source=qr"><i class="fa fa-instagram"></i></a>
-      </div>
-    </div>
-  </div>
-</footer>
+			<div class="row footer-bottom d-flex justify-content-between">
+				<p class="col-lg-8 col-sm-12 footer-text m-0 text-white">
+					Copyright &copy;
+					<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is
+					made with <i class="fa fa-heart-o" aria-hidden="true"></i> by
+					<a href="https://colorlib.com" target="_blank">Colorlib</a>
+				</p>
+				<div class="col-lg-4 col-sm-12 footer-social">
+					<a href="#"><i class="fa fa-facebook"></i></a>
+					<a href="#"><img src="img/tiktok logo.png.svg" alt="tiktok logo"></a>
+					<a href="https://www.instagram.com/smuuthevents?igsh=ZTJ2OWs2MHB2OW94&utm_source=qr"><i
+							class="fa fa-instagram"></i></a>
+				</div>
+			</div>
+		</div>
+	</footer>
 
-<!-- EmailJS v4 (load once, below your other scripts) -->
+	<!-- EmailJS v4 (load once, below your other scripts) -->
 	<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 	<script>
-	  (function () {
-	    emailjs.init("VKk3x4Hb19VUPRuAh"); // Replace with your EmailJS public key
-	  })();
-	
-	  document.getElementById('newsletter-form').addEventListener('submit', function (event) {
-	    event.preventDefault();
-	
-	    const btn = this.querySelector('button[type="submit"]');
-	    const responseDiv = document.getElementById('newsletter-response');
-	    const originalBtnHtml = btn.innerHTML;
-	
-	    // Disable button and show loading
-	    btn.disabled = true;
-	    btn.innerHTML = 'Sending...';
-	    responseDiv.innerHTML = '';
-	
-	    // Send email using EmailJS
-	    emailjs.sendForm('service_qxa591g', 'template_4ql5kl9', this)
-	      .then(function (response) {
-	        console.log('Newsletter subscription successful!', response.status, response.text);
-	        responseDiv.innerHTML = '<p style="color: #4CAF50; margin-top: 10px;">✓ Successfully subscribed!</p>';
-	        document.getElementById('newsletter-form').reset();
-	
-	        setTimeout(function () {
-	          btn.disabled = false;
-	          btn.innerHTML = originalBtnHtml;
-	          responseDiv.innerHTML = '';
-	        }, 3000);
-	      }, function (error) {
-	        console.log('Newsletter subscription failed:', error);
-	        responseDiv.innerHTML = '<p style="color: #f44336; margin-top: 10px;">✗ Failed to subscribe. Please try again.</p>';
-	
-	        btn.disabled = false;
-	        btn.innerHTML = originalBtnHtml;
-	      });
-	  });
+		(function () {
+			emailjs.init("VKk3x4Hb19VUPRuAh"); // Replace with your EmailJS public key
+		})();
+
+		document.getElementById('newsletter-form').addEventListener('submit', function (event) {
+			event.preventDefault();
+
+			const btn = this.querySelector('button[type="submit"]');
+			const responseDiv = document.getElementById('newsletter-response');
+			const originalBtnHtml = btn.innerHTML;
+
+			// Disable button and show loading
+			btn.disabled = true;
+			btn.innerHTML = 'Sending...';
+			responseDiv.innerHTML = '';
+
+			// Send email using EmailJS
+			emailjs.sendForm('service_qxa591g', 'template_4ql5kl9', this)
+				.then(function (response) {
+					console.log('Newsletter subscription successful!', response.status, response.text);
+					responseDiv.innerHTML = '<p style="color: #4CAF50; margin-top: 10px;">✓ Successfully subscribed!</p>';
+					document.getElementById('newsletter-form').reset();
+
+					setTimeout(function () {
+						btn.disabled = false;
+						btn.innerHTML = originalBtnHtml;
+						responseDiv.innerHTML = '';
+					}, 3000);
+				}, function (error) {
+					console.log('Newsletter subscription failed:', error);
+					responseDiv.innerHTML = '<p style="color: #f44336; margin-top: 10px;">✗ Failed to subscribe. Please try again.</p>';
+
+					btn.disabled = false;
+					btn.innerHTML = originalBtnHtml;
+				});
+		});
 	</script>
 	<!-- End footer Area -->
 
