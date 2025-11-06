@@ -40,7 +40,7 @@ googleLogin.addEventListener("click", function () {
                         localStorage.setItem('profileID', doc.id)
                     });
                     if (profileExist) {
-                        window.location.replace("../homepage/index.html");
+                        window.location.replace("../homePage/index.html");
                     }
                 } else {
                     window.location.replace("./profile.html");
