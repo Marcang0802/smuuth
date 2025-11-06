@@ -108,11 +108,13 @@ login.addEventListener("click", function (event) {
                     if (profileExist) {
                         window.location.replace("../homepage/index.html");
                     }
-                } else {
-                    window.location.replace("./profile.html");
+                    else {
+                        console.log('a')
+                        window.location.replace("./profile.html");
+                    }
                 }
-            });
-            // window.location.replace("profile.html");
+                // window.location.replace("profile.html");
+            })
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -124,7 +126,8 @@ login.addEventListener("click", function (event) {
                 errorMessageDisplay.innerText = errorMessage;
             }
         });
-});
+}
+)
 
 
 
