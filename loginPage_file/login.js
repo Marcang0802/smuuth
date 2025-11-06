@@ -17,6 +17,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider()
+//clear leftover data from previous session
+    localStorage.clear()
 const googleLogin = document.getElementById("google")
 googleLogin.addEventListener("click", function () {
     signInWithPopup(auth, provider)
@@ -89,10 +91,21 @@ login.addEventListener("click", function (event) {
         });
 });
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async(user) => {
     if (user) {
-        localStorage.setItem("userId", user.uid); // Store userId for consistent session
-    } else {
-        // window.location.href = "login.html"; // Redirect if not authenticated
-    }
+       let profileExist = false;
+        const profilesRef = collection(db, "profiles");
+        const q = query(profilesRef, where("userId", "==", user.uid));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          profileExist = true;
+          localStorage.setItem('profileID', doc.id)
+        });
+        if (profileExist) {
+          window.location.replace("../homepage/index.html");
+        }
+      } else {
+        window.location.replace("./profile.html");
+      }
 });
+

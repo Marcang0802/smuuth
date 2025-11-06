@@ -237,28 +237,28 @@
     const auth = getAuth(app);
     const storage = getStorage(app);
 
-    //clear leftover data from previous session
-    localStorage.clear()
+    // //clear leftover data from previous session
+    // localStorage.clear()
 
 
-    //check if profile exist, and put profileid in local storage
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        let profileExist = false;
-        const profilesRef = collection(db, "profiles");
-        const q = query(profilesRef, where("userId", "==", user.uid));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          profileExist = true;
-          localStorage.setItem('profileID', doc.id)
-        });
-        if (profileExist) {
-          window.location.replace("../homepage/index.html");
-        }
-      } else {
-        window.location.replace("./login.html");
-      }
-    });
+    // //check if profile exist, and put profileid in local storage
+    // onAuthStateChanged(auth, async (user) => {
+    //   if (user) {
+    //     let profileExist = false;
+    //     const profilesRef = collection(db, "profiles");
+    //     const q = query(profilesRef, where("userId", "==", user.uid));
+    //     const querySnapshot = await getDocs(q);
+    //     querySnapshot.forEach((doc) => {
+    //       profileExist = true;
+    //       localStorage.setItem('profileID', doc.id)
+    //     });
+    //     if (profileExist) {
+    //       window.location.replace("../homepage/index.html");
+    //     }
+    //   } else {
+    //     window.location.replace("./login.html");
+    //   }
+    // });
 
     let uploadedPhotoUrl = null;
 
