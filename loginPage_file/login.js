@@ -1,24 +1,25 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
+import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
-  authDomain: "wad2-505be.firebaseapp.com",
-  projectId: "wad2-505be",
-  storageBucket: "wad2-505be.firebasestorage.app",
-  messagingSenderId: "221863917439",
-  appId: "1:221863917439:web:2a517ca11c83e991388c4a",
-  measurementId: "G-L69GG585GF"
+    apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
+    authDomain: "wad2-505be.firebaseapp.com",
+    projectId: "wad2-505be",
+    storageBucket: "wad2-505be.firebasestorage.app",
+    messagingSenderId: "221863917439",
+    appId: "1:221863917439:web:2a517ca11c83e991388c4a",
+    measurementId: "G-L69GG585GF"
 };
 
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider()
+const db = getFirestore(app);
 //clear leftover data from previous session
-    localStorage.clear()
+localStorage.clear()
 const googleLogin = document.getElementById("google")
 googleLogin.addEventListener("click", function () {
     signInWithPopup(auth, provider)
@@ -28,8 +29,25 @@ googleLogin.addEventListener("click", function () {
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    let profileExist = false;
+                    const profilesRef = collection(db, "profiles");
+                    const q = query(profilesRef, where("userId", "==", user.uid));
+                    const querySnapshot = await getDocs(q);
+                    querySnapshot.forEach((doc) => {
+                        profileExist = true;
+                        localStorage.setItem('profileID', doc.id)
+                    });
+                    if (profileExist) {
+                        window.location.replace("../homepage/index.html");
+                    }
+                } else {
+                    window.location.replace("./profile.html");
+                }
+            });
             // localStorage.setItem("userUID", user.uid); // Store user UID
-            window.location.replace("profile.html");
+            // window.location.replace("profile.html");
             // IdP data available using getAdditionalUserInfo(result)
             // ...
         }).catch((error) => {
@@ -76,8 +94,25 @@ login.addEventListener("click", function (event) {
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            localStorage.setItem("userUID", user.uid); // Store user UID
-            window.location.replace("profile.html");
+            // localStorage.setItem("userUID", user.uid); // Store user UID
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    let profileExist = false;
+                    const profilesRef = collection(db, "profiles");
+                    const q = query(profilesRef, where("userId", "==", user.uid));
+                    const querySnapshot = await getDocs(q);
+                    querySnapshot.forEach((doc) => {
+                        profileExist = true;
+                        localStorage.setItem('profileID', doc.id)
+                    });
+                    if (profileExist) {
+                        window.location.replace("../homepage/index.html");
+                    }
+                } else {
+                    window.location.replace("./profile.html");
+                }
+            });
+            // window.location.replace("profile.html");
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -91,21 +126,5 @@ login.addEventListener("click", function (event) {
         });
 });
 
-onAuthStateChanged(auth, async(user) => {
-    if (user) {
-       let profileExist = false;
-        const profilesRef = collection(db, "profiles");
-        const q = query(profilesRef, where("userId", "==", user.uid));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          profileExist = true;
-          localStorage.setItem('profileID', doc.id)
-        });
-        if (profileExist) {
-          window.location.replace("../homepage/index.html");
-        }
-      } else {
-        window.location.replace("./profile.html");
-      }
-});
+
 
