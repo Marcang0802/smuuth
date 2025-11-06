@@ -18,6 +18,52 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+function showCustomAlert(message, type = 'info', title = null) {
+			return new Promise((resolve) => {
+				const overlay = document.getElementById('customAlertOverlay');
+				const icon = document.getElementById('customAlertIcon');
+				const titleEl = document.getElementById('customAlertTitle');
+				const messageEl = document.getElementById('customAlertMessage');
+				const okBtn = document.getElementById('customAlertOkBtn');
+				// Set icon based on type
+				const icons = {
+					success: '<i class="fa fa-check-circle"></i>',
+					error: '<i class="fa fa-times-circle"></i>',
+					warning: '<i class="fa fa-exclamation-triangle"></i>',
+					info: '<i class="fa fa-info-circle"></i>'
+				};
+				icon.innerHTML = icons[type] || icons.info;
+				icon.className = `custom-alert-icon ${type}`;
+				// Set title
+				const titles = {
+					success: 'Success!',
+					error: 'Error',
+					warning: 'Warning',
+					info: 'Information'
+				};
+				titleEl.textContent = title || titles[type] || 'Alert';
+				// Set message
+				messageEl.textContent = message;
+				// Show overlay
+				overlay.classList.add('show');
+				// Handle OK button
+				const handleOk = () => {
+					overlay.classList.remove('show');
+					okBtn.removeEventListener('click', handleOk);
+					overlay.removeEventListener('click', handleOverlayClick);
+					resolve(true);
+				};
+				// Handle clicking outside
+				const handleOverlayClick = (e) => {
+					if (e.target === overlay) {
+						handleOk();
+					}
+				};
+				okBtn.addEventListener('click', handleOk);
+				overlay.addEventListener('click', handleOverlayClick);
+			});
+		}
+
 //Get the user's role
 export async function getRole(profileID) {
   // get user document reference from firestore
@@ -38,10 +84,10 @@ export async function getRole(profileID) {
 export async function addReward(data) {
   try {
     await addDoc(collection(db, "rewards"), data);
-    alert("Reward added successfully!");
+    await showCustomAlert("Reward added successfully!",'success');
   } catch (error) {
     console.error("Error adding reward:", error);
-    alert("Failed to add reward. Check console for details.");
+    await showCustomAlert("Failed to add reward. Check console for details.",'error');
   }
 }
 
@@ -51,7 +97,7 @@ export async function deleteReward(rewardID) {
   const rewardRef = doc(db, "rewards", rewardID);
   // Delete the document
   await deleteDoc(rewardRef);
-  alert('Deleted')
+  await showCustomAlert('Deleted','info')
 }
 
 //get all redeemedUser (refer to data on top)
@@ -109,14 +155,14 @@ export async function redeemReward(rewardID, profileID) {
   if (redeemedUsers.length < (reward.data().redeemLimit)) {
     for (let user of redeemedUsers) { //check if already redeemed
       if (profileID === user) {
-        alert("Already redeemed")
+        await showCustomAlert("Already redeemed",'info')
         return
       }
     }
     let updateStatus = await updatePoints(reward.data().pointsAmount, "-", profileID)//check if updating points successful
     if (updateStatus === true) {
       redeemedUsers.push(profileID)
-      alert('successfully redeemed!')
+      await showCustomAlert('successfully redeemed!','success')
       await updateDoc(rewardRef, {
         redeemedUser: redeemedUsers // update the array
       });
@@ -128,7 +174,7 @@ export async function redeemReward(rewardID, profileID) {
   }
   else {
     // if rewardLimit reached, therefore no more rewards left
-    alert('Sorry, no more rewards of this type!')
+    await showCustomAlert('Sorry, no more rewards of this type!','info')
     console.log("Sorry, no more rewards of this type!")
   }
 }
