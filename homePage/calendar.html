@@ -201,9 +201,9 @@
 											// Map joined events to calendar format (blue color)
 											let joinedCalendarEvents = joinedEvents.map(event => ({
 												title: event.eventName + ' (Joined)',
-												start: event.start.split('T')[0],
-												end: event.end.split('T')[0],
-												allDay: true,
+												start: event.start,
+												end: event.end,
+												allDay: false,
 												color: '#49e4fa', // Light blue for joined events
 												textColor: '#ffffff'
 											}));
@@ -211,9 +211,9 @@
 											// Map created events to calendar format (green color)
 											let createdCalendarEvents = createdEvents.map(event => ({
 												title: event.eventName + ' (Created)',
-												start: event.start.split('T')[0],
-												end: event.end.split('T')[0],
-												allDay: true,
+												start: event.start,
+												end: event.end,
+												allDay: false,
 												color: '#4CAF50', // Green for created events
 												textColor: '#ffffff'
 											}));
@@ -231,14 +231,26 @@
 											console.log('Initializing calendar...');
 
 											var calendar = new FullCalendar.Calendar(calendarEl, {
-												initialView: 'dayGridMonth',
-												events: allCalendarEvents,
-												headerToolbar: {
-													left: 'prev,next today',
-													center: 'title',
-													right: 'dayGridMonth,timeGridWeek,listWeek'
-												},
-												height: 'auto'
+											initialView: 'dayGridMonth',
+											events: allCalendarEvents,
+											headerToolbar: {
+												left: 'prev,next today',
+												center: 'title',
+												right: 'dayGridMonth,timeGridWeek,listWeek'
+											},
+											height: 'auto',
+											eventContent: function(arg) {
+												const viewType = arg.view.type;
+												let eventTitle = arg.event.title;
+												if (viewType === 'dayGridMonth') {
+												// Hide time in month view
+												return { html: `<div>${eventTitle}</div>` };
+												} else {
+												// Show time in week and list view
+												let timeText = arg.timeText; // this is the time string
+												return { html: `<div><b>${timeText}</b> ${eventTitle}</div>` };
+												}
+											}
 											});
 											calendar.render();
 											console.log('Calendar rendered successfully');
