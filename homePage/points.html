@@ -197,17 +197,17 @@
 
 <body>
 	<div class="custom-alert-overlay" id="customAlertOverlay">
-        <div class="custom-alert-box">
-            <div class="custom-alert-icon" id="customAlertIcon">
-                <i class="fa fa-info-circle"></i>
-            </div>
-            <h3 class="custom-alert-title" id="customAlertTitle">Alert</h3>
-            <p class="custom-alert-message" id="customAlertMessage"></p>
-            <div class="custom-alert-btn-group" id="customAlertButtons">
-                <button class="custom-alert-btn" id="customAlertOkBtn">OK</button>
-            </div>
-        </div>
-    </div>
+		<div class="custom-alert-box">
+			<div class="custom-alert-icon" id="customAlertIcon">
+				<i class="fa fa-info-circle"></i>
+			</div>
+			<h3 class="custom-alert-title" id="customAlertTitle">Alert</h3>
+			<p class="custom-alert-message" id="customAlertMessage"></p>
+			<div class="custom-alert-btn-group" id="customAlertButtons">
+				<button class="custom-alert-btn" id="customAlertOkBtn">OK</button>
+			</div>
+		</div>
+	</div>
 
 	<header id="header" id="home">
 		<div class="container">
@@ -312,11 +312,14 @@
 					made with <i class="fa fa-heart-o" aria-hidden="true"></i> by
 					<a href="https://colorlib.com" target="_blank">Colorlib</a>
 				</p>
-				<div class="col-lg-4 col-sm-12 footer-social">
-					<a href="#"><i class="fa fa-facebook"></i></a>
-					<a href="#"><img src="img/tiktok logo.png.svg" alt="tiktok logo"></a>
-					<a href="https://www.instagram.com/smuuthevents?igsh=ZTJ2OWs2MHB2OW94&utm_source=qr"><i
-							class="fa fa-instagram"></i></a>
+				<div class="col-lg-4 col-sm-6 footer-social">
+					<a href="https://www.facebook.com/people/SMUuth-Events/61583632431022/"><img
+							src="img/facebook logo.svg" alt="facebook logo" class="socialLogo"></a>
+					<a href="https://www.tiktok.com/en/"><img src="img/tiktok logo.png.svg" alt="tiktok logo"
+							class="socialLogo"></a>
+					<a href="https://www.instagram.com/smuuthevents?igsh=ZTJ2OWs2MHB2OW94&utm_source=qr">
+						<img src="img/instagram logo.svg" alt="instagram logo" class="socialLogo">
+					</a>
 				</div>
 			</div>
 		</div>
@@ -403,7 +406,7 @@
 		let rewardList = await getAllRewards();
 		let role = await getRole(profileID);
 
-		
+
 
 		// iterate through the reward list and populate the screen
 		for (let reward of rewardList) {
@@ -500,71 +503,71 @@
 		}
 
 		function showCustomConfirm(message, title = 'Confirm') {
-            return new Promise((resolve) => {
-                const overlay = document.getElementById('customAlertOverlay');
-                const icon = document.getElementById('customAlertIcon');
-                const titleEl = document.getElementById('customAlertTitle');
-                const messageEl = document.getElementById('customAlertMessage');
-                const buttonsContainer = document.getElementById('customAlertButtons');
+			return new Promise((resolve) => {
+				const overlay = document.getElementById('customAlertOverlay');
+				const icon = document.getElementById('customAlertIcon');
+				const titleEl = document.getElementById('customAlertTitle');
+				const messageEl = document.getElementById('customAlertMessage');
+				const buttonsContainer = document.getElementById('customAlertButtons');
 
-                // Set icon for confirmation
-                icon.innerHTML = '<i class="fa fa-question-circle"></i>';
-                icon.className = 'custom-alert-icon warning';
+				// Set icon for confirmation
+				icon.innerHTML = '<i class="fa fa-question-circle"></i>';
+				icon.className = 'custom-alert-icon warning';
 
-                // Set title and message
-                titleEl.textContent = title;
-                messageEl.textContent = message;
+				// Set title and message
+				titleEl.textContent = title;
+				messageEl.textContent = message;
 
-                // Create Yes/No buttons
-                buttonsContainer.innerHTML = `
+				// Create Yes/No buttons
+				buttonsContainer.innerHTML = `
                     <button class="custom-alert-btn secondary" id="customAlertNoBtn">Cancel</button>
                     <button class="custom-alert-btn" id="customAlertYesBtn">Confirm</button>
                 `;
 
-                // Show overlay
-                overlay.classList.add('show');
+				// Show overlay
+				overlay.classList.add('show');
 
-                const yesBtn = document.getElementById('customAlertYesBtn');
-                const noBtn = document.getElementById('customAlertNoBtn');
+				const yesBtn = document.getElementById('customAlertYesBtn');
+				const noBtn = document.getElementById('customAlertNoBtn');
 
-                const handleYes = () => {
-                    overlay.classList.remove('show');
-                    cleanup();
-                    resolve(true);
-                };
+				const handleYes = () => {
+					overlay.classList.remove('show');
+					cleanup();
+					resolve(true);
+				};
 
-                const handleNo = () => {
-                    overlay.classList.remove('show');
-                    cleanup();
-                    resolve(false);
-                };
+				const handleNo = () => {
+					overlay.classList.remove('show');
+					cleanup();
+					resolve(false);
+				};
 
-                const cleanup = () => {
-                    yesBtn.removeEventListener('click', handleYes);
-                    noBtn.removeEventListener('click', handleNo);
-                    overlay.removeEventListener('click', handleOverlayClick);
-                    // Reset to single OK button
-                    buttonsContainer.innerHTML = '<button class="custom-alert-btn" id="customAlertOkBtn">OK</button>';
-                };
+				const cleanup = () => {
+					yesBtn.removeEventListener('click', handleYes);
+					noBtn.removeEventListener('click', handleNo);
+					overlay.removeEventListener('click', handleOverlayClick);
+					// Reset to single OK button
+					buttonsContainer.innerHTML = '<button class="custom-alert-btn" id="customAlertOkBtn">OK</button>';
+				};
 
-                const handleOverlayClick = (e) => {
-                    if (e.target === overlay) {
-                        handleNo();
-                    }
-                };
+				const handleOverlayClick = (e) => {
+					if (e.target === overlay) {
+						handleNo();
+					}
+				};
 
-                yesBtn.addEventListener('click', handleYes);
-                noBtn.addEventListener('click', handleNo);
-                overlay.addEventListener('click', handleOverlayClick);
-            });
-        }
+				yesBtn.addEventListener('click', handleYes);
+				noBtn.addEventListener('click', handleNo);
+				overlay.addEventListener('click', handleOverlayClick);
+			});
+		}
 
 		// Tab filtering functions
 		function initializeTabs() {
 			const tabButtons = document.querySelectorAll('.tab-btn');
 
 			tabButtons.forEach(button => {
-				button.addEventListener('click', function(e) {
+				button.addEventListener('click', function (e) {
 					e.preventDefault();
 
 					// Remove active class from all buttons
