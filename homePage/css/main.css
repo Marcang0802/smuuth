@@ -3286,12 +3286,12 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .footer-social a {
   background: #111111;
-  width: 20px;
-  width: 40px;
+  width: 45px;
   /* display: inline-table; */
-  height: 40px;
+  height: 45px;
   display: inline-block;
-  margin: 0 8px;
+  margin: 0 1px;
+  border-radius: 10%;
   text-decoration: none;
   text-align: center;
   padding-top: 10px;
@@ -3307,23 +3307,22 @@ body.mobile-nav-active #mobile-nav-toggle {
   opacity: 0.8;
 }
 
-.footer-social a:hover i {
+/* .footer-social a:hover i {
   color: #fff;
-}
+} */
 
-.footer-social .tiktokLogo {
+.footer-social .socialLogo {
   filter: brightness(0) invert(1);
 }
 
-.footer-social a:hover .tiktokLogo {
+.footer-social a:hover .socialLogo {
   color: #fff;
 }
 
-.footer-social i,
-.footer-social .tiktokLogo {
+.footer-social .socialLogo {
   color: #cccccc;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   vertical-align: middle;
   object-fit: contain;
   -webkit-transition: all 0.3s ease 0s;
