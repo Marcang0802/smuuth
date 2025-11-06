@@ -78,9 +78,11 @@ document.addEventListener("DOMContentLoaded", function() {
       window.location.href = "login.html";
     } catch (error) {
       console.error("Registration error:", error);
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
       switch (error.code) {
         case 'auth/email-already-in-use':
-          errorMessageDisplay.innerText = "This email is already in use. Please use a different one.";
+          errorMessageDisplay.innerText = "This email is already registered. Please try logging in instead, or if you need to re-register, delete your account from your profile page first.";
           break;
         case 'auth/invalid-email':
           errorMessageDisplay.innerText = "Invalid email format.";
