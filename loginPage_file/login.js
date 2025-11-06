@@ -102,6 +102,7 @@ login.addEventListener("click", function (event) {
                     const q = query(profilesRef, where("userId", "==", user.uid));
                     const querySnapshot = await getDocs(q);
                     querySnapshot.forEach((doc) => {
+                        console.log('a')
                         profileExist = true;
                         localStorage.setItem('profileID', doc.id)
                     });
@@ -109,6 +110,7 @@ login.addEventListener("click", function (event) {
                         window.location.replace("../homepage/index.html");
                     }
                 } else {
+                    console.log('a')
                     window.location.replace("./profile.html");
                 }
             });
