@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const user = userCredential.user;
       // await createUserDocument(user.uid, email);
       // localStorage.setItem("userUID", user.uid);
-      alert('You can now log in!');
+      await showCustomAlert('You can now log in!', 'success');
       window.location.href = "login.html";
     } catch (error) {
       console.error("Registration error:", error);

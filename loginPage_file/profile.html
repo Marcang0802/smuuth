@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <title>Create Profile | SMU Event Helpers</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../homePage/css/custom-alert.css" />
   <style>
     body {
       background: linear-gradient(135deg, #d6e4ff, #f8f9fa);
@@ -163,7 +165,7 @@
         </div>
         <div class="mb-3">
           <label for="phone" class="form-label">Phone Number</label>
-          <input type="tel" class="form-control" id="phone" name="phone" required pattern="[0-9]{8}"
+          <input type="tel" class="form-control" id="phone" name="phone" required pattern="[8-9][0-9]{7}"
             placeholder="E.g. 91234567" />
         </div>
         <div class="mb-3">
@@ -212,6 +214,7 @@
       </form>
     </div>
   </div>
+  <script src="../homePage/js/custom-alert.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -270,12 +273,12 @@
       if (!file) return;
 
       if (!file.type.startsWith('image/')) {
-        alert("Please select an image file.");
+        await showCustomAlert("Please select an image file.", 'warning');
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        alert("Image size should be less than 5MB.");
+        await showCustomAlert("Image size should be less than 5MB.", 'warning');
         return;
       }
       const reader = new FileReader();
@@ -287,7 +290,7 @@
       try {
         const user = auth.currentUser;
         if (!user) {
-          alert("You must be logged in to upload a photo.");
+          await showCustomAlert("You must be logged in to upload a photo.", 'warning');
           return;
         }
 
@@ -297,7 +300,7 @@
         document.getElementById("profilePic").src = uploadedPhotoUrl;
       } catch (error) {
         console.error("Error uploading photo:", error);
-        alert("Failed to upload photo. Please try again.");
+        await showCustomAlert("Failed to upload photo. Please try again.", 'error');
       }
     };
 
@@ -308,9 +311,9 @@
     });
 
     let user = null;
-    onAuthStateChanged(auth, (u) => {
+    onAuthStateChanged(auth, async (u) => {
       if (!u) {
-        alert("You must be logged in to create profile!");
+        await showCustomAlert("You must be logged in to create profile!", 'warning');
         window.location.href = "../loginPage_file/login.html";
         return;
       }
@@ -352,12 +355,12 @@
 
         try {
           await addDoc(collection(db, "profiles"), data);
-          alert("Profile created!");
+          await showCustomAlert("Profile created!", 'success');
           window.location.href = "../homePage/index.html";
         }
         catch (error) {
           console.error("Error saving profile:", error);
-          alert("Failed to create profile. Please try again.");
+          await showCustomAlert("Failed to create profile. Please try again.", 'error');
         }
       });
     });
