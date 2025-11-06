@@ -343,44 +343,43 @@
 
 	<!-- Start post Area -->
 	<section class="post-area section-gap">
-    <div class="container">
-        <div class="row d-flex">
-            <!-- LEFT SIDE: Video (8 columns = 66.67% width) -->
-            <div class="col-lg-8 post-list">
-                <!-- Video Section -->
-                <h2 class="text-center mb-4">Watch Our Introduction</h2>
-                <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-                    <iframe 
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                        src="https://www.youtube.com/embed/8EUX0DzJmKM" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <!-- End Video Section -->
-                
-                
-
-            </div>
-            
-            <!-- RIGHT SIDE: Top Rated Reviews (4 columns = 33.33% width) -->
-            <div class="col-lg-4 sidebar">
-               
-
-                <div class="single-slidebar">
-                    <h4>Top rated reviews for events</h4>
-                    <div id="topRatedEvents" class="active-relatedjob-carusel">
-                        
-                    </div>
-                </div>
+		<div class="container">
+			<div class="row d-flex">
+				<!-- LEFT SIDE: Video (8 columns = 66.67% width) -->
+				<div class="col-lg-8 post-list">
+					<!-- Video Section -->
+					<h2 class="text-center mb-4">Watch Our Introduction</h2>
+					<div class="video-container"
+						style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+						<iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+							src="https://www.youtube.com/embed/8EUX0DzJmKM" frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+							allowfullscreen>
+						</iframe>
+					</div>
+					<!-- End Video Section -->
 
 
 
-            </div>
-        </div>
-    </div>
-</section>
+				</div>
+
+				<!-- RIGHT SIDE: Top Rated Reviews (4 columns = 33.33% width) -->
+				<div class="col-lg-4 sidebar">
+
+
+					<div class="single-slidebar">
+						<h4>Top rated reviews for events</h4>
+						<div id="topRatedEvents" class="active-relatedjob-carusel">
+
+						</div>
+					</div>
+
+
+
+				</div>
+			</div>
+		</div>
+	</section>
 	<!-- End post Area -->
 
 
@@ -412,7 +411,7 @@
 	</section>
 	<!-- End calto-action Area -->
 
-	
+
 
 	<!-- start footer Area -->
 	<footer class="footer-area section-gap">
@@ -451,7 +450,8 @@
 						target="_blank">Colorlib</a>
 				</p>
 				<div class="col-lg-4 col-sm-6 footer-social">
-					<a href="https://www.facebook.com/people/SMUuth-Events/61583632431022/"><img src="img/facebook logo.svg" alt="facebook logo" class="socialLogo"></a>
+					<a href="https://www.facebook.com/people/SMUuth-Events/61583632431022/"><img
+							src="img/facebook logo.svg" alt="facebook logo" class="socialLogo"></a>
 					<a href="#"><img src="img/tiktok logo.png.svg" alt="tiktok logo" class="socialLogo"></a>
 					<a href="https://www.instagram.com/smuuthevents?igsh=ZTJ2OWs2MHB2OW94&utm_source=qr">
 						<img src="img/instagram logo.svg" alt="instagram logo" class="socialLogo">
@@ -483,23 +483,23 @@
 	<script src="js/main.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 	<script type="text/javascript">
-			(function () {
-				emailjs.init("VKk3x4Hb19VUPRuAh"); // Replace with your EmailJS public key
-			})();
+		(function () {
+			emailjs.init("VKk3x4Hb19VUPRuAh"); // Replace with your EmailJS public key
+		})();
 
-			document.getElementById('newsletter-form').addEventListener('submit', function (event) {
-				event.preventDefault();
+		document.getElementById('newsletter-form').addEventListener('submit', function (event) {
+			event.preventDefault();
 
-				const btn = this.querySelector('button[type="submit"]');
-				const responseDiv = document.getElementById('newsletter-response');
-				const originalBtnHtml = btn.innerHTML;
+			const btn = this.querySelector('button[type="submit"]');
+			const responseDiv = document.getElementById('newsletter-response');
+			const originalBtnHtml = btn.innerHTML;
 
-				// Disable button and show loading
-				btn.disabled = true;
-				btn.innerHTML = 'Sending...';
-				responseDiv.innerHTML = '';
+			// Disable button and show loading
+			btn.disabled = true;
+			btn.innerHTML = 'Sending...';
+			responseDiv.innerHTML = '';
 
-				// Send email using EmailJS
+			// Send email using EmailJS
 			emailjs.sendForm('service_qxa591g', 'template_4ql5kl9', this)
 				.then(function (response) {
 					console.log('Newsletter subscription successful!', response.status, response.text);
@@ -583,7 +583,7 @@
 			}
 
 			topContainer.innerHTML = ''; // Clear loading message
-			
+
 			snapshot.forEach(doc => {
 				const data = doc.data();
 

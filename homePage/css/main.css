@@ -3738,6 +3738,58 @@ body.mobile-nav-active #mobile-nav-toggle {
   opacity: 1;
 }
 
+/* Ensure all team cards are the same height */
+.single-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+/* Make sure images don't shift due to text height */
+.team-area .row.justify-content-center {
+  align-items: flex-start;
+}
+
+.single-team .thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  /* optional */
+  width: 100%;
+  height: 300px;
+  /* set a fixed height for uniformity */
+}
+
+.single-team .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* ensures image fills box without distortion */
+  object-position: center;
+  /* centers the image */
+  transition: transform 0.3s ease;
+}
+
+.single-team .thumb:hover img {
+  transform: scale(1.05);
+  /* optional zoom hover effect */
+}
+
+.single-team {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Optional styling for spacing consistency */
+.single-team .meta-text {
+  flex-grow: 1;
+  margin-top: 20px;
+  text-align: center;
+  min-height: 100px; /* force equal text area height */
+}
+
 .single-title {
   margin-bottom: 20px;
 }
