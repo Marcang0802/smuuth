@@ -29,6 +29,59 @@
 	<link rel="stylesheet" href="css/animate.min.css">
 	<link rel="stylesheet" href="css/owl.carousel.css">
 	<link rel="stylesheet" href="css/main.css">
+	<style>
+		.calendar-legend {
+			background: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			margin-bottom: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 30px;
+			flex-wrap: wrap;
+		}
+
+		.legend-item {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			font-family: 'Poppins', sans-serif;
+		}
+
+		.legend-color {
+			width: 30px;
+			height: 20px;
+			border-radius: 4px;
+		}
+
+		.legend-color.joined {
+			background-color: #49e4fa;
+		}
+
+		.legend-color.created {
+			background-color: #4CAF50;
+		}
+
+		.legend-text {
+			font-size: 14px;
+			font-weight: 500;
+			color: #222222;
+		}
+
+		/* Calendar container styling */
+		.calendar-api {
+			background: #fff;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+		}
+
+		#calendar {
+			min-height: 600px;
+		}
+	</style>
 </head>
 
 <body>
@@ -96,34 +149,113 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
+					<!-- Calendar Legend -->
+					<div class="calendar-legend">
+						<div class="legend-item">
+							<div class="legend-color joined"></div>
+							<span class="legend-text">Events You Joined</span>
+						</div>
+						<div class="legend-item">
+							<div class="legend-color created"></div>
+							<span class="legend-text">Events You Created</span>
+						</div>
+					</div>
 					<div class="calendar-api">
 						<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js'></script>
 						<script type="module">
-							import { getAllJoinedEvents } from '../calendar/calender.js';
+							import { getAllJoinedEvents, getAllCreatedEvents } from '../calendar/calender.js';
+							import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+							import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+
+							const firebaseConfig = {
+								apiKey: "AIzaSyByPrDz810_ttwZz0BdAJkeP54rMIqH3uw",
+								authDomain: "wad2-505be.firebaseapp.com",
+								databaseURL: "https://wad2-505be-default-rtdb.asia-southeast1.firebasedatabase.app",
+								projectId: "wad2-505be",
+								storageBucket: "wad2-505be.firebasestorage.app",
+								messagingSenderId: "221863917439",
+								appId: "1:221863917439:web:2a517ca11c83e991388c4a",
+								measurementId: "G-L69GG585GF"
+							};
+
+							const app = initializeApp(firebaseConfig);
+							const auth = getAuth(app);
+
 							document.addEventListener('DOMContentLoaded', async function () {
-								//const profileID = '624y2Zv3yVv1MwMx40YV'; //replace later
-								let profileID = localStorage.getItem('profileID')
-								let joinedEvents = await getAllJoinedEvents(profileID);
-								// console.log(joinedEvents)
-								let calendarEvents = joinedEvents.map(event => ({
-								title: event.eventName,
-								start: event.start.split('T')[0],  // Extract just the date, e.g. "2025-11-05"
-								end: event.end.split('T')[0],      // Extract just the date
-								allDay: true       
-							}));
-								// console.log(calendarEvents)
-								var calendarEl = document.getElementById('calendar');
-								var calendar = new FullCalendar.Calendar(calendarEl, {
-									initialView: 'dayGridMonth',
-									events: calendarEvents
+								console.log('Calendar page loaded');
+								let profileID = localStorage.getItem('profileID');
+								console.log('ProfileID:', profileID);
+
+								// Wait for auth state
+								onAuthStateChanged(auth, async (user) => {
+									if (user) {
+										console.log('User authenticated:', user.uid);
+										try {
+											// Get both joined and created events
+											let joinedEvents = await getAllJoinedEvents(profileID);
+											console.log('Joined events:', joinedEvents);
+
+											let createdEvents = await getAllCreatedEvents(user.uid);
+											console.log('Created events:', createdEvents);
+
+											// Map joined events to calendar format (blue color)
+											let joinedCalendarEvents = joinedEvents.map(event => ({
+												title: event.eventName + ' (Joined)',
+												start: event.start.split('T')[0],
+												end: event.end.split('T')[0],
+												allDay: true,
+												color: '#49e4fa', // Light blue for joined events
+												textColor: '#ffffff'
+											}));
+
+											// Map created events to calendar format (green color)
+											let createdCalendarEvents = createdEvents.map(event => ({
+												title: event.eventName + ' (Created)',
+												start: event.start.split('T')[0],
+												end: event.end.split('T')[0],
+												allDay: true,
+												color: '#4CAF50', // Green for created events
+												textColor: '#ffffff'
+											}));
+
+											// Combine both event arrays
+											let allCalendarEvents = [...joinedCalendarEvents, ...createdCalendarEvents];
+											console.log('Total calendar events:', allCalendarEvents.length);
+
+											// Initialize calendar
+											var calendarEl = document.getElementById('calendar');
+											if (!calendarEl) {
+												console.error('Calendar element not found!');
+												return;
+											}
+											console.log('Initializing calendar...');
+
+											var calendar = new FullCalendar.Calendar(calendarEl, {
+												initialView: 'dayGridMonth',
+												events: allCalendarEvents,
+												headerToolbar: {
+													left: 'prev,next today',
+													center: 'title',
+													right: 'dayGridMonth,timeGridWeek,listWeek'
+												},
+												height: 'auto'
+											});
+											calendar.render();
+											console.log('Calendar rendered successfully');
+										} catch (error) {
+											console.error('Error loading calendar:', error);
+										}
+									} else {
+										console.log('No user authenticated');
+									}
 								});
-								calendar.render();
 							});
 
 						</script>
 
-
 						<div id='calendar'></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
