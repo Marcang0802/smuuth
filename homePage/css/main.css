@@ -2445,6 +2445,13 @@ body.mobile-nav-active #mobile-nav-toggle {
   font-size: 14px;
 }
 
+.btn-info:hover {
+  background: rgba(73, 228, 250, 0.2) !important;
+  color: #49e4fa !important;
+  border-color: #49e4fa !important;
+}
+
+
 @media (max-width: 960px) {
   .banner-content .form-cols {
     margin-bottom: 30px;
@@ -3787,7 +3794,8 @@ body.mobile-nav-active #mobile-nav-toggle {
   flex-grow: 1;
   margin-top: 20px;
   text-align: center;
-  min-height: 100px; /* force equal text area height */
+  min-height: 100px;
+  /* force equal text area height */
 }
 
 .single-title {
@@ -4351,6 +4359,16 @@ body.mobile-nav-active #mobile-nav-toggle {
 .eventImg {
   margin-top: 30px;
 }
+
+/* .search-btn:hover {
+  background: rgba(73, 228, 250, 0.2);
+  color: #49e4fa;
+  border-color: #49e4fa;} /* optional: if you want the border to match */
+
+
+/* .search-btn:hover .lnr {
+  color: #49e4fa; /* ensures the icon also changes color */
+ /* }*/
 
 .profile-icon-btn i {
   font-size: 25px;
