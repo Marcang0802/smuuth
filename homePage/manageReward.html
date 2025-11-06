@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div id="rewardList" class="col-8 overflow-auto" style="height: 400px;">
-                <table class="table table-bordered " id="rewardTable">
+                <table class="table table-bordered" id="rewardTable">
                     <thead style="position: sticky; top:0">
                         <tr>
                             <th>Number</th>
@@ -100,8 +100,6 @@
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
     <script src="js/vendor/bootstrap.min.js"></script>
-    <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
     <script src="js/easing.min.js"></script>
     <script src="js/hoverIntent.js"></script>
     <script src="js/superfish.min.js"></script>
@@ -153,7 +151,7 @@
         let user = null;
 
         // writing to the databse of new reward
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const form = document.getElementById("rewardForm");
                 form.addEventListener("submit", async (event) => {
@@ -175,7 +173,6 @@
                     }
                 });
             } else {
-                await showCustomAlert("You must be logged in to manage rewards!", 'warning');
                 window.location.href = "../loginPage_file/login.html";
             }
         });
@@ -188,6 +185,7 @@
         for (let reward of rewardList) {
             // table building
             let tr = document.createElement('tr')
+            tr.setAttribute("style","background:#a998f6;")
             rewardTable.appendChild(tr)
 
             let number = document.createElement("td")
@@ -230,5 +228,6 @@
         }
     </script>
 </body>
+
 
 </html>
