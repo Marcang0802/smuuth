@@ -37,12 +37,33 @@ export async function getAllJoinedEvents(profileID) {
             let eventName = eventSnap.data().name;
             let start = eventSnap.data().startDatetime;
             let end = eventSnap.data().endDatetime;
-            let eventObj = { eventName: eventName, start: start, end: end };
+            let eventObj = { eventName: eventName, start: start, end: end, type: 'joined' };
             result.push(eventObj);
         }
         else{
             console.log('event Not found')
         }
     }
+    return result;
+}
+
+export async function getAllCreatedEvents(userId) {
+    //get all events where creatorId matches the userId
+    const eventsRef = collection(db, "events");
+    const q = query(eventsRef, where("creatorId", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    let result = [];
+    querySnapshot.forEach((doc) => {
+        const eventData = doc.data();
+        let eventObj = {
+            eventName: eventData.name,
+            start: eventData.startDatetime,
+            end: eventData.endDatetime,
+            type: 'created'
+        };
+        result.push(eventObj);
+    });
+
     return result;
 }
