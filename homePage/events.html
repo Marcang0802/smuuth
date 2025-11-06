@@ -1011,6 +1011,8 @@
                 if (currentUser) {
                     const isCreator = event.creatorId === currentUser.uid;
                     const isAdmin = currentUser.uid === "YOUR_SYSTEM_ADMIN_UID";
+                    const profileID = localStorage.getItem('profileID');
+                    const hasJoined = event.helpers && event.helpers.includes(profileID);
 
                     if (isCreator || isAdmin) {
                         adminControls = `
@@ -1024,7 +1026,11 @@
                     }
 
                     if (!isCreator) {
-                        joinButton = `<button class="btn btn-primary mt-2" onclick="joinEvent('${eventId}', '${event.name}', ${event.rewardPoints})">Join Event</button>`;
+                        if (hasJoined) {
+                            joinButton = `<button class="btn btn-danger mt-2" onclick="leaveEvent('${eventId}', '${event.name}')">Leave Event</button>`;
+                        } else {
+                            joinButton = `<button class="btn btn-primary mt-2" onclick="joinEvent('${eventId}', '${event.name}', ${event.rewardPoints})">Join Event</button>`;
+                        }
                     }
                 } else {
                     joinButton = `<p class="text-muted mt-2">Log in to join this event</p>`;
@@ -1276,8 +1282,70 @@
                 console.error("Join error:", err);
                 await showCustomAlert("Failed to join event. Please try again.", 'error', 'Error');
             }
-        }
-            ;
+        };
+
+        window.leaveEvent = async (eventId, eventName) => {
+            const confirmed = await showCustomConfirm(
+                `Are you sure you want to leave "${eventName}"? You can always join again later.`,
+                'Leave Event'
+            );
+
+            if (!confirmed) return;
+
+            try {
+                let profileID = localStorage.getItem('profileID');
+                console.log('Leaving event:', eventId, 'Profile:', profileID);
+
+                // Get event reference and data
+                const eventRef = doc(db, "events", eventId);
+                const eventSnap = await getDoc(eventRef);
+
+                if (!eventSnap.exists()) {
+                    await showCustomAlert("Event not found.", 'error', 'Error');
+                    return;
+                }
+
+                const eventData = eventSnap.data();
+                let helpers = eventData.helpers || [];
+
+                // Remove user from event helpers
+                helpers = helpers.filter(id => id !== profileID);
+
+                // Update event document
+                await updateDoc(eventRef, {
+                    helpers: helpers
+                });
+
+                console.log('Removed from event helpers');
+
+                // Get profile reference and data
+                const profileRef = doc(db, "profiles", profileID);
+                const profileSnap = await getDoc(profileRef);
+
+                if (profileSnap.exists()) {
+                    let joinedEvents = profileSnap.data().joinedEvents || [];
+
+                    // Remove event from user's joined events
+                    joinedEvents = joinedEvents.filter(id => id !== eventId);
+
+                    // Update profile document
+                    await updateDoc(profileRef, {
+                        joinedEvents: joinedEvents
+                    });
+
+                    console.log('Removed from profile joinedEvents');
+                }
+
+                await showCustomAlert(`You have successfully left "${eventName}".`, 'success', 'Left Event');
+
+                // Reload events to update the UI and tabs
+                loadEvents();
+            }
+            catch (err) {
+                console.error("Leave event error:", err);
+                await showCustomAlert("Failed to leave event. Please try again.", 'error', 'Error');
+            }
+        };
 
         window.deleteEvent = async (eventId, eventName) => {
             const confirmed = await showCustomConfirm(`Are you sure you want to delete "${eventName}"?`, 'Delete Event');
